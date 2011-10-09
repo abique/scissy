@@ -1,0 +1,6 @@
+[submodule "src/libgit2"]
+	path = src/libgit2
+	url = git://github.com/libgit2/libgit2.git
+[submodule "src/mimosa"]
+	path = src/mimosa
+	url = git://github.com/abique/mimosa.git
