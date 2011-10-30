@@ -1,0 +1,30 @@
+/**
+
+@page bluegitf_design Bluegitf's design
+
+@section component Components
+
+- bluegitf-init
+- bluegitf-db
+ - bluegitf-db-simple
+ - bluegitf-db-mysql
+- bluegitf-web-server
+
+@section filesystem_layout Filesystem layout
+
+- /db                   stores the database
+- /ssh                  stores the ssh access
+- /repos/${HASH}/       stores the bare git repository
+- /conf                 stores the config files
+
+@section database_abstraction Database abstraction
+
+It is usefull to have a database abstraction, for exemple starting mysqld
+or postgresqld for a small server is a non sense, a custom database
+could be easier to setup and more efficient.
+
+@subsection database_simple Simple database
+
+@subsection database_mysql MySQL database
+
+*/
