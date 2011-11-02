@@ -1,11 +1,18 @@
 package bluegitf.db;
 
-message Status
+enum Status
 {
   kSucceed         = 0;
   kInternalError   = 1;
   kInvalidUser     = 2;
   kInvalidPassword = 3;
+}
+
+enum Role
+{
+  kAdministrator = 0; // able to administrate
+  kContributor   = 1; // able to modify
+  kViewer        = 2; // able to view
 }
 
 message User

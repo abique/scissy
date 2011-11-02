@@ -1,3 +1,6 @@
+add_subdirectory(db)
+add_subdirectory(web-server)
+
 add_executable(bluegitfd
   bluegitfd.cc)
 
