@@ -1,7 +1,7 @@
 add_subdirectory(db)
 add_subdirectory(web-server)
 
-add_executable(bluegitfd
-  bluegitfd.cc)
+add_library(bluegitf
+  config.cc)
 
-target_link_libraries(bluegitfd mimosa)
+target_link_libraries(bluegitf mimosa)
