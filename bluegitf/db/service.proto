@@ -1,0 +1,54 @@
+package bluegitf.db;
+
+message Status
+{
+  kSucceed         = 0;
+  kInternalError   = 1;
+  kInvalidUser     = 2;
+  kInvalidPassword = 3;
+}
+
+message User
+{
+  required string email    = 1;
+  required string name     = 2;
+
+  // this field is relative to the context (role in a group, role over a repo)
+  optional Role   role     = 3;
+
+  required uint32 registration_date = 4;
+}
+
+message Users
+{
+  repeated User users = 1;
+}
+
+message Group
+{
+  required string name  = 1;
+  repeated User   users = 2;
+
+  required uint32 registration_date = 3;
+}
+
+message AuthRequest
+{
+  required string email    = 1;
+  optional string password = 2;
+  optional string cookie   = 3;
+}
+
+message StatusMsg
+{
+  required Status status = 1;
+}
+
+service Db
+{
+  // register a user
+  rpc registerUser(User) returns (StatusMsg);
+
+  // request for authentification
+  rpc auth(AuthRequest) returns (StatusMsg);
+}
