@@ -16,6 +16,8 @@
 - /ssh                  stores the ssh access
 - /repos/${HASH}/       stores the bare git repository
 - /conf                 stores the config files
+- /conf/key.pem         the web server key
+- /conf/cert.pem        the web server certificate
 
 @section database_abstraction Database abstraction
 
