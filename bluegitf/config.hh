@@ -16,6 +16,7 @@ namespace bluegitf
     inline const std::string & wwwDir() { return www_dir_; }
     inline const std::string & repoDir() { return repo_dir_; }
     inline const std::string & dbDir() { return db_dir_; }
+    inline const std::string & dbSocket() { return db_socket_; }
     inline const std::string & sshDir() { return ssh_dir_; }
 
   private:
@@ -23,6 +24,7 @@ namespace bluegitf
     std::string www_dir_;
     std::string repo_dir_;
     std::string db_dir_;
+    std::string db_socket_;
     std::string ssh_dir_;
   };
 }

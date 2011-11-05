@@ -3,7 +3,7 @@
 #include "config.hh"
 
 std::string & ROOT = * mimosa::options::addOption<std::string>(
-  "", "root", "bluegitf root directory", "");
+  "", "root", "bluegitf root directory", "/srv/bluegitf");
 
 namespace bluegitf
 {
@@ -12,11 +12,13 @@ namespace bluegitf
       www_dir_(ROOT),
       repo_dir_(ROOT),
       db_dir_(ROOT),
+      db_socket_(ROOT),
       ssh_dir_(ROOT)
   {
     www_dir_.append("/www");
     repo_dir_.append("/repo");
     db_dir_.append("/db");
+    db_socket_.append("/db/socket");
     ssh_dir_.append("/.ssh");
   }
 

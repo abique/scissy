@@ -1,4 +1,4 @@
-package bluegitf.db;
+package bluegitf.db.pb;
 
 enum Status
 {

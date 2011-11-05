@@ -4,10 +4,17 @@ add_library(bluegitf-db-proto
   service.pb.cc)
 
 add_executable(bluegitf-db
-  main.cc)
+  main.cc
+  db.cc)
 
 target_link_libraries(bluegitf-db
   bluegitf-db-proto
+  bluegitf
+  mimosa-rpc
+  mimosa-net
+  mimosa-stream
+  mimosa-runtime
+  mimosa-log
   mimosa
   mimosa-options
   gnutls
