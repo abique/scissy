@@ -1,5 +1,3 @@
-#include <gflags/gflags.h>
-
 #include <mimosa/init.hh>
 
 #include "../config.hh"

@@ -9,4 +9,6 @@ add_executable(bluegitf-db
 target_link_libraries(bluegitf-db
   bluegitf-db-proto
   mimosa
+  mimosa-options
+  gnutls
   protobuf)
