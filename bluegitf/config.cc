@@ -10,12 +10,18 @@ namespace bluegitf
   Config::Config()
     : root_dir_(ROOT),
       www_dir_(ROOT),
+      tpl_dir_(ROOT),
+      key_pem_(ROOT),
+      cert_pem_(ROOT),
       repo_dir_(ROOT),
       db_dir_(ROOT),
       db_socket_(ROOT),
       ssh_dir_(ROOT)
   {
     www_dir_.append("/www");
+    tpl_dir_.append("/www/tpl");
+    key_pem_.append("/conf/key.pem");
+    cert_pem_.append("/conf/cert.pem");
     repo_dir_.append("/repo");
     db_dir_.append("/db");
     db_socket_.append("/db/socket");
