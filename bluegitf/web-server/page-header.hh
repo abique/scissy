@@ -1,7 +1,7 @@
 #ifndef BLUEGITF_WEB_SERVER_PAGE_HEADER_HH
 # define BLUEGITF_WEB_SERVER_PAGE_HEADER_HH
 
-# include <ctemplate/template.h>
+# include <mimosa/tpl/dict.hh>
 
 # include "session.hh"
 
@@ -9,8 +9,8 @@ namespace bluegitf
 {
   namespace web_server
   {
-    bool setPageHeader(Session::Ptr                    session,
-                       ctemplate::TemplateDictionary * dict);
+    bool setPageHeader(Session::Ptr        session,
+                       mimosa::tpl::Dict & dict);
   }
 }
 

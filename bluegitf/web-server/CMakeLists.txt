@@ -12,16 +12,4 @@ add_executable(bluegitf-web-server
 
 target_link_libraries(bluegitf-web-server
   bluegitf-db-proto
-  bluegitf
-  mimosa-rpc
-  mimosa-http
-  mimosa-uri
-  mimosa-net
-  mimosa-stream
-  mimosa-runtime
-  mimosa-log
-  mimosa
-  mimosa-options
-  gnutls
-  protobuf
-  ctemplate)
+  bluegitf)

@@ -34,4 +34,12 @@ namespace bluegitf
     static Config instance;
     return instance;
   }
+
+  mimosa::tpl::Template::Ptr
+  Config::loadTpl(const std::string & rel_path) const
+  {
+    std::string path(www_dir_);
+    path += "/" + rel_path;
+    return mimosa::tpl::Template::parseFile(path);
+  }
 }

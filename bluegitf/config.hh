@@ -3,6 +3,8 @@
 
 # include <string>
 
+# include <mimosa/tpl/template.hh>
+
 namespace bluegitf
 {
   class Config
@@ -12,15 +14,17 @@ namespace bluegitf
 
     static Config & instance();
 
-    inline const std::string & rootDir() { return root_dir_; }
-    inline const std::string & wwwDir() { return www_dir_; }
-    inline const std::string & tplDir() { return tpl_dir_; }
-    inline const std::string & keyPem() { return key_pem_; }
-    inline const std::string & certPem() { return cert_pem_; }
-    inline const std::string & repoDir() { return repo_dir_; }
-    inline const std::string & dbDir() { return db_dir_; }
-    inline const std::string & dbSocket() { return db_socket_; }
-    inline const std::string & sshDir() { return ssh_dir_; }
+    inline const std::string & rootDir() const { return root_dir_; }
+    inline const std::string & wwwDir() const { return www_dir_; }
+    inline const std::string & tplDir() const { return tpl_dir_; }
+    inline const std::string & keyPem() const { return key_pem_; }
+    inline const std::string & certPem() const { return cert_pem_; }
+    inline const std::string & repoDir() const { return repo_dir_; }
+    inline const std::string & dbDir() const { return db_dir_; }
+    inline const std::string & dbSocket() const { return db_socket_; }
+    inline const std::string & sshDir() const { return ssh_dir_; }
+
+    mimosa::tpl::Template::Ptr loadTpl(const std::string & rel_path) const;
 
   private:
     std::string root_dir_;

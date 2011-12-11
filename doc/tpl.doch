@@ -1,0 +1,23 @@
+/**
+
+@page TplSystem Template system
+
+Bluegitf uses mimosa's templating system.
+
+@section variables Variables
+
+<table>
+
+<tr>
+ <td>id</td>
+ <td>Subdictionary which defines a logged in user. Not defined if the user is not logged in.</td>
+</tr>
+
+<tr>
+ <td>id.name</td>
+ <td>Users' name.</td>
+</tr>
+
+</table>
+
+*/

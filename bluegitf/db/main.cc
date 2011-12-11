@@ -18,7 +18,7 @@ int main(int argc, char ** argv)
   server->setServiceMap(service_map);
   if (!server->listenUnix(bluegitf::Config::instance().dbSocket()))
   {
-    MIMOSA_LOG(Fatal, NULL, "failed to bind unix socket to %s: %s",
+    MIMOSA_LOG(Fatal, nullptr, "failed to bind unix socket to %s: %s",
                bluegitf::Config::instance().dbSocket(),
                strerror(errno));
     return 1;

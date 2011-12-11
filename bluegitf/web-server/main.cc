@@ -8,8 +8,6 @@
 #include <mimosa/http/fs-handler.hh>
 #include <mimosa/http/log-handler.hh>
 
-#include <ctemplate/template.h>
-
 #include "../config.hh"
 #include "clear-cache-handler.hh"
 #include "root-handler.hh"
@@ -19,8 +17,6 @@ uint16_t & PORT = *mimosa::options::addOption<uint16_t>("", "port", "the port to
 int main(int argc, char ** argv)
 {
   mimosa::init(argc, argv);
-
-  ctemplate::Template::SetTemplateRootDirectory(bluegitf::Config::instance().tplDir());
 
   auto dispatch = new mimosa::http::DispatchHandler;
   dispatch->registerHandler(
