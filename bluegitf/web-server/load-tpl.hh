@@ -3,11 +3,14 @@
 
 # include <mimosa/tpl/template.hh>
 
+# include "session.hh"
+
 namespace bluegitf
 {
   namespace web_server
   {
-    mimosa::tpl::Template::Ptr loadTpl(const std::string & path);
+    mimosa::tpl::Template::Ptr loadTpl(Session::Ptr        session,
+                                       const std::string & path);
   }
 }
 

@@ -2,7 +2,9 @@ add_executable(bluegitf-web-server
   main.cc
 
   # logic
+  load-tpl.cc
   session.cc
+  page-header.cc
 
   # handlers
   clear-cache-handler.cc

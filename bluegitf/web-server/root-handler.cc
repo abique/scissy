@@ -14,8 +14,8 @@ namespace bluegitf
     RootHandler::handle(mimosa::http::RequestReader & request,
                         mimosa::http::ResponseWriter & response) const
     {
-      auto tpl = loadTpl("page.html");
       auto session = Session::get(request);
+      auto tpl = loadTpl(session, "page.html");
 
       mimosa::tpl::Dict dict;
 
@@ -23,8 +23,8 @@ namespace bluegitf
 
       response.status_ = mimosa::http::kStatusOk;
       response.content_type_ = "text/html";
-      response.sendHeader(response.writeTimeout());
-      tpl->execute(&response, dict);
+      //response.sendHeader(response.writeTimeout());
+      tpl->execute(&response, dict, response.writeTimeout());
       return true;
     }
   }

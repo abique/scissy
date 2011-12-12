@@ -10,7 +10,7 @@ namespace bluegitf
     class Session : public mimosa::RefCountable<Session>
     {
     public:
-      static Session::Ptr get(mimosa::http::Request & request);
+      static Session::Ptr get(const mimosa::http::Request & request);
 
       std::string user_;
       std::string email_;
