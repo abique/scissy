@@ -6,6 +6,7 @@ enum Status
   kInternalError   = 1;
   kInvalidUser     = 2;
   kInvalidPassword = 3;
+  kDuplicateUser   = 4;
 }
 
 enum Role
@@ -27,15 +28,14 @@ message AuthCookie
 message User
 {
   required string email     = 1;
-  required string name      = 2; // the pseudonym
-  optional string real_name = 3;
+  required string login     = 2; // the pseudonym
   required bytes  password  = 4;
 
   // this field is relative to the context (role in a group, role over a repo)
   optional Role   role      = 5;
 
   // timestamp (UTC)
-  required uint32 registration_date = 6;
+  optional uint32 registration_date = 6;
 
   repeated AuthCookie auth_cookies = 7;
 }
@@ -68,7 +68,7 @@ message StatusMsg
 service Db
 {
   // register a user
-  rpc registerUser(User) returns (StatusMsg);
+  rpc addUser(User) returns (StatusMsg);
 
   // request for authentification
   rpc auth(AuthRequest) returns (StatusMsg);

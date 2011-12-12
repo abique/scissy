@@ -1,0 +1,8 @@
+#logo {
+    font-size: 18;
+}
+
+.register-error {
+    color: red;
+    font-weight: bold;
+}

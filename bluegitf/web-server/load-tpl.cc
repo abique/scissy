@@ -1,4 +1,5 @@
 #include <mimosa/tpl/cache.hh>
+#include <mimosa/log/log.hh>
 
 #include "load-tpl.hh"
 #include "../config.hh"
@@ -12,9 +13,15 @@ namespace bluegitf
     {
       static mimosa::tpl::Cache cache;
 
-      std::string real_path(Config::instance().wwwDir() + "/" + path);
+      std::string real_path(Config::instance().wwwDir() + "/tpl/" + path);
 
-      return cache.get(real_path)->get();
+      // auto tpl = cache.get(real_path)->get();
+      auto tpl = mimosa::tpl::Template::parseFile(real_path);
+      if (tpl)
+        return tpl;
+
+      MIMOSA_LOG(Error, NULL, "failed to load template: %s", real_path);
+      return nullptr;
     }
   }
 }

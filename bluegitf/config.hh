@@ -16,6 +16,7 @@ namespace bluegitf
 
     inline const std::string & rootDir() const { return root_dir_; }
     inline const std::string & wwwDir() const { return www_dir_; }
+    inline const std::string & cssDir() const { return css_dir_; }
     inline const std::string & tplDir() const { return tpl_dir_; }
     inline const std::string & keyPem() const { return key_pem_; }
     inline const std::string & certPem() const { return cert_pem_; }
@@ -29,6 +30,7 @@ namespace bluegitf
   private:
     std::string root_dir_;
     std::string www_dir_;
+    std::string css_dir_;
     std::string tpl_dir_;
     std::string key_pem_;
     std::string cert_pem_;

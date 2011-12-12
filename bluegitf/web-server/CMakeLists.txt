@@ -4,10 +4,13 @@ add_executable(bluegitf-web-server
   # logic
   load-tpl.cc
   session.cc
+  page-footer.cc
   page-header.cc
+  db.cc
 
   # handlers
   clear-cache-handler.cc
+  register-handler.cc
   root-handler.cc
 
   )

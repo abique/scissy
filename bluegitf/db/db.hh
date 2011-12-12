@@ -12,9 +12,9 @@ namespace bluegitf
     class Db : public pb::Db::Server
     {
     public:
-      virtual void registerUser(::mimosa::rpc::Call<
-                                  ::bluegitf::db::pb::User,
-                                  ::bluegitf::db::pb::StatusMsg>::Ptr call);
+      virtual void addUser(::mimosa::rpc::Call<
+                             ::bluegitf::db::pb::User,
+                             ::bluegitf::db::pb::StatusMsg>::Ptr call);
 
       virtual void auth(::mimosa::rpc::Call<
                           ::bluegitf::db::pb::AuthRequest,

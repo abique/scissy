@@ -4,6 +4,7 @@
 #include "root-handler.hh"
 #include "session.hh"
 #include "page-header.hh"
+#include "page-footer.hh"
 #include "load-tpl.hh"
 
 namespace bluegitf
@@ -17,13 +18,17 @@ namespace bluegitf
       auto session = Session::get(request);
       auto tpl = loadTpl(session, "page.html");
 
+      if (!tpl)
+        return false;
+
       mimosa::tpl::Dict dict;
 
       setPageHeader(session, dict);
+      setPageFooter(session, dict);
 
       response.status_ = mimosa::http::kStatusOk;
       response.content_type_ = "text/html";
-      //response.sendHeader(response.writeTimeout());
+      response.sendHeader(response.writeTimeout());
       tpl->execute(&response, dict, response.writeTimeout());
       return true;
     }

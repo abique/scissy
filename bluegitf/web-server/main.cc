@@ -10,9 +10,11 @@
 
 #include "../config.hh"
 #include "clear-cache-handler.hh"
+#include "register-handler.hh"
 #include "root-handler.hh"
 
 uint16_t & PORT = *mimosa::options::addOption<uint16_t>("", "port", "the port to use", 19042);
+bool & UNSECURE = *mimosa::options::addSwitch("", "unsecure", "disable https, usefull for dev");
 
 int main(int argc, char ** argv)
 {
@@ -20,18 +22,20 @@ int main(int argc, char ** argv)
 
   auto dispatch = new mimosa::http::DispatchHandler;
   dispatch->registerHandler(
-    "/data/", new mimosa::http::FsHandler(
-      bluegitf::Config::instance().wwwDir(), 1, true));
+    "/css/*", new mimosa::http::FsHandler(
+      bluegitf::Config::instance().cssDir(), 1, true));
   dispatch->registerHandler("/", new bluegitf::web_server::RootHandler);
   dispatch->registerHandler("/clear-cache", new bluegitf::web_server::ClearCacheHandler);
+  dispatch->registerHandler("/register", new bluegitf::web_server::RegisterHandler);
 
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);
 
   mimosa::http::Server::Ptr server(new mimosa::http::Server);
   server->setHandler(log_handler);
-  server->setSecure(bluegitf::Config::instance().certPem(),
-                    bluegitf::Config::instance().keyPem());
+  if (!UNSECURE)
+    server->setSecure(bluegitf::Config::instance().certPem(),
+                      bluegitf::Config::instance().keyPem());
 
   if (!server->listenInet4(PORT))
   {
