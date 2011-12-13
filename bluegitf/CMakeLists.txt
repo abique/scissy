@@ -1,6 +1,5 @@
 add_executable(bluegitf
   main.cc
-  db.cc
 
   # web logic and common stuff
   config.cc

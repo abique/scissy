@@ -2,7 +2,7 @@
 #include <mimosa/log/log.hh>
 
 #include "load-tpl.hh"
-#include "../config.hh"
+#include "config.hh"
 
 namespace bluegitf
 {

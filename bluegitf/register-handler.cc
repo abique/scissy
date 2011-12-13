@@ -12,7 +12,6 @@
 #include "page-header.hh"
 #include "page-footer.hh"
 #include "load-tpl.hh"
-#include "db.hh"
 
 namespace bluegitf
 {

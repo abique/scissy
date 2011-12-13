@@ -8,7 +8,7 @@
 #include <mimosa/http/fs-handler.hh>
 #include <mimosa/http/log-handler.hh>
 
-#include "../config.hh"
+#include "config.hh"
 #include "clear-cache-handler.hh"
 #include "register-handler.hh"
 #include "root-handler.hh"
@@ -24,9 +24,9 @@ int main(int argc, char ** argv)
   dispatch->registerHandler(
     "/css/*", new mimosa::http::FsHandler(
       bluegitf::Config::instance().cssDir(), 1, true));
-  dispatch->registerHandler("/", new bluegitf::::RootHandler);
-  dispatch->registerHandler("/clear-cache", new bluegitf::::ClearCacheHandler);
-  dispatch->registerHandler("/register", new bluegitf::::RegisterHandler);
+  dispatch->registerHandler("/", new bluegitf::RootHandler);
+  dispatch->registerHandler("/clear-cache", new bluegitf::ClearCacheHandler);
+  dispatch->registerHandler("/register", new bluegitf::RegisterHandler);
 
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);
