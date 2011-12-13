@@ -1,8 +1,43 @@
 /**
 
-@page bluegitf_design Bluegitf's design
+@mainpage Bluegitf's goals and design
 
-@dotfile doc/design.dot
+@section goals Goals
+
+- provide a git repository hosting service
+- have a web interface to:
+ - create/update/delete a user account
+ - create/update/delete a group
+ - create/delete a repository
+ - browse a repository:
+  - history
+  - branches/tags
+  - tree
+  - download a tarball of a revision
+ - manage a repository's ACL
+ - list repositories
+ - list users
+ - list groups
+- have a very simple setup
+ - no apache, nginx or any external web server to configure
+ - no mysql, postgresql, or any database to configure
+ - no complicated configuration options, you can enjoy the default settings
+ - you should be able to setup your server from scratch in a few minutes
+- security
+ - code is written with robustness and security in mind
+ - bluegitf comes with default profiles for apparmor
+
+@section non_goals Non goals
+
+- have a distributed, scalable, complex architecture
+ - bluegitf is not designed to host thousand of repositories, every companies
+ should be able to host its own bluegitf server, and I think that almost every
+ companies should host their repositories on one server. And if not, they could
+ be able to regroup projects on separated machines. Also, vertical scaling is
+ an option.
+- be social like github: even if it's cool, github does it very well. Maybe I'll
+ add "I like" or "+1", but at the cost of privacy for the visitor. So I may
+ never do it as well.
 
 @section component Components
 
@@ -10,44 +45,19 @@
 - bluegitf, web server, acl server (used by bluegitf-shell)
 - bluegitf-shell, ensure ACL between ssh and git-shell
 
+@dotfile doc/design.dot
+
 @section filesystem_layout Filesystem layout
 
-- /db/bluegitf.sqlite   stores the database
-- /ssh/authorized_keys  stores the ssh authorized_keys, the file could be
-linked to ${HOME}/.ssh/
-- /repos/${name}        stores the bare git repository
-- /conf                 stores the config files
-- /conf/key.pem         the web server key
-- /conf/cert.pem        the web server certificate
+- ~/db/bluegitf.sqlite   stores the database
+- ~/.ssh/authorized_keys stores the ssh authorized_keys
+- ~/repos/${name}        stores the bare git repository
+- ~/conf                 stores the config files
+- ~/conf/key.pem         the web server key
+- ~/conf/cert.pem        the web server certificate
 
 @section database_model Database model
 
-
-
-- user related
- - add new user
- - update user (email, password, keys)
- - delete user
- - list users
- - list related groups
- - list related repositories
-- group related
- - add new group
- - update a group detail (name, description)
- - add user to a group
- - update user's role in a group
- - remove user from a group
- - include a group into another group?
- - update included group's role
- - remove an included group from another group?
- - list groups
- - list groups related by inclusion to another one
-- repository related
- - create a repository
- - rename a repository
- - delete a repository
- - add/update/delete ACLs user->repo and group->repo
- - list ACLs
- - list repositories
+@dotfile sql/model.dot
 
 */

@@ -19,7 +19,7 @@ create table if not exists users
 create table if not exists users_keys
 (
   key_id integer not null primary key autoincrement,
-  user_id integer not null references user (user_id) on delete cascade on update cascade,
+  user_id integer not null references users (user_id) on delete cascade on update cascade,
   `key` blob not null unique
 );
 
