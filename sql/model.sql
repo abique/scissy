@@ -23,6 +23,15 @@ create table if not exists users_keys
   `key` blob not null unique
 );
 
+create table if not exists users_auth
+(
+  cookie blob not null,
+  user_id integer not null references users (user_id) on delete cascade on update cascade,
+  ts_start integer not null,
+  ts_end integer not null,
+  primary key (cookie, user_id)
+);
+
 create table if not exists groups
 (
   group_id integer not null primary key autoincrement,

@@ -6,12 +6,14 @@ overlap=scale
 roles [label=<<TABLE CELLSPACING="0"><TR><TD COLSPAN="4"><U>roles</U></TD></TR><TR><TD PORT="role_id">role_id</TD><TD PORT="description">description</TD></TR></TABLE>>];
 users [label=<<TABLE CELLSPACING="0"><TR><TD COLSPAN="4"><U>users</U></TD></TR><TR><TD PORT="user_id">user_id</TD><TD PORT="login">login</TD><TD PORT="email">email</TD><TD PORT="password">password</TD></TR></TABLE>>];
 users_keys [label=<<TABLE CELLSPACING="0"><TR><TD COLSPAN="4"><U>users_keys</U></TD></TR><TR><TD PORT="key_id">key_id</TD><TD PORT="user_id">user_id</TD><TD PORT="key">key</TD></TR></TABLE>>];
+users_auth [label=<<TABLE CELLSPACING="0"><TR><TD COLSPAN="4"><U>users_auth</U></TD></TR><TR><TD PORT="cookie">cookie</TD><TD PORT="user_id">user_id</TD><TD PORT="ts_start">ts_start</TD><TD PORT="ts_end">ts_end</TD></TR></TABLE>>];
 groups [label=<<TABLE CELLSPACING="0"><TR><TD COLSPAN="4"><U>groups</U></TD></TR><TR><TD PORT="group_id">group_id</TD><TD PORT="group_name">group_name</TD></TR></TABLE>>];
 groups_users [label=<<TABLE CELLSPACING="0"><TR><TD COLSPAN="4"><U>groups_users</U></TD></TR><TR><TD PORT="group_id">group_id</TD><TD PORT="user_id">user_id</TD><TD PORT="role_id">role_id</TD></TR></TABLE>>];
 repos [label=<<TABLE CELLSPACING="0"><TR><TD COLSPAN="4"><U>repos</U></TD></TR><TR><TD PORT="repo_id">repo_id</TD><TD PORT="repo_name">repo_name</TD></TR></TABLE>>];
 repos_groups [label=<<TABLE CELLSPACING="0"><TR><TD COLSPAN="4"><U>repos_groups</U></TD></TR><TR><TD PORT="repo_id">repo_id</TD><TD PORT="group_id">group_id</TD><TD PORT="role_id">role_id</TD></TR></TABLE>>];
 repos_users [label=<<TABLE CELLSPACING="0"><TR><TD COLSPAN="4"><U>repos_users</U></TD></TR><TR><TD PORT="repo_id">repo_id</TD><TD PORT="user_id">user_id</TD><TD PORT="role_id">role_id</TD></TR></TABLE>>];
 users_keys:user_id -> users:user_id;
+users_auth:user_id -> users:user_id;
 groups_users:role_id -> roles:role_id;
 groups_users:user_id -> users:user_id;
 groups_users:group_id -> groups:group_id;
