@@ -24,9 +24,9 @@ int main(int argc, char ** argv)
   dispatch->registerHandler(
     "/css/*", new mimosa::http::FsHandler(
       bluegitf::Config::instance().cssDir(), 1, true));
-  dispatch->registerHandler("/", new bluegitf::web_server::RootHandler);
-  dispatch->registerHandler("/clear-cache", new bluegitf::web_server::ClearCacheHandler);
-  dispatch->registerHandler("/register", new bluegitf::web_server::RegisterHandler);
+  dispatch->registerHandler("/", new bluegitf::::RootHandler);
+  dispatch->registerHandler("/clear-cache", new bluegitf::::ClearCacheHandler);
+  dispatch->registerHandler("/register", new bluegitf::::RegisterHandler);
 
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);

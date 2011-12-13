@@ -2,12 +2,9 @@
 
 namespace bluegitf
 {
-  namespace web_server
+  Session::Ptr
+  Session::get(const mimosa::http::Request & request)
   {
-    Session::Ptr
-    Session::get(const mimosa::http::Request & request)
-    {
-      return nullptr;
-    }
+    return nullptr;
   }
 }

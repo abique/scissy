@@ -1,6 +1,3 @@
-add_subdirectory(db)
-add_subdirectory(web-server)
-
 add_executable(bluegitf
   main.cc
   db.cc

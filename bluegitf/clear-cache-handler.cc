@@ -4,13 +4,10 @@
 
 namespace bluegitf
 {
-  namespace web_server
+  bool
+  ClearCacheHandler::handle(mimosa::http::RequestReader & request,
+                            mimosa::http::ResponseWriter & response) const
   {
-    bool
-    ClearCacheHandler::handle(mimosa::http::RequestReader & request,
-                        mimosa::http::ResponseWriter & response) const
-    {
-      return mimosa::http::redirect(response, "/");
-    }
+    return mimosa::http::redirect(response, "/");
   }
 }

@@ -5,19 +5,16 @@
 
 namespace bluegitf
 {
-  namespace web_server
+  bool setPageHeader(Session::Ptr        session,
+                     mimosa::tpl::Dict & dict)
   {
-    bool setPageHeader(Session::Ptr        session,
-                       mimosa::tpl::Dict & dict)
-    {
-      auto tpl = loadTpl(session, "header.html");
-      if (!tpl)
-        return false;
+    auto tpl = loadTpl(session, "header.html");
+    if (!tpl)
+      return false;
 
-      auto inc = new mimosa::tpl::Include(tpl, "header");
-      dict.append(inc);
+    auto inc = new mimosa::tpl::Include(tpl, "header");
+    dict.append(inc);
 
-      return true;
-    }
+    return true;
   }
 }

@@ -9,28 +9,25 @@
 
 namespace bluegitf
 {
-  namespace web_server
+  bool
+  RootHandler::handle(mimosa::http::RequestReader & request,
+                      mimosa::http::ResponseWriter & response) const
   {
-    bool
-    RootHandler::handle(mimosa::http::RequestReader & request,
-                        mimosa::http::ResponseWriter & response) const
-    {
-      auto session = Session::get(request);
-      auto tpl = loadTpl(session, "page.html");
+    auto session = Session::get(request);
+    auto tpl = loadTpl(session, "page.html");
 
-      if (!tpl)
-        return false;
+    if (!tpl)
+      return false;
 
-      mimosa::tpl::Dict dict;
+    mimosa::tpl::Dict dict;
 
-      setPageHeader(session, dict);
-      setPageFooter(session, dict);
+    setPageHeader(session, dict);
+    setPageFooter(session, dict);
 
-      response.status_ = mimosa::http::kStatusOk;
-      response.content_type_ = "text/html";
-      response.sendHeader(response.writeTimeout());
-      tpl->execute(&response, dict, response.writeTimeout());
-      return true;
-    }
+    response.status_ = mimosa::http::kStatusOk;
+    response.content_type_ = "text/html";
+    response.sendHeader(response.writeTimeout());
+    tpl->execute(&response, dict, response.writeTimeout());
+    return true;
   }
 }
