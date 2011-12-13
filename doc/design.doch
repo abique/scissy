@@ -2,30 +2,27 @@
 
 @page bluegitf_design Bluegitf's design
 
+@dotfile doc/design.dot
+
 @section component Components
 
 - bluegitf-init, initialize a new bluegitf-environment
-- bluegitf-db, serves bluegitf's database
-- bluegitf-web-server, http frontend for bluegitf
-- bluegitf-shell, wraps ssh connection around git-shell, ensuring ACL
-- bluegitf-repo, server which has access to a repository
+- bluegitf, web server, acl server (used by bluegitf-shell)
+- bluegitf-shell, ensure ACL between ssh and git-shell
 
 @section filesystem_layout Filesystem layout
 
-- /db                   stores the database
-- /ssh                  stores the ssh access
-- /repos/${HASH}/       stores the bare git repository
+- /db/bluegitf.sqlite   stores the database
+- /ssh/authorized_keys  stores the ssh authorized_keys, the file could be
+linked to ${HOME}/.ssh/
+- /repos/${name}        stores the bare git repository
 - /conf                 stores the config files
 - /conf/key.pem         the web server key
 - /conf/cert.pem        the web server certificate
 
-@section database_abstraction Database abstraction
+@section database_model Database model
 
-It is usefull to have a database abstraction, for exemple starting mysqld
-or postgresqld for a small server is a non sense, a custom database
-could be easier to setup and more efficient.
 
-@section database_operations Database operations
 
 - user related
  - add new user

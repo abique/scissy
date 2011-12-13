@@ -27,11 +27,11 @@ DOXYFILE_ENCODING      = UTF-8
 
 PROJECT_NAME           = bluegitf
 
-# The PROJECT_NUMBER tag can be used to enter a project or revision number.
+# The PROJECT_NUMBER=0.0.0
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         =
+PROJECT_NUMBER=0.0.0
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer
@@ -1660,7 +1660,7 @@ DOT_PATH               =
 # contain dot files that are included in the documentation (see the
 # \dotfile command).
 
-DOTFILE_DIRS           =
+DOTFILE_DIRS           = .
 
 # The MSCFILE_DIRS tag can be used to specify one or more directories that
 # contain msc files that are included in the documentation (see the
