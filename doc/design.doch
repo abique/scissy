@@ -4,11 +4,11 @@
 
 @section component Components
 
-- bluegitf-init
-- bluegitf-db
- - bluegitf-db-simple
- - bluegitf-db-mysql
-- bluegitf-web-server
+- bluegitf-init, initialize a new bluegitf-environment
+- bluegitf-db, serves bluegitf's database
+- bluegitf-web-server, http frontend for bluegitf
+- bluegitf-shell, wraps ssh connection around git-shell, ensuring ACL
+- bluegitf-repo, server which has access to a repository
 
 @section filesystem_layout Filesystem layout
 
@@ -25,8 +25,32 @@ It is usefull to have a database abstraction, for exemple starting mysqld
 or postgresqld for a small server is a non sense, a custom database
 could be easier to setup and more efficient.
 
-@subsection database_simple Simple database
+@section database_operations Database operations
 
-@subsection database_mysql MySQL database
+- user related
+ - add new user
+ - update user (email, password, keys)
+ - delete user
+ - list users
+ - list related groups
+ - list related repositories
+- group related
+ - add new group
+ - update a group detail (name, description)
+ - add user to a group
+ - update user's role in a group
+ - remove user from a group
+ - include a group into another group?
+ - update included group's role
+ - remove an included group from another group?
+ - list groups
+ - list groups related by inclusion to another one
+- repository related
+ - create a repository
+ - rename a repository
+ - delete a repository
+ - add/update/delete ACLs user->repo and group->repo
+ - list ACLs
+ - list repositories
 
 */
