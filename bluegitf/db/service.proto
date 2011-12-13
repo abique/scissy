@@ -25,6 +25,10 @@ message AuthCookie
   required uint32 expiration_date = 2;
 }
 
+message Key
+{
+}
+
 message User
 {
   required string email     = 1;
@@ -38,6 +42,7 @@ message User
   optional uint32 registration_date = 6;
 
   repeated AuthCookie auth_cookies = 7;
+  repeated Key keys = 8;
 }
 
 message Users
@@ -69,6 +74,11 @@ service Db
 {
   // register a user
   rpc addUser(User) returns (StatusMsg);
+
+  rpc addKey(User) returns (
+
+  // register a group
+  rpc addGroup(Group) returns (StatusMsg);
 
   // request for authentification
   rpc auth(AuthRequest) returns (StatusMsg);
