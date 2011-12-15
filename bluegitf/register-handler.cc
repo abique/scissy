@@ -2,6 +2,7 @@
 #include <regex>
 
 #include <mimosa/log/log.hh>
+#include <mimosa/sqlite/sqlite.hh>
 #include <mimosa/tpl/dict.hh>
 #include <mimosa/tpl/include.hh>
 #include <mimosa/tpl/template.hh>
@@ -93,30 +94,31 @@ namespace bluegitf
 
       bool tryRegister()
       {
-        sqlite3_stmt * stmt = nullptr;
-        int err = sqlite3_prepare_v2(Db::handle(),
-                                     "insert or fail into users (login, email, password)"
-                                     " values (?, ?, ?)", -1, &stmt, nullptr);
-        assert(err == SQLITE_OK);
+        mimosa::sqlite::Stmt stmt;
+        int err = stmt.prepare(Db::handle(),
+                               "insert or fail into users (login, email, password)"
+                               " values (?, ?, ?)");
+        assert(err == SQLITE_OK); // must pass
 
-        err = sqlite3_bind_text(stmt, 1, login_.c_str(), login_.size(), nullptr);
+        err = stmt.bind(1, login_);
         assert(err == SQLITE_OK);
-        err = sqlite3_bind_text(stmt, 2, email_.c_str(), email_.size(), nullptr);
+        err = stmt.bind(1, email_);
         assert(err == SQLITE_OK);
-        err = sqlite3_bind_text(stmt, 3, password_.c_str(), password_.size(), nullptr);
+        err = stmt.bind(1, password_);
         assert(err == SQLITE_OK);
 
         err = sqlite3_step(stmt);
-        MIMOSA_LOG(Debug, NULL, "%d", err);
         if (err == SQLITE_CONSTRAINT)
         {
           register_err_ = "failed to register, try another username";
           return false;
         }
-        assert(err == SQLITE_DONE);
 
-        err = sqlite3_finalize(stmt);
-        assert(err == SQLITE_OK);
+        if (err != SQLITE_DONE)
+        {
+          register_err_ = "failed to register, internal error";
+          return false;
+        }
 
         return true;
       }
