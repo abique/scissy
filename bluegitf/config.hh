@@ -3,16 +3,14 @@
 
 # include <string>
 
-# include <mimosa/tpl/template.hh>
+# include <mimosa/container/singleton.hh>
 
 namespace bluegitf
 {
-  class Config
+  class Config : public mimosa::container::Singleton<Config>
   {
   public:
     Config();
-
-    static Config & instance();
 
     inline const std::string & rootDir() const { return root_dir_; }
     inline const std::string & wwwDir() const { return www_dir_; }
@@ -22,10 +20,8 @@ namespace bluegitf
     inline const std::string & certPem() const { return cert_pem_; }
     inline const std::string & repoDir() const { return repo_dir_; }
     inline const std::string & dbDir() const { return db_dir_; }
-    inline const std::string & dbSocket() const { return db_socket_; }
+    inline const std::string & dbPath() const { return db_path_; }
     inline const std::string & sshDir() const { return ssh_dir_; }
-
-    mimosa::tpl::Template::Ptr loadTpl(const std::string & rel_path) const;
 
   private:
     std::string root_dir_;
@@ -36,7 +32,7 @@ namespace bluegitf
     std::string cert_pem_;
     std::string repo_dir_;
     std::string db_dir_;
-    std::string db_socket_;
+    std::string db_path_;
     std::string ssh_dir_;
   };
 }

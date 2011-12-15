@@ -16,7 +16,7 @@ namespace bluegitf
       cert_pem_(ROOT),
       repo_dir_(ROOT),
       db_dir_(ROOT),
-      db_socket_(ROOT),
+      db_path_(ROOT),
       ssh_dir_(ROOT)
   {
     www_dir_.append("/www");
@@ -26,22 +26,7 @@ namespace bluegitf
     cert_pem_.append("/conf/cert.pem");
     repo_dir_.append("/repo");
     db_dir_.append("/db");
-    db_socket_.append("/db/socket");
+    db_path_.append("/db/db.sqlite");
     ssh_dir_.append("/.ssh");
-  }
-
-  Config &
-  Config::instance()
-  {
-    static Config instance;
-    return instance;
-  }
-
-  mimosa::tpl::Template::Ptr
-  Config::loadTpl(const std::string & rel_path) const
-  {
-    std::string path(www_dir_);
-    path += "/" + rel_path;
-    return mimosa::tpl::Template::parseFile(path);
   }
 }

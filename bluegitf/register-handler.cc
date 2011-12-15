@@ -2,16 +2,17 @@
 #include <regex>
 
 #include <mimosa/log/log.hh>
-#include <mimosa/tpl/template.hh>
 #include <mimosa/tpl/dict.hh>
 #include <mimosa/tpl/include.hh>
+#include <mimosa/tpl/template.hh>
 #include <mimosa/tpl/value.hh>
 
+#include "db.hh"
+#include "load-tpl.hh"
+#include "page-footer.hh"
+#include "page-header.hh"
 #include "register-handler.hh"
 #include "session.hh"
-#include "page-header.hh"
-#include "page-footer.hh"
-#include "load-tpl.hh"
 
 namespace bluegitf
 {
@@ -92,43 +93,32 @@ namespace bluegitf
 
       bool tryRegister()
       {
-        MIMOSA_LOG(Error, NULL, "trying to register");
+        sqlite3_stmt * stmt = nullptr;
+        int err = sqlite3_prepare_v2(Db::handle(),
+                                     "insert or fail into users (login, email, password)"
+                                     " values (?, ?, ?)", -1, &stmt, nullptr);
+        assert(err == SQLITE_OK);
 
-        auto db = dbService();
-        if (!db)
+        err = sqlite3_bind_text(stmt, 1, login_.c_str(), login_.size(), nullptr);
+        assert(err == SQLITE_OK);
+        err = sqlite3_bind_text(stmt, 2, email_.c_str(), email_.size(), nullptr);
+        assert(err == SQLITE_OK);
+        err = sqlite3_bind_text(stmt, 3, password_.c_str(), password_.size(), nullptr);
+        assert(err == SQLITE_OK);
+
+        err = sqlite3_step(stmt);
+        MIMOSA_LOG(Debug, NULL, "%d", err);
+        if (err == SQLITE_CONSTRAINT)
         {
-          register_err_ = "database unavailable";
+          register_err_ = "failed to register, try another username";
           return false;
         }
+        assert(err == SQLITE_DONE);
 
-        auto user = new db::pb::User;
-        user->set_email(email_);
-        user->set_login(login_);
-        user->set_password(password_);
+        err = sqlite3_finalize(stmt);
+        assert(err == SQLITE_OK);
 
-        auto call = db->addUser(user);
-        call->wait();
-        if (call->isCanceled())
-          return false;
-
-        switch (call->response().status())
-        {
-        case db::pb::kSucceed:
-          // TODO redirect
-          return true;
-
-        case db::pb::kInternalError:
-          register_err_ = "internal error";
-          return false;
-
-        case db::pb::kDuplicateUser:
-          register_err_ = "duplicate user";
-          return false;
-
-        default:
-          register_err_ = db::pb::Status_Name(call->response().status());
-          return false;
-        }
+        return true;
       }
 
       bool handle()

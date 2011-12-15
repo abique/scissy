@@ -3,6 +3,7 @@ add_executable(bluegitf
 
   # web logic and common stuff
   config.cc
+  db.cc
   load-tpl.cc
   page-footer.cc
   page-header.cc
@@ -18,6 +19,7 @@ target_link_libraries(bluegitf
   mimosa
   gnutls
   protobuf
+  sqlite3
   pthread
   rt
 )

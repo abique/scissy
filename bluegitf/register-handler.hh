@@ -10,9 +10,6 @@ namespace bluegitf
   public:
     virtual bool handle(mimosa::http::RequestReader & request,
                         mimosa::http::ResponseWriter & response) const;
-
-  private:
-    bool applyRegistration();
   };
 }
 

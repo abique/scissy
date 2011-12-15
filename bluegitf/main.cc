@@ -10,6 +10,7 @@
 
 #include "config.hh"
 #include "clear-cache-handler.hh"
+#include "db.hh"
 #include "register-handler.hh"
 #include "root-handler.hh"
 
@@ -18,7 +19,10 @@ bool & UNSECURE = *mimosa::options::addSwitch("", "unsecure", "disable https, us
 
 int main(int argc, char ** argv)
 {
+  sqlite3_initialize();
   mimosa::init(argc, argv);
+  bluegitf::Config::instance();
+  bluegitf::Db::instance();
 
   auto dispatch = new mimosa::http::DispatchHandler;
   dispatch->registerHandler(
@@ -47,6 +51,9 @@ int main(int argc, char ** argv)
   while (true)
     server->serveOne();
 
+  bluegitf::Db::release();
+  bluegitf::Config::release();
   mimosa::deinit();
+  sqlite3_shutdown();
   return 0;
 }
