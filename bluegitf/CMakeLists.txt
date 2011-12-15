@@ -16,6 +16,9 @@ add_executable(bluegitf
 )
 
 target_link_libraries(bluegitf
+  mimosa-tpl
+  mimosa-http
+  mimosa-sqlite
   mimosa
   gnutls
   protobuf
