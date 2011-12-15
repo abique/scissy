@@ -12,7 +12,7 @@ create table if not exists users
 (
   user_id integer not null primary key autoincrement,
   login varchar(128) not null unique,
-  email varchar(256) not null,
+  email varchar(256) not null unique,
   password blob not null
 );
 
