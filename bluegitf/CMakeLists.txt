@@ -11,6 +11,7 @@ add_executable(bluegitf
 
   # handlers
   clear-cache-handler.cc
+  login-handler.cc
   register-handler.cc
   root-handler.cc
 )
@@ -23,6 +24,7 @@ target_link_libraries(bluegitf
   gnutls
   protobuf
   sqlite3
+  crack
   pthread
   rt
 )

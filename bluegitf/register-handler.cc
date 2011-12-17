@@ -1,6 +1,9 @@
 #include <iostream>
 #include <regex>
 
+#include <crack.h>
+
+#include <mimosa/stream/hash.hh>
 #include <mimosa/log/log.hh>
 #include <mimosa/sqlite/sqlite.hh>
 #include <mimosa/tpl/dict.hh>
@@ -79,17 +82,20 @@ namespace bluegitf
         if (password_.size() > 128)
           password_err_ = "password too big (128 characters at most)";
 
+        password_err_ = ::FascistCheck(password_.c_str(),
+                                       ::GetDefaultCracklibDict()) ? : "";
+
         // if (!std::regex_match(login_, login_match))
         //   login_err_ = "the login must match ^[[:alnum:]]+$";
 
         if (login_.size() > 64)
-          password_err_ = "login too big (64 characters at most)";
+          login_err_ = "login too big (64 characters at most)";
 
         // if (!std::regex_match(email_, email_match))
         //   email_err_ = "invalid email";
 
         if (email_.size() > 256)
-          password_err_ = "email too big (256 characters at most)";
+          login_err_ = "email too big (256 characters at most)";
       }
 
       bool tryRegister()
@@ -100,11 +106,14 @@ namespace bluegitf
                                " values (?, ?, ?)");
         assert(err == SQLITE_OK); // must pass
 
+        mimosa::stream::Sha512 sha512;
+        sha512.write(password_.data(), password_.size());
+
         err = stmt.bind(1, login_);
         assert(err == SQLITE_OK);
-        err = stmt.bind(1, email_);
+        err = stmt.bind(2, email_);
         assert(err == SQLITE_OK);
-        err = stmt.bind(1, password_);
+        err = stmt.bindBlob(3, sha512.digest(), sha512.digestLen());
         assert(err == SQLITE_OK);
 
         err = sqlite3_step(stmt);
@@ -120,6 +129,30 @@ namespace bluegitf
           return false;
         }
 
+        return registrationSucceed();
+      }
+
+      bool registrationSucceed()
+      {
+        auto session = Session::get(request_);
+        auto tpl = loadTpl(session, "page.html");
+        if (!tpl)
+          return false;
+
+        mimosa::tpl::Dict dict;
+
+        auto tpl_body = loadTpl(session, "registration-succeed.html");
+        if (!tpl_body)
+          return false;
+        dict.append(new mimosa::tpl::Include(tpl_body, "body"));
+
+        setPageHeader(session, dict);
+        setPageFooter(session, dict);
+
+        response_.status_ = mimosa::http::kStatusOk;
+        response_.content_type_ = "text/html";
+        response_.sendHeader(response_.writeTimeout());
+        tpl->execute(&response_, dict, response_.writeTimeout());
         return true;
       }
 

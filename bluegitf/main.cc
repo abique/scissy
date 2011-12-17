@@ -9,8 +9,11 @@
 #include <mimosa/http/log-handler.hh>
 
 #include "config.hh"
-#include "clear-cache-handler.hh"
 #include "db.hh"
+
+// handlers
+#include "clear-cache-handler.hh"
+#include "login-handler.hh"
 #include "register-handler.hh"
 #include "root-handler.hh"
 
@@ -31,6 +34,7 @@ int main(int argc, char ** argv)
   dispatch->registerHandler("/", new bluegitf::RootHandler);
   dispatch->registerHandler("/clear-cache", new bluegitf::ClearCacheHandler);
   dispatch->registerHandler("/register", new bluegitf::RegisterHandler);
+  dispatch->registerHandler("/login", new bluegitf::LoginHandler);
 
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);
