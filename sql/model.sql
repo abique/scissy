@@ -20,13 +20,14 @@ create table if not exists users_keys
 (
   key_id integer not null primary key autoincrement,
   user_id integer not null references users (user_id) on delete cascade on update cascade,
-  `key` blob not null unique
+  `key` blob not null,
+  ts_created integer not null
 );
 
-create table if not exists users_auth
+create table if not exists users_auths
 (
-  cookie blob not null,
   user_id integer not null references users (user_id) on delete cascade on update cascade,
+  cookie blob not null,
   ts_start integer not null,
   ts_end integer not null,
   primary key (cookie, user_id)
