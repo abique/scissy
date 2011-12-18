@@ -1,0 +1,27 @@
+* repositories
+** TODO list repositories
+** TODO create a repository
+*** TODO creation form
+*** check the form (names, db, fs)
+*** create the repository (git init --bare with libgit2)
+** admin a repository
+*** list current ACLs
+*** add/update/remove ACL
+*** update description
+*** update name
+** browse a repository
+*** view changelog
+**** view a diff
+*** view branches/tags
+*** view tree at a specified branch/tag/revision
+*** download a tarball of the tree at a specified branch/tag/revision
+** ssh access
+*** generate the .ssh/authorized_keys
+*** write bluegitf-shell
+**** write a tests suite for bluegitf-shell
+** https clone/pull/push
+* groups
+** create a group
+** admin a group
+** list groups
+** list a group's members
