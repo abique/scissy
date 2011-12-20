@@ -13,7 +13,8 @@ create table if not exists users
   user_id integer not null primary key autoincrement,
   login varchar(128) not null unique,
   email varchar(256) not null unique,
-  password blob not null
+  password blob not null,
+  is_admin boolean not null default false
 );
 
 create table if not exists users_keys
@@ -29,7 +30,6 @@ create table if not exists users_auths
   user_id integer not null references users (user_id) on delete cascade on update cascade,
   cookie blob not null,
   ts_start integer not null,
-  ts_end integer not null,
   primary key (cookie, user_id)
 );
 

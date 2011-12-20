@@ -1,11 +1,11 @@
-{{*register_err}}<span class="register-error">{{.}}</span>{{/}}
+{{*register_err}}<span class="error-msg">{{.}}</span>{{/}}
 <form method="post" enctype="application/x-www-form-urlencoded" name="register-form">
   login: <input name="login" type="text" value="{{register_login}}"/>
-  {{*register_login_err}}<span class="register-error">{{.}}</span>{{/}}<br/>
+  {{*register_login_err}}<span class="error-msg">{{.}}</span>{{/}}<br/>
   email: <input name="email" type="text" value="{{register_email}}"/>
-  {{*register_email_err}}<span class="register-error">{{.}}</span>{{/}}<br/>
+  {{*register_email_err}}<span class="error-msg">{{.}}</span>{{/}}<br/>
   password: <input name="password" type="password"/>
-  {{*register_password_err}}<span class="register-error">{{.}}</span>{{/}}<br/>
+  {{*register_password_err}}<span class="error-msg">{{.}}</span>{{/}}<br/>
   password (again): <input name="password2" type="password"/><br/>
   <input type="reset" value="Reset"/>
   <input type="submit" value="Register"/>

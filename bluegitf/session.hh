@@ -10,8 +10,7 @@ namespace bluegitf
   public:
     static Session::Ptr get(const mimosa::http::Request & request);
 
-    std::string user_;
-    std::string email_;
+    std::string login_;
   };
 }
 

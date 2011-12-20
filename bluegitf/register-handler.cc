@@ -116,7 +116,7 @@ namespace bluegitf
         err = stmt.bindBlob(3, sha512.digest(), sha512.digestLen());
         assert(err == SQLITE_OK);
 
-        err = sqlite3_step(stmt);
+        err = stmt.step();
         if (err == SQLITE_CONSTRAINT)
         {
           register_err_ = "failed to register, try another username";

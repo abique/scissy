@@ -7,6 +7,7 @@
 #include <mimosa/http/dispatch-handler.hh>
 #include <mimosa/http/fs-handler.hh>
 #include <mimosa/http/log-handler.hh>
+#include <mimosa/http/new-repo-handler.hh>
 
 #include "config.hh"
 #include "db.hh"
@@ -35,6 +36,7 @@ int main(int argc, char ** argv)
   dispatch->registerHandler("/clear-cache", new bluegitf::ClearCacheHandler);
   dispatch->registerHandler("/register", new bluegitf::RegisterHandler);
   dispatch->registerHandler("/login", new bluegitf::LoginHandler);
+  dispatch->registerHandler("/new-repo", new bluegitf::NewRepoHandler);
 
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);

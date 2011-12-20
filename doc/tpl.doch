@@ -14,8 +14,8 @@ Bluegitf uses mimosa's templating system.
 </tr>
 
 <tr>
- <td>id.name</td>
- <td>Users' name.</td>
+ <td>id.login</td>
+ <td>User's login.</td>
 </tr>
 
 </table>

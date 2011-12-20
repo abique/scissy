@@ -1,3 +1,4 @@
+#include <ctime>
 #include <cstring>
 
 #include <mimosa/http/redirect.hh>
@@ -73,7 +74,7 @@ namespace bluegitf
         err = stmt.bind(1, login_);
         assert(err == SQLITE_OK);
 
-        err = sqlite3_step(stmt);
+        err = stmt.step();
 
         if (err == SQLITE_DONE)
         {
@@ -131,8 +132,8 @@ namespace bluegitf
         // save the cookie in the db
         mimosa::sqlite::Stmt stmt;
         int err = stmt.prepare(Db::handle(),
-                               "insert or fail into users_auths (user_id, cookie, ts_start, ts_end)"
-                               " values (?, ?, 0, 0)");
+                               "insert or fail into users_auths (user_id, cookie, ts_start)"
+                               " values (?, ?, ?)");
         assert(err == SQLITE_OK); // must pass
 
         mimosa::stream::Sha512 sha512;
@@ -142,8 +143,10 @@ namespace bluegitf
         assert(err == SQLITE_OK);
         err = stmt.bindBlob(2, auth, sizeof (auth));
         assert(err == SQLITE_OK);
+        err = stmt.bind(3, ::time(0));
+        assert(err == SQLITE_OK);
 
-        err = sqlite3_step(stmt);
+        err = stmt.step();
         if (err != SQLITE_DONE)
         {
           MIMOSA_LOG(Debug, NULL, "error: %d", err);
@@ -157,7 +160,7 @@ namespace bluegitf
         cookie_login->setValue(login_);
         cookie_login->setDomain(request_.host());
         cookie_login->setPath("/");
-        //cookie_login->setSecure(true);
+        cookie_login->setSecure(true);
         cookie_login->setHttpOnly(true);
 
         auto cookie_auth = new mimosa::http::Cookie;
@@ -165,7 +168,7 @@ namespace bluegitf
         cookie_auth->setValue(auth16->str());
         cookie_auth->setDomain(request_.host());
         cookie_auth->setPath("/");
-        //cookie_auth->setSecure(true);
+        cookie_auth->setSecure(true);
         cookie_auth->setHttpOnly(true);
 
         response_.cookies_.push(cookie_login);
@@ -176,7 +179,10 @@ namespace bluegitf
       bool handle()
       {
         if (auth_)
+        {
+          MIMOSA_LOG(Debug, NULL, "%s", response_.toHttpHeader());
           return mimosa::http::redirect(response_, "/");
+        }
 
         auto session = Session::get(request_);
         auto tpl = loadTpl(session, "page.html");

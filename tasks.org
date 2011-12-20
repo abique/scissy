@@ -1,3 +1,9 @@
+* login
+** register form
+** DONE login form
+   CLOSED: [2011-12-18 Sun 13:13]
+** TODO logout
+** account suppresion
 * repositories
 ** TODO list repositories
 ** TODO create a repository
@@ -25,3 +31,6 @@
 ** admin a group
 ** list groups
 ** list a group's members
+* admin
+** list users
+** remove users/group/repository
