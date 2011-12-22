@@ -1,0 +1,15 @@
+<a href="/new-group">New group</a><br/>
+
+<table>
+  <tr>
+    <th>Group</th>
+    <th>Description</th>
+  </tr>
+
+  {{*groups}}
+  <tr>
+    <td><a href="/group-detail?group={{name}}">{{name|h}}</a></td>
+    <td>{{desc|h}}</td>
+  </tr>
+  {{/groups}}
+</table>

@@ -1,3 +1,5 @@
+<a href="/new-repo">New repository</a><br/>
+
 <table>
   <tr>
     <th>Project</th>
@@ -8,8 +10,8 @@
 
   {{*repos}}
   <tr>
-    <td>{{name}}</td>
-    <td>{{desc}}</td>
+    <td><a href="/summary?repo={{name}}">{{name|h}}</a></td>
+    <td>{{desc|h}}</td>
     <td>{{last_change}}</td>
     <td>
       <a href="/summary?repo={{name}}">summary</a> |

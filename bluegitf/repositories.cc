@@ -18,6 +18,31 @@ namespace bluegitf
   }
 
   bool
+  Repositories::addOwner(const std::string & name,
+                         const std::string & owner)
+  {
+    mimosa::sqlite::Stmt stmt;
+    int err = stmt.prepare(Db::handle(),
+                           "insert into repos_users (repo_id, user_id, role_id) values"
+                           " ((select repo_id from repos where name = ?),"
+                           " (select user_id from users where login = ?),"
+                           " 0)");
+    assert(err == SQLITE_OK); // must pass
+
+    err = stmt.bind(1, name);
+    assert(err == SQLITE_OK);
+
+    err = stmt.bind(2, owner);
+    assert(err == SQLITE_OK);
+
+    err = stmt.step();
+    if (err != SQLITE_DONE)
+      return false;
+
+    return true;
+  }
+
+  bool
   Repositories::getId(const std::string & name,
                       int64_t &           id)
   {
@@ -26,7 +51,7 @@ namespace bluegitf
                            "select repo_id from repos where name = ?");
     assert(err == SQLITE_OK); // must pass
 
-    err = stmt.bindBlob(1, name.c_str(), name.size());
+    err = stmt.bind(1, name);
     assert(err == SQLITE_OK);
 
     err = stmt.step();
@@ -52,6 +77,7 @@ namespace bluegitf
   bool
   Repositories::create(const std::string & name,
                        const std::string & desc,
+                       const std::string & owner,
                        std::string &       error)
   {
     // insert the data into sqlite
@@ -62,7 +88,7 @@ namespace bluegitf
                              " values (?, ?)");
       assert(err == SQLITE_OK); // must pass
 
-      err = stmt.bindBlob(1, name.c_str(), name.size());
+      err = stmt.bind(1, name);
       assert(err == SQLITE_OK);
       err = stmt.bind(2, desc);
       assert(err == SQLITE_OK);
@@ -82,23 +108,32 @@ namespace bluegitf
     }
 
     // create the repository on the filesystem
-    std::string path;
-    if (!getRepoPath(name, path))
     {
-      error = "failed to get the repo path";
+      std::string path;
+      if (!getRepoPath(name, path))
+      {
+        error = "failed to get the repo path";
+        return false;
+      }
+
+      git_repository * repo = nullptr;
+      int err = git_repository_init(&repo, path.c_str(), true);
+      if (err != GIT_SUCCESS)
+      {
+        error = mimosa::format::str("failed to initialize git repository: %s",
+                                    git_strerror(err));
+        return false;
+      }
+
+      git_repository_free(repo);
+    }
+
+    if (!addOwner(name, owner))
+    {
+      error = "failed to set owner";
       return false;
     }
 
-    git_repository * repo = nullptr;
-    int err = git_repository_init(&repo, path.c_str(), true);
-    if (err != GIT_SUCCESS)
-    {
-      error = mimosa::format::str("failed to initialize git repository: %s",
-                                  git_strerror(err));
-      return false;
-    }
-
-    git_repository_free(repo);
     return true;
   }
 }

@@ -8,8 +8,12 @@ namespace bluegitf
   class Repositories : public mimosa::container::Singleton<Repositories>
   {
   public:
+    bool addOwner(const std::string & name,
+                  const std::string & owner);
+
     bool create(const std::string & name,
                 const std::string & description,
+                const std::string & owner,
                 std::string &       error);
 
     bool getId(const std::string & name,

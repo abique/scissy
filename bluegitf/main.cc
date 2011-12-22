@@ -14,10 +14,13 @@
 
 // handlers
 #include "clear-cache-handler.hh"
+#include "groups-handler.hh"
 #include "login-handler.hh"
 #include "register-handler.hh"
 #include "root-handler.hh"
 #include "new-repo-handler.hh"
+#include "repos-handler.hh"
+#include "settings-handler.hh"
 
 uint16_t & PORT = *mimosa::options::addOption<uint16_t>("", "port", "the port to use", 19042);
 bool & UNSECURE = *mimosa::options::addSwitch("", "unsecure", "disable https, usefull for dev");
@@ -38,6 +41,9 @@ int main(int argc, char ** argv)
   dispatch->registerHandler("/register", new bluegitf::RegisterHandler);
   dispatch->registerHandler("/login", new bluegitf::LoginHandler);
   dispatch->registerHandler("/new-repo", new bluegitf::NewRepoHandler);
+  dispatch->registerHandler("/repos", new bluegitf::ReposHandler);
+  dispatch->registerHandler("/settings", new bluegitf::SettingsHandler);
+  dispatch->registerHandler("/groups", new bluegitf::GroupsHandler);
 
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);

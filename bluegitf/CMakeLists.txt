@@ -12,10 +12,13 @@ add_executable(bluegitf
 
   # handlers
   clear-cache-handler.cc
+  groups-handler.cc
   login-handler.cc
-  register-handler.cc
-  root-handler.cc
   new-repo-handler.cc
+  register-handler.cc
+  repos-handler.cc
+  root-handler.cc
+  settings-handler.cc
 )
 
 target_link_libraries(bluegitf
