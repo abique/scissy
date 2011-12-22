@@ -28,14 +28,11 @@ namespace bluegitf
       mimosa::http::ResponseWriter & response_;
 
       std::string login_;
-      std::string login_err_;
       std::string email_;
-      std::string email_err_;
       std::string password_;
-      std::string password_err_;
       std::string password2_;
 
-      std::string register_err_;
+      std::string error_;
 
       RegisterCtx(mimosa::http::RequestReader & request,
                   mimosa::http::ResponseWriter & response)
@@ -72,30 +69,56 @@ namespace bluegitf
         // XXX wait for std::regex to work
         // static const std::regex login_match("^[[:alnum:]]+$", std::regex_constants::extended);
         // static const std::regex email_match("^[-._a-zA-Z0-9]+@[-._a-zA-Z0-9]+$", std::regex_constants::extended);
+        if (login_.empty() && email_.empty() &&
+            password_.empty() && password2_.empty())
+          return;
 
         if (password_ != password2_)
-          password_err_ = "passwords doesn't match";
+        {
+          error_ = "passwords doesn't match";
+          return;
+        }
 
         if (password_.size() < 5)
-          password_err_ = "password too short (5 characters at least)";
+        {
+          error_ = "password too short (5 characters at least)";
+          return;
+        }
 
         if (password_.size() > 128)
-          password_err_ = "password too big (128 characters at most)";
+        {
+          error_ = "password too big (128 characters at most)";
+          return;
+        }
 
-        password_err_ = ::FascistCheck(password_.c_str(),
-                                       ::GetDefaultCracklibDict()) ? : "";
+        error_ = ::FascistCheck(password_.c_str(),
+                                ::GetDefaultCracklibDict()) ? : "";
+        if (!error_.empty())
+          return;
 
         // if (!std::regex_match(login_, login_match))
-        //   login_err_ = "the login must match ^[[:alnum:]]+$";
+        // {
+        //   error_ = "the login must match ^[[:alnum:]]+$";
+        //   return;
+        // }
 
         if (login_.size() > 64)
-          login_err_ = "login too big (64 characters at most)";
+        {
+          error_ = "login too big (64 characters at most)";
+          return;
+        }
 
         // if (!std::regex_match(email_, email_match))
-        //   email_err_ = "invalid email";
+        // {
+        //   error_ = "invalid email";
+        //   return;
+        // }
 
         if (email_.size() > 256)
-          login_err_ = "email too big (256 characters at most)";
+        {
+          error_ = "email too big (256 characters at most)";
+          return;
+        }
       }
 
       bool tryRegister()
@@ -119,13 +142,13 @@ namespace bluegitf
         err = stmt.step();
         if (err == SQLITE_CONSTRAINT)
         {
-          register_err_ = "failed to register, try another username";
+          error_ = "failed to register, try another username";
           return false;
         }
 
         if (err != SQLITE_DONE)
         {
-          register_err_ = "failed to register, internal error";
+          error_ = "failed to register, internal error";
           return false;
         }
 
@@ -158,9 +181,7 @@ namespace bluegitf
 
       bool handle()
       {
-        if (!login_.empty() && !email_.empty() && !password_.empty() &&
-            password_err_.empty() && login_err_.empty() && email_err_.empty() &&
-            tryRegister())
+        if (!login_.empty() && error_.empty() && tryRegister())
           return true;
 
         auto session = Session::get(request_);
@@ -179,21 +200,11 @@ namespace bluegitf
         setPageFooter(session, dict);
 
         if (!login_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(login_, "register_login"));
+          dict.append(new mimosa::tpl::Value<std::string>(login_, "login"));
         if (!email_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(email_, "register_email"));
-
-        if (!login_.empty() || !email_.empty() || !password_.empty())
-        {
-          if (!login_err_.empty())
-            dict.append(new mimosa::tpl::Value<std::string>(login_err_, "register_login_err"));
-          if (!password_err_.empty())
-            dict.append(new mimosa::tpl::Value<std::string>(password_err_, "register_password_err"));
-          if (!email_err_.empty())
-            dict.append(new mimosa::tpl::Value<std::string>(email_err_, "register_email_err"));
-          if (!register_err_.empty())
-            dict.append(new mimosa::tpl::Value<std::string>(register_err_, "register_err"));
-        }
+          dict.append(new mimosa::tpl::Value<std::string>(email_, "email"));
+        if (!error_.empty())
+          dict.append(new mimosa::tpl::Value<std::string>(error_, "error"));
 
         response_.status_ = mimosa::http::kStatusOk;
         response_.content_type_ = "text/html";
