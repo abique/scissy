@@ -50,7 +50,8 @@ create table if not exists groups_users
 create table if not exists repos
 (
   repo_id integer not null primary key autoincrement,
-  repo_name blob not null unique
+  `name` blob not null unique,
+  `desc` text not null default ''
 );
 
 create table if not exists repos_groups

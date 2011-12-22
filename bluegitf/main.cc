@@ -7,16 +7,17 @@
 #include <mimosa/http/dispatch-handler.hh>
 #include <mimosa/http/fs-handler.hh>
 #include <mimosa/http/log-handler.hh>
-#include <mimosa/http/new-repo-handler.hh>
 
 #include "config.hh"
 #include "db.hh"
+#include "repositories.hh"
 
 // handlers
 #include "clear-cache-handler.hh"
 #include "login-handler.hh"
 #include "register-handler.hh"
 #include "root-handler.hh"
+#include "new-repo-handler.hh"
 
 uint16_t & PORT = *mimosa::options::addOption<uint16_t>("", "port", "the port to use", 19042);
 bool & UNSECURE = *mimosa::options::addSwitch("", "unsecure", "disable https, usefull for dev");
@@ -57,6 +58,7 @@ int main(int argc, char ** argv)
   while (true)
     server->serveOne();
 
+  bluegitf::Repositories::release();
   bluegitf::Db::release();
   bluegitf::Config::release();
   mimosa::deinit();

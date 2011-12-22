@@ -1,0 +1,8 @@
+{{*error}}<span class="error-msg">{{.}}</span>{{/}}
+<form method="post" enctype="application/x-www-form-urlencoded" name="new-repo-form">
+  repo: <input name="name" type="text" value="{{name}}"/><br/>
+  description: <br/>
+  <textarea name="desc">{{desc}}</textarea><br/>
+  <input type="reset" value="Reset"/>
+  <input type="submit" value="Create"/>
+</form>

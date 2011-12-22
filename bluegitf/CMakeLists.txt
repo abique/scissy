@@ -7,6 +7,7 @@ add_executable(bluegitf
   load-tpl.cc
   page-footer.cc
   page-header.cc
+  repositories.cc
   session.cc
 
   # handlers
@@ -14,6 +15,7 @@ add_executable(bluegitf
   login-handler.cc
   register-handler.cc
   root-handler.cc
+  new-repo-handler.cc
 )
 
 target_link_libraries(bluegitf
@@ -25,6 +27,7 @@ target_link_libraries(bluegitf
   protobuf
   sqlite3
   crack
+  git2
   pthread
   rt
 )

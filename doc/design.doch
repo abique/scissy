@@ -51,10 +51,10 @@
 
 - ~/db/bluegitf.sqlite   stores the database
 - ~/.ssh/authorized_keys stores the ssh authorized_keys
-- ~/repos/${name}        stores the bare git repository
+- ~/repos/${repo_id}/    stores the bare git repository
 - ~/conf                 stores the config files
-- ~/conf/key.pem         the web server key
-- ~/conf/cert.pem        the web server certificate
+- ~/conf/key.pem         the web server key (certtool --generate-privkey --outfile key.pem)
+- ~/conf/cert.pem        the web server certificate (certtool -s --load-privkey --outfile cert.pem)
 
 @section database_model Database model
 

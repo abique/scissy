@@ -24,7 +24,7 @@ namespace bluegitf
     tpl_dir_.append("/www/tpl");
     key_pem_.append("/conf/key.pem");
     cert_pem_.append("/conf/cert.pem");
-    repo_dir_.append("/repo");
+    repo_dir_.append("/repos");
     db_dir_.append("/db");
     db_path_.append("/db/db.sqlite");
     ssh_dir_.append("/.ssh");

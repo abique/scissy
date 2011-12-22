@@ -1,15 +1,16 @@
 * login
-** register form
+** DONE register form
+   CLOSED: [2011-12-22 Thu 11:56]
 ** DONE login form
    CLOSED: [2011-12-18 Sun 13:13]
 ** TODO logout
-** account suppresion
+** TODO account suppresion
 * repositories
 ** TODO list repositories
-** TODO create a repository
+** create a repository
 *** TODO creation form
-*** check the form (names, db, fs)
-*** create the repository (git init --bare with libgit2)
+*** TODO check the form (names, db, fs)
+*** TODO create the repository (git init --bare with libgit2)
 ** admin a repository
 *** list current ACLs
 *** add/update/remove ACL

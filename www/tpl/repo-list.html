@@ -1,0 +1,20 @@
+<table>
+  <tr>
+    <th>Project</th>
+    <th>Description</th>
+    <th><!-- Shortcuts --></th>
+  </tr>
+
+  {{*repos}}
+  <tr>
+    <td>{{name}}</td>
+    <td>{{desc}}</td>
+    <td>
+      <a href="/summary?repo={{name}}">summary</a> |
+      <a href="/shortlog?repo={{name}}">shortlog</a> |
+      <a href="/log?repo={{name}}">log</a> |
+      <a href="/tree?repo={{name}}">tree</a> |
+      <a href="bluegitf@localhost:{{name}}">git</a></td>
+  </tr>
+  {{/repos}}
+</table>
