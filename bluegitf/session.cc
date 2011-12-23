@@ -39,12 +39,12 @@ namespace bluegitf
     std::string auth;
 
     auto it = request.cookies().find("login");
-    if (it == request.cookies().end())
+    if (it == request.cookies().end() || it->second.empty())
       return nullptr;
     login = it->second;
 
     it = request.cookies().find("auth");
-    if (it == request.cookies().end())
+    if (it == request.cookies().end() || it->second.empty())
       return nullptr;
     auth = it->second;
 
