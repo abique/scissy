@@ -16,6 +16,7 @@
 #include "clear-cache-handler.hh"
 #include "groups-handler.hh"
 #include "login-handler.hh"
+#include "logout-handler.hh"
 #include "register-handler.hh"
 #include "root-handler.hh"
 #include "new-repo-handler.hh"
@@ -40,6 +41,7 @@ int main(int argc, char ** argv)
   dispatch->registerHandler("/clear-cache", new bluegitf::ClearCacheHandler);
   dispatch->registerHandler("/register", new bluegitf::RegisterHandler);
   dispatch->registerHandler("/login", new bluegitf::LoginHandler);
+  dispatch->registerHandler("/logout", new bluegitf::LogoutHandler);
   dispatch->registerHandler("/new-repo", new bluegitf::NewRepoHandler);
   dispatch->registerHandler("/repos", new bluegitf::ReposHandler);
   dispatch->registerHandler("/settings", new bluegitf::SettingsHandler);
