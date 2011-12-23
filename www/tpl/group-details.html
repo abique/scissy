@@ -1,0 +1,27 @@
+{{*error}}<span class="error-msg">{{.}}</span>{{/}}
+<form method="post" enctype="application/x-www-form-urlencoded" name="register-form">
+  login: <input name="login" type="text" value="{{login}}"/>
+  role: 
+  <select name="role" type="text"/>
+  <option>Administrator</option>
+  <option>Contributor</option>
+  <option>Observer</option>
+  <option>Remove</option>
+  </select>
+  <input type="submit" value="Add/Update"/>
+</form>
+
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Role</th>
+  </tr>
+
+  {{*users}}
+  <tr>
+    <td>{{login|h}}</a></td>
+    <td>{{role}}</td>
+  </tr>
+  {{/users}}
+</table>

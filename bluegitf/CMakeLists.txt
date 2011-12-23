@@ -4,10 +4,12 @@ add_executable(bluegitf
   # web logic and common stuff
   config.cc
   db.cc
+  groups.cc
   load-tpl.cc
   page-footer.cc
   page-header.cc
   repositories.cc
+  role.cc
   session.cc
 
   # handlers
@@ -15,6 +17,7 @@ add_executable(bluegitf
   groups-handler.cc
   login-handler.cc
   logout-handler.cc
+  new-group-handler.cc
   new-repo-handler.cc
   register-handler.cc
   repos-handler.cc

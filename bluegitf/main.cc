@@ -20,6 +20,7 @@
 #include "register-handler.hh"
 #include "root-handler.hh"
 #include "new-repo-handler.hh"
+#include "new-group-handler.hh"
 #include "repos-handler.hh"
 #include "settings-handler.hh"
 
@@ -43,6 +44,7 @@ int main(int argc, char ** argv)
   dispatch->registerHandler("/login", new bluegitf::LoginHandler);
   dispatch->registerHandler("/logout", new bluegitf::LogoutHandler);
   dispatch->registerHandler("/new-repo", new bluegitf::NewRepoHandler);
+  dispatch->registerHandler("/new-group", new bluegitf::NewGroupHandler);
   dispatch->registerHandler("/repos", new bluegitf::ReposHandler);
   dispatch->registerHandler("/settings", new bluegitf::SettingsHandler);
   dispatch->registerHandler("/groups", new bluegitf::GroupsHandler);

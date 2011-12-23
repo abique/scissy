@@ -130,6 +130,7 @@ namespace bluegitf
 
     if (!addOwner(name, owner))
     {
+      // XXX remove the repository
       error = "failed to set owner";
       return false;
     }
