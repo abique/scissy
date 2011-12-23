@@ -8,7 +8,7 @@ namespace bluegitf
   class RootHandler : public mimosa::http::Handler
   {
   public:
-    virtual bool handle(mimosa::http::RequestReader & request,
+    virtual bool handle(mimosa::http::RequestReader &  request,
                         mimosa::http::ResponseWriter & response) const;
   };
 }
