@@ -14,7 +14,7 @@ create table if not exists users
   login varchar(128) not null unique,
   email varchar(256) not null unique,
   password blob not null, -- sha512(password)
-  is_admin boolean not null default false
+  role_id integer not null default 2
 );
 
 create table if not exists users_keys

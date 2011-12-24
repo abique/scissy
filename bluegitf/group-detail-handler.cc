@@ -91,7 +91,7 @@ namespace bluegitf
 
           mimosa::sqlite::Stmt stmt;
           int err = stmt.prepare(Db::handle(),
-                                 "select login, role_id"
+                                 "select login, groups_users.role_id"
                                  " from groups join groups_users using (group_id)"
                                  " join users using (user_id)"
                                  " where groups.name = ?");
@@ -100,15 +100,18 @@ namespace bluegitf
           err = stmt.bind(1, group_);
           assert(err == SQLITE_OK);
 
-          auto users = new mimosa::tpl::List("groups");
+          auto users = new mimosa::tpl::List("users");
           while (stmt.step() == SQLITE_ROW)
           {
-            auto group = new mimosa::tpl::Dict("user");
-            users->append(new mimosa::tpl::Value<std::string>(
+            if (session_->login_ == (const char *)sqlite3_column_text(stmt, 0))
+              dict.append(new mimosa::tpl::Value<bool>(true, "is-group-admin"));
+
+            auto user = new mimosa::tpl::Dict("user");
+            user->append(new mimosa::tpl::Value<std::string>(
                             (const char*)sqlite3_column_text(stmt, 0), "login"));
-            users->append(new mimosa::tpl::Value<std::string>(
+            user->append(new mimosa::tpl::Value<std::string>(
                             (const char*)sqlite3_column_text(stmt, 1), "role"));
-            users->append(group);
+            users->append(user);
           }
           dict.append(users);
         }

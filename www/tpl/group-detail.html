@@ -1,6 +1,6 @@
 {{group|h}}<br/>
 
-{{*is_group_admin}}
+{{*is-group-admin}}
 {{*error}}<span class="error-msg">{{.}}</span>{{/}}
 <form method="post" enctype="application/x-www-form-urlencoded" name="register-form">
   login: <input name="login" type="text" value="{{login}}"/>
@@ -13,7 +13,7 @@
   </select>
   <input type="submit" value="Add/Update"/>
 </form>
-{{/is_group_admin}}
+{{/is-group-admin}}
 
 <table>
   <tr>
@@ -23,7 +23,7 @@
 
   {{*users}}
   <tr>
-    <td>{{login|h}}</a></td>
+    <td>{{login|h}}</td>
     <td>{{role}}</td>
   </tr>
   {{/users}}
