@@ -15,6 +15,7 @@
 // handlers
 #include "clear-cache-handler.hh"
 #include "groups-handler.hh"
+#include "group-detail-handler.hh"
 #include "login-handler.hh"
 #include "logout-handler.hh"
 #include "register-handler.hh"
@@ -48,6 +49,7 @@ int main(int argc, char ** argv)
   dispatch->registerHandler("/repos", new bluegitf::ReposHandler);
   dispatch->registerHandler("/settings", new bluegitf::SettingsHandler);
   dispatch->registerHandler("/groups", new bluegitf::GroupsHandler);
+  dispatch->registerHandler("/group-detail", new bluegitf::GroupDetailHandler);
 
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);

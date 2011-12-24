@@ -15,6 +15,7 @@ add_executable(bluegitf
   # handlers
   clear-cache-handler.cc
   groups-handler.cc
+  group-detail-handler.cc
   login-handler.cc
   logout-handler.cc
   new-group-handler.cc

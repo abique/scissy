@@ -34,11 +34,12 @@ namespace bluegitf
     setPageHeader(session, dict);
     setPageFooter(session, dict);
 
-    auto groups = new mimosa::tpl::List("groups");
     {
       mimosa::sqlite::Stmt stmt;
       int err = stmt.prepare(Db::handle(), "select name, desc from groups");
+      assert(err == SQLITE_OK); // must pass
 
+      auto groups = new mimosa::tpl::List("groups");
       while (stmt.step() == SQLITE_ROW)
       {
         auto group = new mimosa::tpl::Dict("group");
@@ -48,8 +49,8 @@ namespace bluegitf
                        (const char*)sqlite3_column_text(stmt, 1), "desc"));
         groups->append(group);
       }
+      dict.append(groups);
     }
-    dict.append(groups);
 
     response.status_ = mimosa::http::kStatusOk;
     response.content_type_ = "text/html";
