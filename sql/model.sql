@@ -71,3 +71,9 @@ create table if not exists repos_users
   role_id integer not null references roles (role_id) on delete cascade on update cascade,
   primary key (repo_id, user_id)
 );
+
+-- Views
+
+create view if not exists groups_users_view as
+   select groups.name as name, login as user, groups_users.role_id as role_id
+      from groups join groups_users using (group_id) join users using (user_id);
