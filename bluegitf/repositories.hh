@@ -14,13 +14,13 @@ namespace bluegitf
     bool create(const std::string & name,
                 const std::string & description,
                 const std::string & owner,
-                std::string &       error);
+                std::string *       error);
 
     bool getId(const std::string & name,
-               int64_t &           id);
+               int64_t *           id);
 
     bool getRepoPath(const std::string & name,
-                     std::string &       path);
+                     std::string *       path);
 
   private:
     Repositories();

@@ -10,17 +10,24 @@ namespace bluegitf
   class Groups : public mimosa::container::Singleton<Groups>
   {
   public:
-    bool addMember(const std::string & group,
-                   const std::string & user,
-                   Role                role);
+    bool getUserRole(const std::string & group,
+                     const std::string & user,
+                     Role *              role);
+
+    bool addUser(const std::string & group,
+                 const std::string & user,
+                 Role                role);
+
+    bool removeUser(const std::string & group,
+                    const std::string & user);
 
     bool create(const std::string & group,
                 const std::string & desc,
                 const std::string & owner,
-                std::string &       error);
+                std::string *       error);
 
     bool getId(const std::string & group,
-               int64_t &           id);
+               int64_t *           id);
 
   private:
     Groups();

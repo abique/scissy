@@ -26,10 +26,11 @@ namespace bluegitf
       mimosa::http::ResponseWriter & response_;
       Session::Ptr                   session_;
 
-      std::string                    error_;
-      std::string                    group_;
-      std::string                    user_;
-      std::string                    role_;
+      std::string error_;
+      std::string group_;
+      std::string user_;        // the user to be added
+      std::string user_role_;   // the user's role
+      Role        current_role_; // the logged in user's role in the current grp
 
       RegisterCtx(mimosa::http::RequestReader &  request,
                   mimosa::http::ResponseWriter & response,
@@ -40,10 +41,13 @@ namespace bluegitf
           error_(),
           group_(),
           user_(),
-          role_()
+          user_role_(),
+          current_role_(kObserver)
       {
         parseQuery();
         parseForm();
+
+        Groups::instance().getUserRole(group_, session->login_, &current_role_);
       }
 
       void parseQuery()
@@ -65,7 +69,7 @@ namespace bluegitf
 
         it = form.find("role");
         if (it != form.end())
-          role_ = it->second;
+          user_role_ = it->second;
       }
 
       bool showForm()
@@ -91,9 +95,7 @@ namespace bluegitf
 
           mimosa::sqlite::Stmt stmt;
           int err = stmt.prepare(Db::handle(),
-                                 "select login, groups_users.role_id"
-                                 " from groups join groups_users using (group_id)"
-                                 " join users using (user_id)"
+                                 "select user, role_id from groups_users_view"
                                  " where groups.name = ?");
           assert(err == SQLITE_OK);
 
@@ -101,11 +103,12 @@ namespace bluegitf
           assert(err == SQLITE_OK);
 
           auto users = new mimosa::tpl::List("users");
+
+          if (current_role_ == kAdministrator)
+            dict.append(new mimosa::tpl::Value<bool>(true, "is-group-admin"));
+
           while (stmt.step() == SQLITE_ROW)
           {
-            if (session_->login_ == (const char *)sqlite3_column_text(stmt, 0))
-              dict.append(new mimosa::tpl::Value<bool>(true, "is-group-admin"));
-
             auto user = new mimosa::tpl::Dict("user");
             user->append(new mimosa::tpl::Value<std::string>(
                             (const char*)sqlite3_column_text(stmt, 0), "login"));
@@ -125,11 +128,31 @@ namespace bluegitf
         return true;
       }
 
+      void addUpdateUser()
+      {
+        if (current_role_ != kAdministrator ||
+            user_.empty() || user_role_.empty())
+          return;
+
+        if (user_role_ == "remove")
+        {
+          Groups::instance().removeUser(group_, user_);
+          return;
+        }
+
+        Role role = kObserver;
+        if (!parseRole(user_role_, &role))
+        {
+          error_ = "invalid role";
+          return;
+        }
+
+        Groups::instance().addUser(group_, user_, role);
+      }
+
       bool handle()
       {
-        // if (!name_.empty() &&
-        //     Groups::instance().create(name_, desc_, session_->login_, error_))
-        //   return mimosa::http::redirect(response_, "/");
+        addUpdateUser();
         return showForm();
       }
     };

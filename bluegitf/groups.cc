@@ -18,9 +18,9 @@ namespace bluegitf
   }
 
   bool
-  Groups::addMember(const std::string & group,
-                    const std::string & user,
-                    Role                role)
+  Groups::addUser(const std::string & group,
+                  const std::string & user,
+                  Role                role)
   {
     mimosa::sqlite::Stmt stmt;
     int err = stmt.prepare(Db::handle(),
@@ -48,7 +48,7 @@ namespace bluegitf
 
   bool
   Groups::getId(const std::string & group,
-                int64_t &           id)
+                int64_t *           id)
   {
     mimosa::sqlite::Stmt stmt;
     int err = stmt.prepare(Db::handle(),
@@ -62,7 +62,7 @@ namespace bluegitf
     if (err != SQLITE_ROW)
       return false;
 
-    id = sqlite3_column_int64(stmt, 0);
+    *id = sqlite3_column_int64(stmt, 0);
     return true;
   }
 
@@ -70,7 +70,7 @@ namespace bluegitf
   Groups::create(const std::string & group,
                  const std::string & desc,
                  const std::string & owner,
-                 std::string &       error)
+                 std::string *       error)
   {
     // insert the data into sqlite
     {
@@ -88,20 +88,20 @@ namespace bluegitf
       err = stmt.step();
       if (err == SQLITE_CONSTRAINT)
       {
-        error = "name already used";
+        *error = "name already used";
         return false;
       }
 
       if (err != SQLITE_DONE)
       {
-        error = "failed to register, internal error";
+        *error = "failed to register, internal error";
         return false;
       }
     }
 
-    if (!addMember(group, owner, kAdministrator))
+    if (!addUser(group, owner, kAdministrator))
     {
-      error = "failed to set owner";
+      *error = "failed to set owner";
       // XXX remove the group
       return false;
     }

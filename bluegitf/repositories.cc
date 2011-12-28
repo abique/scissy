@@ -44,7 +44,7 @@ namespace bluegitf
 
   bool
   Repositories::getId(const std::string & name,
-                      int64_t &           id)
+                      int64_t *           id)
   {
     mimosa::sqlite::Stmt stmt;
     int err = stmt.prepare(Db::handle(),
@@ -58,19 +58,19 @@ namespace bluegitf
     if (err != SQLITE_ROW)
       return false;
 
-    id = sqlite3_column_int64(stmt, 0);
+    *id = sqlite3_column_int64(stmt, 0);
     return true;
   }
 
   bool
   Repositories::getRepoPath(const std::string & name,
-                            std::string &       path)
+                            std::string *       path)
   {
     int64_t repo_id = 0;
-    if (!getId(name, repo_id))
+    if (!getId(name, &repo_id))
       return false;
 
-    path = mimosa::format::str("%s/%x", Config::instance().repoDir(), repo_id);
+    *path = mimosa::format::str("%s/%x", Config::instance().repoDir(), repo_id);
     return true;
   }
 
@@ -78,7 +78,7 @@ namespace bluegitf
   Repositories::create(const std::string & name,
                        const std::string & desc,
                        const std::string & owner,
-                       std::string &       error)
+                       std::string *       error)
   {
     // insert the data into sqlite
     {
@@ -96,13 +96,13 @@ namespace bluegitf
       err = stmt.step();
       if (err == SQLITE_CONSTRAINT)
       {
-        error = "name already used";
+        *error = "name already used";
         return false;
       }
 
       if (err != SQLITE_DONE)
       {
-        error = "failed to register, internal error";
+        *error = "failed to register, internal error";
         return false;
       }
     }
@@ -110,9 +110,9 @@ namespace bluegitf
     // create the repository on the filesystem
     {
       std::string path;
-      if (!getRepoPath(name, path))
+      if (!getRepoPath(name, &path))
       {
-        error = "failed to get the repo path";
+        *error = "failed to get the repo path";
         return false;
       }
 
@@ -120,8 +120,8 @@ namespace bluegitf
       int err = git_repository_init(&repo, path.c_str(), true);
       if (err != GIT_SUCCESS)
       {
-        error = mimosa::format::str("failed to initialize git repository: %s",
-                                    git_strerror(err));
+        *error = mimosa::format::str("failed to initialize git repository: %s",
+                                     git_strerror(err));
         return false;
       }
 
@@ -131,7 +131,7 @@ namespace bluegitf
     if (!addOwner(name, owner))
     {
       // XXX remove the repository
-      error = "failed to set owner";
+      *error = "failed to set owner";
       return false;
     }
 
