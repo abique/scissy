@@ -47,6 +47,55 @@ namespace bluegitf
   }
 
   bool
+  Groups::removeUser(const std::string & group,
+                     const std::string & user)
+  {
+    mimosa::sqlite::Stmt stmt;
+    int err = stmt.prepare(Db::handle(),
+                           "delete from groups_users"
+                           " where group_id = (select group_id from groups where name = ?)"
+                           " and user_id = (select user_id from users where login = ?)");
+    assert(err == SQLITE_OK); // must pass
+
+    err = stmt.bind(1, group);
+    assert(err == SQLITE_OK);
+
+    err = stmt.bind(2, user);
+    assert(err == SQLITE_OK);
+
+    err = stmt.step();
+    if (err != SQLITE_DONE)
+      return false;
+
+    return true;
+  }
+
+  bool
+  Groups::getUserRole(const std::string & group,
+                      const std::string & user,
+                      Role *              role)
+  {
+    mimosa::sqlite::Stmt stmt;
+    int err = stmt.prepare(Db::handle(),
+                           "select role_id from groups_users_view"
+                           " where group = ? and user = ?");
+    assert(err == SQLITE_OK); // must pass
+
+    err = stmt.bind(1, group);
+    assert(err == SQLITE_OK);
+
+    err = stmt.bind(2, user);
+    assert(err == SQLITE_OK);
+
+    err = stmt.step();
+    if (err != SQLITE_ROW)
+      return false;
+
+    *role = static_cast<Role> (sqlite3_column_int64(stmt, 0));
+    return true;
+  }
+
+  bool
   Groups::getId(const std::string & group,
                 int64_t *           id)
   {

@@ -83,7 +83,7 @@ namespace bluegitf
       bool handle()
       {
         if (!name_.empty() &&
-            Groups::instance().create(name_, desc_, session_->login_, error_))
+            Groups::instance().create(name_, desc_, session_->login_, &error_))
           return mimosa::http::redirect(response_, "/");
         return showForm();
       }
