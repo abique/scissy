@@ -12,9 +12,7 @@ namespace bluegitf
     if (!tpl)
       return false;
 
-    auto inc = new mimosa::tpl::Include(tpl, "footer");
-    dict.append(inc);
-
+    dict.append("footer", tpl);
     return true;
   }
 }

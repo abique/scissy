@@ -83,7 +83,7 @@ namespace bluegitf
         auto tpl_body = loadTpl(session_, "group-detail.html");
         if (!tpl_body)
           return false;
-        dict.append(new mimosa::tpl::Include(tpl_body, "body"));
+        dict.append("body", tpl_body);
         if (!group_.empty())
           dict.append("group", group_);
         if (!error_.empty())

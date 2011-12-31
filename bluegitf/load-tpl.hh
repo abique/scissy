@@ -7,8 +7,8 @@
 
 namespace bluegitf
 {
-  mimosa::tpl::Template::Ptr loadTpl(Session::Ptr        session,
-                                     const std::string & path);
+  mimosa::tpl::Template::ConstPtr loadTpl(Session::Ptr        session,
+                                          const std::string & path);
 }
 
 #endif /* !BLUEGITF_LOAD_TPL_HH */

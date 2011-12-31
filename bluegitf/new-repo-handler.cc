@@ -63,7 +63,7 @@ namespace bluegitf
         auto tpl_body = loadTpl(session_, "new-repo.html");
         if (!tpl_body)
           return false;
-        dict.append(new mimosa::tpl::Include(tpl_body, "body"));
+        dict.append("body", tpl_body);
         if (!name_.empty())
           dict.append("name", name_);
         if (!desc_.empty())

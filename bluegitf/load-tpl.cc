@@ -6,8 +6,8 @@
 
 namespace bluegitf
 {
-  mimosa::tpl::Template::Ptr loadTpl(Session::Ptr        session,
-                                     const std::string & path)
+  mimosa::tpl::Template::ConstPtr loadTpl(Session::Ptr        session,
+                                          const std::string & path)
   {
     static mimosa::tpl::Cache cache;
 

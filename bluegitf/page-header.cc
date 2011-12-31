@@ -13,8 +13,7 @@ namespace bluegitf
     if (!tpl)
       return false;
 
-    auto inc = new mimosa::tpl::Include(tpl, "header");
-    dict.append(inc);
+    dict.append("header", tpl);
 
     if (session)
     {

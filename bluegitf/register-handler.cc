@@ -167,7 +167,7 @@ namespace bluegitf
         auto tpl_body = loadTpl(session, "registration-succeed.html");
         if (!tpl_body)
           return false;
-        dict.append(new mimosa::tpl::Include(tpl_body, "body"));
+        dict.append("body", tpl_body);
 
         setPageHeader(session, dict);
         setPageFooter(session, dict);
@@ -194,7 +194,7 @@ namespace bluegitf
         auto tpl_body = loadTpl(session, "register.html");
         if (!tpl_body)
           return false;
-        dict.append(new mimosa::tpl::Include(tpl_body, "body"));
+        dict.append("body", tpl_body);
 
         setPageHeader(session, dict);
         setPageFooter(session, dict);
