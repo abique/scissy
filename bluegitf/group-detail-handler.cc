@@ -85,9 +85,9 @@ namespace bluegitf
           return false;
         dict.append(new mimosa::tpl::Include(tpl_body, "body"));
         if (!group_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(group_, "group"));
+          dict.append("group", group_);
         if (!error_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(error_, "error"));
+          dict.append("error", error_);
 
         // load group users
         {
@@ -96,7 +96,7 @@ namespace bluegitf
           mimosa::sqlite::Stmt stmt;
           int err = stmt.prepare(Db::handle(),
                                  "select user, role_id from groups_users_view"
-                                 " where groups.name = ?");
+                                 " where name = ?");
           assert(err == SQLITE_OK);
 
           err = stmt.bind(1, group_);
@@ -105,18 +105,19 @@ namespace bluegitf
           auto users = new mimosa::tpl::List("users");
 
           if (current_role_ == kAdministrator)
-            dict.append(new mimosa::tpl::Value<bool>(true, "is-group-admin"));
+            dict.append("is-group-admin", true);
 
           while (stmt.step() == SQLITE_ROW)
           {
             auto user = new mimosa::tpl::Dict("user");
-            user->append(new mimosa::tpl::Value<std::string>(
-                            (const char*)sqlite3_column_text(stmt, 0), "login"));
-            user->append(new mimosa::tpl::Value<std::string>(
-                            (const char*)sqlite3_column_text(stmt, 1), "role"));
+            user->append("login", (const char*)sqlite3_column_text(stmt, 0));
+            user->append("role", (const char*)sqlite3_column_text(stmt, 1));
             users->append(user);
           }
           dict.append(users);
+
+          if (!error_.empty())
+            dict.append("error", error_);
         }
 
         setPageHeader(session_, dict);

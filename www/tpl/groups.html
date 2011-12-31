@@ -3,12 +3,14 @@
 <table>
   <tr>
     <th>Group</th>
+    {{*id}}<th>Role</th>{{/id}}
     <th>Description</th>
   </tr>
 
   {{*groups}}
   <tr>
     <td><a href="/group-detail?group={{name}}">{{name|h}}</a></td>
+    {{*id}}<td>{{role}}</td>{{/id}}
     <td>{{desc|h}}</td>
   </tr>
   {{/groups}}

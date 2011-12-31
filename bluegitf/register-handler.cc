@@ -200,11 +200,11 @@ namespace bluegitf
         setPageFooter(session, dict);
 
         if (!login_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(login_, "login"));
+          dict.append("login", login_);
         if (!email_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(email_, "email"));
+          dict.append("email", email_);
         if (!error_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(error_, "error"));
+          dict.append("error", error_);
 
         response_.status_ = mimosa::http::kStatusOk;
         response_.content_type_ = "text/html";

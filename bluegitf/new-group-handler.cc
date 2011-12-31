@@ -65,11 +65,11 @@ namespace bluegitf
           return false;
         dict.append(new mimosa::tpl::Include(tpl_body, "body"));
         if (!name_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(name_, "name"));
+          dict.append("name", name_);
         if (!desc_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(desc_, "desc"));
+          dict.append("desc", desc_);
         if (!error_.empty())
-          dict.append(new mimosa::tpl::Value<std::string>(error_, "error"));
+          dict.append("error", error_);
 
         setPageHeader(session_, dict);
         setPageFooter(session_, dict);

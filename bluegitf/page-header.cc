@@ -19,8 +19,7 @@ namespace bluegitf
     if (session)
     {
       auto id = new mimosa::tpl::Dict("id");
-      id->append(new mimosa::tpl::Value<std::string>(session->login_, "login"));
-
+      id->append("login", session->login_);
       dict.append(id);
     }
 

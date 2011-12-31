@@ -42,10 +42,8 @@ namespace bluegitf
       while (stmt.step() == SQLITE_ROW)
       {
         auto repo = new mimosa::tpl::Dict("repo");
-        repo->append(new mimosa::tpl::Value<std::string>(
-                       (const char*)sqlite3_column_text(stmt, 0), "name"));
-        repo->append(new mimosa::tpl::Value<std::string>(
-                       (const char*)sqlite3_column_text(stmt, 1), "desc"));
+        repo->append("name", (const char*)sqlite3_column_text(stmt, 0));
+        repo->append("desc", (const char*)sqlite3_column_text(stmt, 1));
         repos->append(repo);
       }
     }

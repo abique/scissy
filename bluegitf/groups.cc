@@ -78,7 +78,7 @@ namespace bluegitf
     mimosa::sqlite::Stmt stmt;
     int err = stmt.prepare(Db::handle(),
                            "select role_id from groups_users_view"
-                           " where group = ? and user = ?");
+                           " where name = ? and user = ?");
     assert(err == SQLITE_OK); // must pass
 
     err = stmt.bind(1, group);

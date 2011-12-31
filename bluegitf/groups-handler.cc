@@ -43,10 +43,8 @@ namespace bluegitf
       while (stmt.step() == SQLITE_ROW)
       {
         auto group = new mimosa::tpl::Dict("group");
-        group->append(new mimosa::tpl::Value<std::string>(
-                       (const char*)sqlite3_column_text(stmt, 0), "name"));
-        group->append(new mimosa::tpl::Value<std::string>(
-                       (const char*)sqlite3_column_text(stmt, 1), "desc"));
+        group->append("name", (const char*)sqlite3_column_text(stmt, 0));
+        group->append("desc", (const char*)sqlite3_column_text(stmt, 1));
         groups->append(group);
       }
       dict.append(groups);
