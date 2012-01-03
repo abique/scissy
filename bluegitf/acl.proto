@@ -1,0 +1,25 @@
+package bluegitf.pb;
+
+enum Right
+{
+  kNone  = 0;
+  kRead  = 1;
+  kWrite = 2;
+}
+
+message UserRepo
+{
+  required bytes user = 1;
+  required bytes repo = 2;
+}
+
+message RepoRight
+{
+  required int64 repo_id = 1;
+  required Right right   = 2;
+}
+
+service Acl
+{
+  rpc get(UserRepo) returns (RepoRight);
+}

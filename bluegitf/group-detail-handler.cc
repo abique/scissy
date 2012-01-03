@@ -63,7 +63,7 @@ namespace bluegitf
       {
         auto & form = request_.form();
 
-        auto it = form.find("user");
+        auto it = form.find("login");
         if (it != form.end())
           user_ = it->second;
 
@@ -91,8 +91,6 @@ namespace bluegitf
 
         // load group users
         {
-          MIMOSA_LOG(Debug, NULL, "%s", group_);
-
           mimosa::sqlite::Stmt stmt;
           int err = stmt.prepare(Db::handle(),
                                  "select user, role_id from groups_users_view"
@@ -111,7 +109,7 @@ namespace bluegitf
           {
             auto user = new mimosa::tpl::Dict("user");
             user->append("login", (const char*)sqlite3_column_text(stmt, 0));
-            user->append("role", (const char*)sqlite3_column_text(stmt, 1));
+            user->append("role", roleName(static_cast<Role> (sqlite3_column_int(stmt, 1))));
             users->append(user);
           }
           dict.append(users);

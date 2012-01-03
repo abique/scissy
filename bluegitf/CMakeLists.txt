@@ -1,3 +1,5 @@
+protoc_mimosa(acl)
+
 add_executable(bluegitf
   main.cc
 
@@ -24,6 +26,9 @@ add_executable(bluegitf
   repos-handler.cc
   root-handler.cc
   settings-handler.cc
+
+  # rpc
+  acl.pb.cc
 )
 
 target_link_libraries(bluegitf

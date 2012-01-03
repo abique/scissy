@@ -28,10 +28,14 @@
 **** write a tests suite for bluegitf-shell
 ** https clone/pull/push
 * groups
-** create a group
-** admin a group
-** list groups
-** list a group's members
+** DONE create a group
+   CLOSED: [2011-12-31 Sat 11:14]
+** DONE admin a group
+   CLOSED: [2011-12-31 Sat 11:14]
+** DONE list groups
+   CLOSED: [2011-12-31 Sat 11:14]
+** DONE list a group's members
+   CLOSED: [2011-12-31 Sat 11:14]
 * admin
 ** list users
 ** remove users/group/repository
