@@ -50,11 +50,11 @@ namespace bluegitf
 
     if (!check(login, auth))
     {
-      MIMOSA_LOG(Debug, NULL, "Session::get(%s, %s) failed", login, auth);
+      mimosa::log::debug("Session::get(%s, %s) failed", login, auth);
       return nullptr;
     }
 
-    MIMOSA_LOG(Debug, NULL, "Session::get(%s, %s) succeed", login, auth);
+    mimosa::log::debug("Session::get(%s, %s) succeed", login, auth);
 
     auto session = new Session;
     session->login_ = login;

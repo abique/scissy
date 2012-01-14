@@ -18,7 +18,7 @@ namespace bluegitf
     if (tpl)
       return tpl;
 
-    MIMOSA_LOG(Error, NULL, "failed to load template: %s", real_path);
+    mimosa::log::error("failed to load template: %s", real_path);
     return nullptr;
   }
 }

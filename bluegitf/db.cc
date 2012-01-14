@@ -16,8 +16,8 @@ namespace bluegitf
 
     if (err != SQLITE_OK)
     {
-      MIMOSA_LOG(Fatal, NULL, "failed to open sqlite database: %s: %s",
-                 Config::instance().dbPath(), sqlite3_errmsg(db_));
+      mimosa::log::fatal("failed to open sqlite database: %s: %s",
+                         Config::instance().dbPath(), sqlite3_errmsg(db_));
       sqlite3_close(db_);
       db_ = nullptr;
     }

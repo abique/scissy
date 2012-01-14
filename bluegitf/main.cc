@@ -62,8 +62,8 @@ int main(int argc, char ** argv)
 
   if (!server->listenInet4(PORT))
   {
-    MIMOSA_LOG(Fatal, NULL, "failed to listen on the port %d: %s",
-               PORT, ::strerror(errno));
+    mimosa::log::fatal("failed to listen on the port %d: %s",
+                       PORT, ::strerror(errno));
     return 1;
   }
 

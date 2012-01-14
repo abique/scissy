@@ -97,9 +97,9 @@ namespace bluegitf
         // chech if hashes equals
         if (blob_size != sha512.digestLen())
         {
-          MIMOSA_LOG(Critical, NULL, "invalid password hash for user %s"
-                     " (size in db: %d, expected size: %d)", login_, blob_size,
-                     sha512.digestLen());
+          mimosa::log::critical("invalid password hash for user %s"
+                                " (size in db: %d, expected size: %d)", login_, blob_size,
+                                sha512.digestLen());
           err_ = "internal error, please contact your administrator";
           return false;
         }
@@ -149,7 +149,7 @@ namespace bluegitf
         err = stmt.step();
         if (err != SQLITE_DONE)
         {
-          MIMOSA_LOG(Debug, NULL, "error: %d", err);
+          mimosa::log::debug("error: %d", err);
           err_ = "got some troubles";
           return false;
         }
@@ -180,7 +180,7 @@ namespace bluegitf
       {
         if (auth_)
         {
-          MIMOSA_LOG(Debug, NULL, "%s", response_.toHttpHeader());
+          mimosa::log::debug("%s", response_.toHttpHeader());
           return mimosa::http::redirect(response_, "/");
         }
 
