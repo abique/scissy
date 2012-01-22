@@ -9,14 +9,14 @@ enum Right
 
 message UserRepo
 {
-  required bytes user = 1;
-  required bytes repo = 2;
+   required int64 user_id = 1;
+   required bytes repo    = 2;
 }
 
 message RepoRight
 {
-  required int64 repo_id = 1;
-  required Right right   = 2;
+  required bytes path  = 1;
+  required Right right = 2;
 }
 
 service Acl

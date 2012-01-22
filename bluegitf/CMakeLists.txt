@@ -1,6 +1,22 @@
 protoc_mimosa(acl)
 
-add_executable(bluegitf
+add_library(bluegitf-pb
+  acl.pb.cc
+  )
+
+add_executable(bluegitf-shell
+  shell.cc)
+
+target_link_libraries(bluegitf-shell
+  bluegitf-pb
+  mimosa-rpc
+  mimosa
+  protobuf
+  gnutls
+  pthread
+  rt)
+
+add_executable(bluegitfd
   main.cc
 
   # web logic and common stuff
@@ -28,10 +44,9 @@ add_executable(bluegitf
   settings-handler.cc
 
   # rpc
-  acl.pb.cc
 )
 
-target_link_libraries(bluegitf
+target_link_libraries(bluegitfd
   mimosa-tpl
   mimosa-http
   mimosa-sqlite
