@@ -75,5 +75,9 @@ create table if not exists repos_users
 -- Views
 
 create view if not exists groups_users_view as
-   select groups.name as name, login as user, groups_users.role_id as role_id
+   select group_id, user_id, groups.name as name, login as user, groups_users.role_id as role_id
       from groups join groups_users using (group_id) join users using (user_id);
+
+create view if not exists repos_users_view as
+   select repos.`name` as repo_name, repo_id, users.login as `user`, user_id, role_id
+      from repos join repos_users using (repo_id) join users using (user_id);
