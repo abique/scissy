@@ -94,7 +94,10 @@ namespace bluegitf
         error_ = ::FascistCheck(password_.c_str(),
                                 ::GetDefaultCracklibDict()) ? : "";
         if (!error_.empty())
+        {
+          error_ = "password: " + error_;
           return;
+        }
 
         // if (!std::regex_match(login_, login_match))
         // {

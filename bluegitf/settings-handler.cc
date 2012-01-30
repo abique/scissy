@@ -12,7 +12,7 @@ namespace bluegitf
 {
   bool
   SettingsHandler::handle(mimosa::http::RequestReader & request,
-                      mimosa::http::ResponseWriter & response) const
+                          mimosa::http::ResponseWriter & response) const
   {
     auto session = Session::get(request);
     auto tpl = loadTpl(session, "page.html");

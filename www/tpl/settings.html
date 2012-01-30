@@ -1,2 +1,39 @@
 Account<br/>
+login: {{id.login}}<br/>
+email: {{id.email}}<br/>
+
+<hr/>
 SSH keys<br/>
+
+<table>
+  <tr>
+    <th>name</th>
+    <th>type</th>
+    <th>fingerprint</th>
+    <th>actions</th>
+  </tr>
+
+  {{*ssh_keys}}
+  <tr>
+    <td>{{name}}</td>
+    <td>{{type}}</td>
+    <td>{{fingerprint}}</td>
+    <td>
+      <form method="post" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="operation" value="remove-key"/>
+        <input type="hidden" name="id" value="{{id}}"/>
+        <input type="submit" value="remove">
+      </form>
+    </td>
+    {{*id}}<td>{{role}}</td>{{/id}}
+    <td>{{desc|h}}</td>
+  </tr>
+  {{/groups}}
+</table>
+
+<form method="post" enctype="application/x-www-form-urlencoded">
+  <input type="hidden" name="operation" value="add-key"/>
+  <textarea name="key"></textarea></br>
+  <input type="reset" value="Reset"/>
+  <input type="submit" value="Add key"/>
+</form>
