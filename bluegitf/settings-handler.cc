@@ -10,6 +10,25 @@
 
 namespace bluegitf
 {
+  namespace
+  {
+    struct RegisterCtx
+    {
+      mimosa::http::RequestReader & request_;
+      mimosa::http::ResponseWriter & response_;
+
+      RegisterCtx(mimosa::http::RequestReader & request,
+                  mimosa::http::ResponseWriter & response)
+        : request_(request),
+          response_(response)
+      {
+        parseForm();
+        checkForm();
+      }
+
+    };
+  }
+
   bool
   SettingsHandler::handle(mimosa::http::RequestReader & request,
                           mimosa::http::ResponseWriter & response) const
