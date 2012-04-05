@@ -23,6 +23,8 @@
 *** view tree at a specified branch/tag/revision
 *** download a tarball of the tree at a specified branch/tag/revision
 ** ssh access
+*** parse the public key
+    http://thialfihar.org/projects/semantic_rsa_key/
 *** generate the .ssh/authorized_keys
 *** write bluegitf-shell
 **** write a tests suite for bluegitf-shell
