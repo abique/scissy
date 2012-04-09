@@ -7,10 +7,9 @@ enable_testing()
 find_package(GnuTLS REQUIRED)
 
 add_definitions(
-  -std=c++0x
-  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -DGOOGLE_PROTOBUF_NO_RTTI
+  -std=c++0x -fsplit-stack
+  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE
   -Wall -Wextra -Werror=return-type
-  -fsplit-stack -fno-exceptions -fno-rtti
   ${GNUTLS_DEFINITIONS})
 
 set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -std=c99")
