@@ -37,7 +37,7 @@ int main(int argc, char ** argv)
 
   auto dispatch = new mimosa::http::DispatchHandler;
   dispatch->registerHandler(
-    "/css/*", new mimosa::http::FsHandler(
+    "/css/*.css", new mimosa::http::FsHandler(
       bluegitf::Config::instance().cssDir(), 1, true));
   dispatch->registerHandler(
     "/js/*", new mimosa::http::FsHandler(

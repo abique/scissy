@@ -15,8 +15,8 @@ namespace bluegitf
     inline const std::string & rootDir() const { return root_dir_; }
     inline const std::string & wwwDir() const { return www_dir_; }
     inline const std::string & cssDir() const { return css_dir_; }
-    inline const std::string & jsDir() const { return css_dir_; }
-    inline const std::string & imgDir() const { return css_dir_; }
+    inline const std::string & jsDir() const { return js_dir_; }
+    inline const std::string & imgDir() const { return img_dir_; }
     inline const std::string & tplDir() const { return tpl_dir_; }
     inline const std::string & keyPem() const { return key_pem_; }
     inline const std::string & certPem() const { return cert_pem_; }

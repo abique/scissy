@@ -1,7 +1,33 @@
-{{*error}}<span class="error-msg">{{.}}</span>{{/}}
-<form method="post" enctype="application/x-www-form-urlencoded" name="login-form">
-  login: <input name="login" type="text" value="{{register_login}}"/><br/>
-  password: <input name="password" type="password"/><br/>
-  <input type="reset" value="Reset"/>
-  <input type="submit" value="Login"/>
-</form>
+<div class="row">
+  <div class="span8">
+    {{*error}}<span class="error-msg">{{.}}</span>{{/}}
+    <form method="post" enctype="application/x-www-form-urlencoded" name="login-form"
+          class="form-horizontal">
+      <fieldset>
+
+        <legend>Login</legend>
+
+        <div class="control-group">
+          <label class="control-label" for="login">Login</label>
+          <div class="controls">
+            <input name="login" id="login" type="text" class="input-xlarge" value="{{login}}"/>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="password">Password</label>
+          <div class="controls">
+            <input name="password" id="password" type="password" class="input-xlarge"
+                   value="{{password}}"/>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <input type="reset" value="Reset" class="btn"/>
+          <input type="submit" value="Login" class="btn btn-primary"/>
+        </div>
+
+      </fieldset>
+    </form>
+  </div>
+</div>
