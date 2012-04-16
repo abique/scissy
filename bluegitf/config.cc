@@ -11,6 +11,8 @@ namespace bluegitf
     : root_dir_(ROOT),
       www_dir_(ROOT),
       css_dir_(ROOT),
+      js_dir_(ROOT),
+      img_dir_(ROOT),
       tpl_dir_(ROOT),
       key_pem_(ROOT),
       cert_pem_(ROOT),
@@ -21,6 +23,8 @@ namespace bluegitf
   {
     www_dir_.append("/www");
     css_dir_.append("/www/css");
+    js_dir_.append("/www/js");
+    img_dir_.append("/www/img");
     tpl_dir_.append("/www/tpl");
     key_pem_.append("/conf/key.pem");
     cert_pem_.append("/conf/cert.pem");

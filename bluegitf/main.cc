@@ -39,6 +39,12 @@ int main(int argc, char ** argv)
   dispatch->registerHandler(
     "/css/*", new mimosa::http::FsHandler(
       bluegitf::Config::instance().cssDir(), 1, true));
+  dispatch->registerHandler(
+    "/js/*", new mimosa::http::FsHandler(
+      bluegitf::Config::instance().jsDir(), 1, true));
+  dispatch->registerHandler(
+    "/img/*", new mimosa::http::FsHandler(
+      bluegitf::Config::instance().imgDir(), 1, true));
   dispatch->registerHandler("/", new bluegitf::RootHandler);
   dispatch->registerHandler("/clear-cache", new bluegitf::ClearCacheHandler);
   dispatch->registerHandler("/register", new bluegitf::RegisterHandler);
