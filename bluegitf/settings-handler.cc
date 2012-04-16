@@ -22,8 +22,8 @@ namespace bluegitf
         : request_(request),
           response_(response)
       {
-        parseForm();
-        checkForm();
+        // parseForm();
+        // checkForm();
       }
 
     };

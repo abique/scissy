@@ -36,15 +36,15 @@ namespace bluegitf
 
     {
       mimosa::sqlite::Stmt stmt;
-      int err = stmt.prepare(Db::handle(), "select name, desc from groups");
-      assert(err == SQLITE_OK); // must pass
+      stmt.prepare(Db::handle(), "select name, desc from groups");
 
       auto groups = new mimosa::tpl::List("groups");
-      while (stmt.step() == SQLITE_ROW)
+      mimosa::string::StringRef name, desc;
+      while (stmt.fetch(&name, &desc))
       {
         auto group = new mimosa::tpl::Dict("group");
-        group->append("name", (const char*)sqlite3_column_text(stmt, 0));
-        group->append("desc", (const char*)sqlite3_column_text(stmt, 1));
+        group->append("name", name);
+        group->append("desc", desc);
         groups->append(group);
       }
       dict.append(groups);

@@ -68,34 +68,25 @@ namespace bluegitf
       {
         // load the password from the db
         mimosa::sqlite::Stmt stmt;
-        int err = stmt.prepare(Db::handle(),
-                               "select password, user_id from users where login = ?");
-        assert(err == SQLITE_OK); // must pass
-        err = stmt.bind(1, login_);
-        assert(err == SQLITE_OK);
+        stmt.prepare(Db::handle(),
+                     "select password, user_id from users where login = ?");
+        stmt.bind(login_);
 
-        err = stmt.step();
-
-        if (err == SQLITE_DONE)
+        const void *blob      = nullptr;
+        int         blob_size = 0;
+        int64_t     user_id   = 0;
+        if (!stmt.fetch(&blob, &blob_size, &user_id))
         {
           err_ = "user not found";
           return false;
         }
-
-        if (err != SQLITE_ROW)
-          return false;
-
-        const void * blob = sqlite3_column_blob(stmt, 0);
-        size_t blob_size = sqlite3_column_bytes(stmt, 0);
-
-        user_id_ = sqlite3_column_int(stmt, 1);
 
         // compute the hash
         mimosa::stream::Sha512 sha512;
         sha512.write(password_.data(), password_.size());
 
         // chech if hashes equals
-        if (blob_size != sha512.digestLen())
+        if ((size_t)blob_size != sha512.digestLen())
         {
           mimosa::log::critical("invalid password hash for user %s"
                                 " (size in db: %d, expected size: %d)", login_, blob_size,
@@ -127,29 +118,20 @@ namespace bluegitf
         mimosa::stream::Base16Encoder::Ptr b16 = new mimosa::stream::Base16Encoder(auth16);
         b16->write(auth, sizeof (auth));
 
+        mimosa::stream::Sha512 sha512;
+        sha512.write(password_.data(), password_.size());
+
         // retrieve client's ip
 
         // save the cookie in the db
         mimosa::sqlite::Stmt stmt;
-        int err = stmt.prepare(Db::handle(),
-                               "insert or fail into users_auths (user_id, cookie, ts_start)"
-                               " values (?, ?, ?)");
-        assert(err == SQLITE_OK); // must pass
+        stmt.prepare(Db::handle(),
+                     "insert or fail into users_auths (user_id, cookie, ts_start)"
+                     " values (?, ?, ?)");
+        stmt.bind(user_id_, auth, sizeof (auth), ::time(0));
 
-        mimosa::stream::Sha512 sha512;
-        sha512.write(password_.data(), password_.size());
-
-        err = stmt.bind(1, user_id_);
-        assert(err == SQLITE_OK);
-        err = stmt.bindBlob(2, auth, sizeof (auth));
-        assert(err == SQLITE_OK);
-        err = stmt.bind(3, ::time(0));
-        assert(err == SQLITE_OK);
-
-        err = stmt.step();
-        if (err != SQLITE_DONE)
+        if (stmt.step() != SQLITE_DONE)
         {
-          mimosa::log::debug("error: %d", err);
           err_ = "got some troubles";
           return false;
         }

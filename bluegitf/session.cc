@@ -17,19 +17,11 @@ namespace bluegitf
     b16.write(auth.data(), auth.size());
 
     mimosa::sqlite::Stmt stmt;
-    int err = stmt.prepare(Db::handle(),
-                           "select 1 from users join users_auths using (user_id)"
-                           " where login = ? and cookie = ?");
-    assert(err == SQLITE_OK); // must pass
-    err = stmt.bind(1, login);
-    assert(err == SQLITE_OK);
-
-    auto data = blob->str();
-    err = stmt.bindBlob(2, data.data(), data.size());
-    assert(err == SQLITE_OK);
-
-    err = stmt.step();
-    return err == SQLITE_ROW;
+    stmt.prepare(Db::handle(),
+                 "select 1 from users join users_auths using (user_id)"
+                 " where login = ? and cookie = ?");
+    stmt.bind(login, blob->str());
+    return stmt.fetch();
   }
 
   Session::Ptr

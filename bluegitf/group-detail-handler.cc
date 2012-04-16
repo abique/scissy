@@ -92,24 +92,22 @@ namespace bluegitf
         // load group users
         {
           mimosa::sqlite::Stmt stmt;
-          int err = stmt.prepare(Db::handle(),
-                                 "select user, role_id from groups_users_view"
-                                 " where name = ?");
-          assert(err == SQLITE_OK);
-
-          err = stmt.bind(1, group_);
-          assert(err == SQLITE_OK);
+          stmt.prepare(Db::handle(),
+                       "select user, role_id from groups_users_view"
+                       " where name = ?");
+          stmt.bind(group_);
 
           auto users = new mimosa::tpl::List("users");
 
           if (current_role_ == kAdministrator)
             dict.append("is-group-admin", true);
 
-          while (stmt.step() == SQLITE_ROW)
+          mimosa::string::StringRef login, role;
+          while (stmt.fetch(&login, &role))
           {
             auto user = new mimosa::tpl::Dict("user");
-            user->append("login", (const char*)sqlite3_column_text(stmt, 0));
-            user->append("role", roleName(static_cast<Role> (sqlite3_column_int(stmt, 1))));
+            user->append("login", login);
+            user->append("role", role);
             users->append(user);
           }
           dict.append(users);

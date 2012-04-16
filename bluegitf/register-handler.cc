@@ -126,23 +126,16 @@ namespace bluegitf
 
       bool tryRegister()
       {
-        mimosa::sqlite::Stmt stmt;
-        int err = stmt.prepare(Db::handle(),
-                               "insert or fail into users (login, email, password)"
-                               " values (?, ?, ?)");
-        assert(err == SQLITE_OK); // must pass
-
         mimosa::stream::Sha512 sha512;
         sha512.write(password_.data(), password_.size());
 
-        err = stmt.bind(1, login_);
-        assert(err == SQLITE_OK);
-        err = stmt.bind(2, email_);
-        assert(err == SQLITE_OK);
-        err = stmt.bindBlob(3, sha512.digest(), sha512.digestLen());
-        assert(err == SQLITE_OK);
+        mimosa::sqlite::Stmt stmt;
+        stmt.prepare(Db::handle(),
+                     "insert or fail into users (login, email, password)"
+                     " values (?, ?, ?)");
+        stmt.bind(login_, email_, sha512.digest(), sha512.digestLen());
 
-        err = stmt.step();
+        int err = stmt.step();
         if (err == SQLITE_CONSTRAINT)
         {
           error_ = "failed to register, try another username";
