@@ -18,7 +18,7 @@ namespace bluegitf
                  const std::string & user,
                  Role                role);
 
-    bool removeUser(const std::string & group,
+    void removeUser(const std::string & group,
                     const std::string & user);
 
     bool create(const std::string & group,

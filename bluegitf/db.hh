@@ -1,8 +1,8 @@
 #ifndef BLUEGITF_DB_HH
 # define BLUEGITF_DB_HH
 
-# include <sqlite3.h>
 # include <mimosa/container/singleton.hh>
+# include <mimosa/sqlite/sqlite.hh>
 
 namespace bluegitf
 {
@@ -10,12 +10,11 @@ namespace bluegitf
   {
   public:
     Db();
-    ~Db();
 
-    static sqlite3 * handle();
+    static mimosa::sqlite::Stmt&& prepare(const char *rq);
 
   private:
-    sqlite3 * db_;
+    mimosa::sqlite::Db db_;
   };
 }
 

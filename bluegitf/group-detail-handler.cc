@@ -91,13 +91,11 @@ namespace bluegitf
 
         // load group users
         {
-          mimosa::sqlite::Stmt stmt;
-          stmt.prepare(Db::handle(),
-                       "select user, role_id from groups_users_view"
-                       " where name = ?");
-          stmt.bind(group_);
-
           auto users = new mimosa::tpl::List("users");
+          auto stmt  = Db::prepare(
+            "select user, role_id from groups_users_view"
+            " where name = ?");
+          stmt.bind(group_);
 
           if (current_role_ == kAdministrator)
             dict.append("is-group-admin", true);

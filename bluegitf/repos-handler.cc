@@ -36,8 +36,7 @@ namespace bluegitf
 
     auto repos = new mimosa::tpl::List("repos");
     {
-      mimosa::sqlite::Stmt stmt;
-      stmt.prepare(Db::handle(), "select name, desc from repos");
+      auto stmt = Db::prepare("select name, desc from repos");
 
       while (stmt.step() == SQLITE_ROW)
       {

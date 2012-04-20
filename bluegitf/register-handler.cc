@@ -129,13 +129,12 @@ namespace bluegitf
         mimosa::stream::Sha512 sha512;
         sha512.write(password_.data(), password_.size());
 
-        mimosa::sqlite::Stmt stmt;
-        stmt.prepare(Db::handle(),
-                     "insert or fail into users (login, email, password)"
-                     " values (?, ?, ?)");
-        stmt.bind(login_, email_, sha512.digest(), sha512.digestLen());
+        auto stmt = Db::prepare(
+          "insert or fail into users (login, email, password)"
+          " values (?, ?, ?)");
+        int err = stmt.bind(login_, email_, sha512.digest(), sha512.digestLen())
+          .step();
 
-        int err = stmt.step();
         if (err == SQLITE_CONSTRAINT)
         {
           error_ = "failed to register, try another username";

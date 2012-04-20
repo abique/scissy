@@ -19,6 +19,8 @@
 #include "page-header.hh"
 #include "session.hh"
 
+extern bool & UNSECURE;
+
 namespace bluegitf
 {
   namespace
@@ -66,16 +68,13 @@ namespace bluegitf
 
       bool tryAuth()
       {
-        // load the password from the db
-        mimosa::sqlite::Stmt stmt;
-        stmt.prepare(Db::handle(),
-                     "select password, user_id from users where login = ?");
-        stmt.bind(login_);
-
         const void *blob      = nullptr;
         int         blob_size = 0;
-        int64_t     user_id   = 0;
-        if (!stmt.fetch(&blob, &blob_size, &user_id))
+
+        // load the password from the db
+        auto stmt = Db::prepare(
+          "select password, user_id from users where login = ?");
+        if (!stmt.bind(login_).fetch(&blob, &blob_size, &user_id_))
         {
           err_ = "user not found";
           return false;
@@ -124,12 +123,10 @@ namespace bluegitf
         // retrieve client's ip
 
         // save the cookie in the db
-        mimosa::sqlite::Stmt stmt;
-        stmt.prepare(Db::handle(),
-                     "insert or fail into users_auths (user_id, cookie, ts_start)"
-                     " values (?, ?, ?)");
-        stmt.bind(user_id_, auth, sizeof (auth), ::time(0));
-
+        auto stmt = Db::prepare(
+          "insert or fail into users_auths (user_id, cookie, ts_start)"
+          " values (?, ?, ?)");
+        stmt.bind(user_id_, (const void*)auth, sizeof (auth), ::time(0));
         if (stmt.step() != SQLITE_DONE)
         {
           err_ = "got some troubles";
@@ -142,7 +139,8 @@ namespace bluegitf
         cookie_login->setValue(login_);
         cookie_login->setDomain(request_.host());
         cookie_login->setPath("/");
-        cookie_login->setSecure(true);
+        if (!UNSECURE)
+          cookie_login->setSecure(true);
         cookie_login->setHttpOnly(true);
 
         auto cookie_auth = new mimosa::http::Cookie;
@@ -150,7 +148,8 @@ namespace bluegitf
         cookie_auth->setValue(auth16->str());
         cookie_auth->setDomain(request_.host());
         cookie_auth->setPath("/");
-        cookie_auth->setSecure(true);
+        if (!UNSECURE)
+          cookie_auth->setSecure(true);
         cookie_auth->setHttpOnly(true);
 
         response_.cookies_.push(cookie_login);

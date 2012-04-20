@@ -21,25 +21,20 @@ namespace bluegitf
   Repositories::addOwner(const std::string & name,
                          const std::string & owner)
   {
-    mimosa::sqlite::Stmt stmt;
-    stmt.prepare(Db::handle(),
-                 "insert into repos_users (repo_id, user_id, role_id) values"
-                 " ((select repo_id from repos where name = ?),"
-                 " (select user_id from users where login = ?),"
-                 " 0)")
-      .bind(name, owner);
-
-    return stmt.step() == SQLITE_DONE;
+    auto stmt = Db::prepare(
+      "insert into repos_users (repo_id, user_id, role_id) values"
+      " ((select repo_id from repos where name = ?),"
+      " (select user_id from users where login = ?),"
+      " 0)");
+    return stmt.bind(name, owner).step() == SQLITE_DONE;
   }
 
   bool
   Repositories::getId(const std::string & name,
                       int64_t *           id)
   {
-    mimosa::sqlite::Stmt stmt;
-    stmt.prepare(Db::handle(), "select repo_id from repos where name = ?");
-    stmt.bind(name);
-    return stmt.fetch(id);
+    auto stmt = Db::prepare("select repo_id from repos where name = ?");
+    return stmt.bind(name).fetch(id);
   }
 
   bool
@@ -62,13 +57,9 @@ namespace bluegitf
   {
     // insert the data into sqlite
     {
-      mimosa::sqlite::Stmt stmt;
-      stmt.prepare(Db::handle(),
-                   "insert or fail into repos (name, desc)"
-                   " values (?, ?)");
-      stmt.bind(name, desc);
+      auto stmt = Db::prepare("insert or fail into repos (name, desc) values (?, ?)");
+      int err = stmt.bind(name, desc).step();
 
-      int err = stmt.step();
       if (err == SQLITE_CONSTRAINT)
       {
         *error = "name already used";
@@ -106,8 +97,9 @@ namespace bluegitf
 
     if (!addOwner(name, owner))
     {
-      // XXX remove the repository
       *error = "failed to set owner";
+      auto stmt = Db::prepare("delete from repos where name = ?");
+      stmt.bind(name).exec();
       return false;
     }
 

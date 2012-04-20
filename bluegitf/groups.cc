@@ -22,27 +22,23 @@ namespace bluegitf
                   const std::string & user,
                   Role                role)
   {
-    mimosa::sqlite::Stmt stmt;
-    stmt.prepare(Db::handle(),
-                 "insert into groups_users (group_id, user_id, role_id) values"
-                 " ((select group_id from groups where name = ?),"
-                 " (select user_id from users where login = ?),"
-                 " ?)").bind(group, user, role);
-
-    return stmt.step() == SQLITE_DONE;
+    auto stmt = Db::prepare(
+      "insert into groups_users (group_id, user_id, role_id) values"
+      " ((select group_id from groups where name = ?),"
+      " (select user_id from users where login = ?),"
+      " ?)");
+    return stmt.bind(group, user, role).step() == SQLITE_DONE;
   }
 
-  bool
+  void
   Groups::removeUser(const std::string & group,
                      const std::string & user)
   {
-    mimosa::sqlite::Stmt stmt;
-    stmt.prepare(Db::handle(),
-                 "delete from groups_users"
-                 " where group_id = (select group_id from groups where name = ?)"
-                 " and user_id = (select user_id from users where login = ?)");
+    auto stmt = Db::prepare(
+      "delete from groups_users"
+      " where group_id = (select group_id from groups where name = ?)"
+      " and user_id = (select user_id from users where login = ?)");
     stmt.bind(group, user).exec();
-    return true;
   }
 
   bool
@@ -50,23 +46,18 @@ namespace bluegitf
                       const std::string & user,
                       Role *              role)
   {
-    mimosa::sqlite::Stmt stmt;
-    stmt.prepare(Db::handle(),
-                 "select role_id from groups_users_view"
-                 " where name = ? and user = ?").bind(group, user);
-
-    return stmt.fetch(reinterpret_cast<int *>(&role));
+    auto stmt = Db::prepare(
+      "select role_id from groups_users_view"
+      " where name = ? and user = ?");
+    return stmt.bind(group, user).fetch(reinterpret_cast<int *>(&role));
   }
 
   bool
   Groups::getId(const std::string & group,
                 int64_t *           id)
   {
-    mimosa::sqlite::Stmt stmt;
-    stmt.prepare(Db::handle(),
-                 "select group_id from groups where name = ?")
-      .bind(group);
-    return stmt.fetch(id);
+    auto stmt = Db::prepare("select group_id from groups where name = ?");
+    return stmt.bind(group).fetch(id);
   }
 
   bool
@@ -77,13 +68,9 @@ namespace bluegitf
   {
     // insert the data into sqlite
     {
-      mimosa::sqlite::Stmt stmt;
-      stmt.prepare(Db::handle(),
-                   "insert or fail into groups (name, desc)"
-                   " values (?, ?)");
-      stmt.bind(group, desc);
+      auto stmt = Db::prepare("insert or fail into groups (name, desc) values (?, ?)");
+      int err = stmt.bind(group, desc).step();
 
-      int err = stmt.step();
       if (err == SQLITE_CONSTRAINT)
       {
         *error = "name already used";
@@ -100,7 +87,8 @@ namespace bluegitf
     if (!addUser(group, owner, kAdministrator))
     {
       *error = "failed to set owner";
-      // XXX remove the group
+      auto stmt = Db::prepare("delete from groups where name = ?");
+      stmt.bind(group).exec();
       return false;
     }
 

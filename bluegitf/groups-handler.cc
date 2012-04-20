@@ -35,8 +35,7 @@ namespace bluegitf
     setPageFooter(session, dict);
 
     {
-      mimosa::sqlite::Stmt stmt;
-      stmt.prepare(Db::handle(), "select name, desc from groups");
+      auto stmt = Db::prepare("select name, desc from groups");
 
       auto groups = new mimosa::tpl::List("groups");
       mimosa::string::StringRef name, desc;

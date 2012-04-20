@@ -15,13 +15,14 @@ namespace bluegitf
     mimosa::stream::Base16Decoder b16(blob);
 
     b16.write(auth.data(), auth.size());
+    auto str = blob->str();
 
-    mimosa::sqlite::Stmt stmt;
-    stmt.prepare(Db::handle(),
-                 "select 1 from users join users_auths using (user_id)"
-                 " where login = ? and cookie = ?");
-    stmt.bind(login, blob->str());
-    return stmt.fetch();
+    auto stmt = Db::prepare(
+      "select 1 from users join users_auths using (user_id)"
+      " where login = ? and cookie = ?");
+
+    return stmt.bind(login, (const void*)str.data(), str.size())
+      .fetch();
   }
 
   Session::Ptr
@@ -50,6 +51,7 @@ namespace bluegitf
 
     auto session = new Session;
     session->login_ = login;
+    session->auth_ = auth;
     return session;
   }
 }

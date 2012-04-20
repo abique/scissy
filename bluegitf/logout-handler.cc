@@ -1,12 +1,14 @@
 #include <mimosa/http/redirect.hh>
 #include <mimosa/tpl/template.hh>
 #include <mimosa/tpl/dict.hh>
+#include <mimosa/sqlite/sqlite.hh>
 
 #include "logout-handler.hh"
 #include "session.hh"
 #include "page-header.hh"
 #include "page-footer.hh"
 #include "load-tpl.hh"
+#include "db.hh"
 
 namespace bluegitf
 {
@@ -31,6 +33,12 @@ namespace bluegitf
     cookie_login->setSecure(true);
     cookie_login->setHttpOnly(true);
     response.cookies_.push(cookie_login);
+
+    auto session = Session::get(request);
+    if (session) {
+      auto stmt = Db::prepare("delete from users_auths where auth = ?");
+      stmt.bind(session->auth_).exec();
+    }
 
     return mimosa::http::redirect(response, "/");
   }
