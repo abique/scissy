@@ -8,6 +8,7 @@
 #include <mimosa/tpl/list.hh>
 #include <mimosa/http/redirect.hh>
 
+#include "log.hh"
 #include "db.hh"
 #include "groups.hh"
 #include "load-tpl.hh"
@@ -100,12 +101,13 @@ namespace bluegitf
           if (current_role_ == kAdministrator)
             dict.append("is-group-admin", true);
 
-          mimosa::string::StringRef login, role;
+          std::string login;
+          int role;
           while (stmt.fetch(&login, &role))
           {
             auto user = new mimosa::tpl::Dict("user");
             user->append("login", login);
-            user->append("role", role);
+            user->append("role", roleName(static_cast<Role> (role)));
             users->append(user);
           }
           dict.append(users);
