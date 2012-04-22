@@ -38,7 +38,7 @@ namespace bluegitf
       auto stmt = Db::prepare("select name, desc from groups");
 
       auto groups = new mimosa::tpl::List("groups");
-      mimosa::string::StringRef name, desc;
+      std::string name, desc;
       while (stmt.fetch(&name, &desc))
       {
         auto group = new mimosa::tpl::Dict("group");
