@@ -36,7 +36,7 @@ namespace bluegitf
 
     auto session = Session::get(request);
     if (session) {
-      auto stmt = Db::prepare("delete from users_auths where auth = ?");
+      auto stmt = Db::prepare("delete from users_auths where cookie = ?");
       stmt.bind(session->auth_).exec();
     }
 
