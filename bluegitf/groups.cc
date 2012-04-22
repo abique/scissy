@@ -49,7 +49,7 @@ namespace bluegitf
     auto stmt = Db::prepare(
       "select role_id from groups_users_view"
       " where name = ? and user = ?");
-    return stmt.bind(group, user).fetch(reinterpret_cast<int *>(&role));
+    return stmt.bind(group, user).fetch(reinterpret_cast<int *>(role));
   }
 
   bool
