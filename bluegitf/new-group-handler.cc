@@ -84,7 +84,9 @@ namespace bluegitf
       {
         if (!name_.empty() &&
             Groups::instance().create(name_, desc_, session_->login_, &error_))
-          return mimosa::http::redirect(response_, "/");
+          return mimosa::http::redirect(
+            response_,
+            mimosa::format::str("/group-detail?group=%s", name_));
         return showForm();
       }
     };
