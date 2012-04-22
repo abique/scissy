@@ -11,7 +11,7 @@ namespace bluegitf
   public:
     Db();
 
-    static mimosa::sqlite::Stmt&& prepare(const char *rq);
+    static mimosa::sqlite::Stmt prepare(const char *rq);
 
   private:
     mimosa::sqlite::Db db_;

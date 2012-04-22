@@ -132,7 +132,7 @@ namespace bluegitf
         auto stmt = Db::prepare(
           "insert or fail into users (login, email, password)"
           " values (?, ?, ?)");
-        int err = stmt.bind(login_, email_, sha512.digest(), sha512.digestLen())
+        int err = stmt.bind(login_, email_, (void*)sha512.digest(), sha512.digestLen())
           .step();
 
         if (err == SQLITE_CONSTRAINT)

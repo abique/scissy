@@ -19,7 +19,7 @@ namespace bluegitf
                          Config::instance().dbPath(), sqlite3_errmsg(db_));
   }
 
-  mimosa::sqlite::Stmt&&
+  mimosa::sqlite::Stmt
   Db::prepare(const char *rq)
   {
     return Db::instance().db_.prepare(rq);
