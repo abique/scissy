@@ -1,8 +1,29 @@
-{{*error}}<span class="error-msg">{{.}}</span>{{/}}
-<form method="post" enctype="application/x-www-form-urlencoded" name="new-repo-form">
-  repo: <input name="name" type="text" value="{{name}}"/><br/>
-  description: <input name="desc" type="text" value="{{desc}}"/><br/>
-  public: <input name="is-public" type="checkbox" value="{{is-public}}"/><br/>
-  <input type="reset" value="Reset"/>
-  <input type="submit" value="Create"/>
-</form>
+<div class="row">
+  <div class="span8">
+    <form method="post" enctype="application/x-www-form-urlencoded" name="new-repo-form"
+          class="form-horizontal">
+      <fieldset>
+        <legend>New repository</legend>
+
+        <div class="control-group">
+          <label class="control-label" for="name">Name</label>
+          <div class="controls">
+            <input name="name" id="name" type="text" class="input-xlarge" value="{{name}}"/>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="desc">Desc</label>
+          <div class="controls">
+            <input name="desc" id="desc" type="text" class="input-xlarge" value="{{desc}}"/>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <input type="reset" value="Reset" class="btn"/>
+          <input type="submit" value="Create" class="btn btn-primary"/>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
