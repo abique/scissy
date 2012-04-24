@@ -10,6 +10,9 @@
     <div class="tab-content">
       <div class="tab-pane active" id="account">
         <form class="form-horizontal" method="post" enctype="application/x-www-form-urlencoded">
+
+          <input type="hidden" name="operation" value="account" />
+
           <fieldset>
             <div class="control-group">
               <label class="control-label" for="login">Login</label>
@@ -24,6 +27,27 @@
               <label class="control-label" for="email">Email</label>
               <div class="controls">
                 <input name="email" id="email" type="text" class="input-xlarge" value="{{id.email}}"/>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="old-password">Old Password</label>
+              <div class="controls">
+                <input name="old-password" id="old-password" type="password" class="input-xlarge"/>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="new-password">New password</label>
+              <div class="controls">
+                <input name="new-password" id="new-password" type="password" class="input-xlarge"/>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="new-password2">Confirm new password</label>
+              <div class="controls">
+                <input name="new-password2" id="new-password2" type="password" class="input-xlarge"/>
               </div>
             </div>
 
@@ -69,6 +93,7 @@
         <form method="post" enctype="application/x-www-form-urlencoded"
               class="form-horizontal">
           <input type="hidden" name="operation" value="add-key"/>
+
           <div class="control-group">
             <textarea class="textarea span8" name="key"></textarea>
           </div>
