@@ -1,11 +1,11 @@
 #ifndef BLUEGITF_REPOSITORIES_HH
 # define BLUEGITF_REPOSITORIES_HH
 
-# include <mimosa/container/singleton.hh>
+# include <mimosa/singleton.hh>
 
 namespace bluegitf
 {
-  class Repositories : public mimosa::container::Singleton<Repositories>
+  class Repositories : public mimosa::Singleton<Repositories>
   {
   public:
     bool addOwner(const std::string & name,
@@ -26,7 +26,7 @@ namespace bluegitf
     Repositories();
     ~Repositories();
 
-    friend class mimosa::container::Singleton<Repositories>;
+    friend class mimosa::Singleton<Repositories>;
   };
 }
 

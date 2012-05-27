@@ -1,13 +1,13 @@
 #ifndef BLUEGITF_GROUPS_HH
 # define BLUEGITF_GROUPS_HH
 
-# include <mimosa/container/singleton.hh>
+# include <mimosa/singleton.hh>
 
 # include "role.hh"
 
 namespace bluegitf
 {
-  class Groups : public mimosa::container::Singleton<Groups>
+  class Groups : public mimosa::Singleton<Groups>
   {
   public:
     bool getUserRole(const std::string & group,
@@ -33,7 +33,7 @@ namespace bluegitf
     Groups();
     ~Groups();
 
-    friend class mimosa::container::Singleton<Groups>;
+    friend class mimosa::Singleton<Groups>;
   };
 }
 
