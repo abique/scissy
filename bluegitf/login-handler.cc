@@ -185,8 +185,8 @@ namespace bluegitf
 
         response_.status_ = mimosa::http::kStatusOk;
         response_.content_type_ = "text/html";
-        response_.sendHeader(response_.writeTimeout());
-        tpl->execute(&response_, dict, response_.writeTimeout());
+        response_.sendHeader();
+        tpl->execute(&response_, dict);
         return true;
       }
     };

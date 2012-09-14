@@ -17,4 +17,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 include(cmake/ProtocMimosa.cmake)
 
+add_subdirectory(mimosa EXCLUDE_FROM_ALL)
+include_directories(mimosa)
 add_subdirectory(bluegitf)

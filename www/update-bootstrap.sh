@@ -10,5 +10,5 @@ cd ../.. &&
 cp bootstrap/img/* img/ &&
 cat bootstrap/js/{bootstrap-transition,bootstrap-alert,bootstrap-button,bootstrap-carousel,bootstrap-collapse,bootstrap-dropdown,bootstrap-modal,bootstrap-tooltip,bootstrap-popover,bootstrap-scrollspy,bootstrap-tab,bootstrap-typeahead}.js >js/bootstrap.js &&
 $UGLIFYJS js/bootstrap.js >js/bootstrap.min.js &&
-wget http://code.jquery.com/jquery-1.7.2.min.js -O js/jquery.min.js &&
-wget http://code.jquery.com/jquery-1.7.2.js -O js/jquery.js
+wget http://code.jquery.com/jquery-1.8.1.min.js -O js/jquery.min.js &&
+wget http://code.jquery.com/jquery-1.8.1.js -O js/jquery.js
