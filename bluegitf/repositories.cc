@@ -85,10 +85,9 @@ namespace bluegitf
 
       git_repository * repo = nullptr;
       int err = git_repository_init(&repo, path.c_str(), true);
-      if (err != GIT_SUCCESS)
+      if (err != GIT_OK)
       {
-        *error = mimosa::format::str("failed to initialize git repository: %s",
-                                     git_strerror(err));
+        *error = "failed to initialize git repository";
         return false;
       }
 

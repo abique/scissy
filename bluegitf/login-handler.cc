@@ -114,7 +114,7 @@ namespace bluegitf
         }
 
         mimosa::stream::StringStream::Ptr auth16 = new mimosa::stream::StringStream;
-        mimosa::stream::Base16Encoder::Ptr b16 = new mimosa::stream::Base16Encoder(auth16);
+        mimosa::stream::Base16Encoder::Ptr b16 = new mimosa::stream::Base16Encoder(auth16.get());
         b16->write(auth, sizeof (auth));
 
         mimosa::stream::Sha512 sha512;

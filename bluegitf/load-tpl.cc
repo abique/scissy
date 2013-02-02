@@ -16,7 +16,7 @@ namespace bluegitf
     // auto tpl = cache.get(real_path)->get();
     auto tpl = mimosa::tpl::Template::parseFile(real_path);
     if (tpl)
-      return tpl;
+      return tpl.get();
 
     mimosa::log::error("failed to load template: %s", real_path);
     return nullptr;

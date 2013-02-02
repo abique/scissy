@@ -1,4 +1,4 @@
-protoc_mimosa(acl)
+mimosa_protoc(acl)
 
 add_library(bluegitf-common
   acl.pb.cc
