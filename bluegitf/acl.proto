@@ -1,5 +1,9 @@
 package bluegitf.pb;
 
+message Void
+{
+}
+
 enum Right
 {
   kNone  = 0;
@@ -7,19 +11,23 @@ enum Right
   kWrite = 2;
 }
 
-message UserRepo
+message AuthInfo
 {
-   required int64 user_id = 1;
-   required bytes repo    = 2;
+  required bytes login    = 1;
+  required bytes password = 2;
 }
 
-message RepoRight
+message RepoInfo
 {
-  required bytes path  = 1;
-  required Right right = 2;
+  required bytes name = 1;
+}
+
+message RepoList
+{
+  repeated RepoInfo repos = 1;
 }
 
 service Acl
 {
-  rpc get(UserRepo) returns (RepoRight);
+  rpc listRepos(Void) returns (RepoList);
 }
