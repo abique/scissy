@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="span8">
+    <form novalidate class="form-horizontal">
+      <fieldset>
+
+        <legend>Register yourself!</legend>
+
+        <div class="alert alert-error" ng-show="user.errmsg">
+          {{user.errmsg}}
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="login">Login</label>
+          <div class="controls">
+            <input id="login" type="text" class="input-xlarge" ng-model="user.login" required/>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="email">Email</label>
+          <div class="controls">
+            <input id="email" type="email" class="input-xlarge" ng-model="user.email" required/>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="password">Password</label>
+          <div class="controls">
+            <input id="password" type="password" class="input-xlarge" ng-model="user.password" required/>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="password2">Password (again)</label>
+          <div class="controls">
+            <input id="password2" type="password" class="input-xlarge" ng-model="user.password2" required/>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button ng-click="reset()" class="btn">Reset</button>
+          <button ng-click="register(user)" class="btn-primary">Register</button>
+        </div>
+
+      </fieldset>
+    </form>
+  </div>
+</div>

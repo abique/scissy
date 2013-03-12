@@ -4,9 +4,10 @@ create table if not exists roles
   description text not null
 );
 
-insert or replace into roles (role_id, description) values (0, "administrator");
-insert or replace into roles (role_id, description) values (1, "contributor");
-insert or replace into roles (role_id, description) values (2, "observer");
+insert or replace into roles (role_id, description) values (0, "none");
+insert or replace into roles (role_id, description) values (1, "reader");
+insert or replace into roles (role_id, description) values (2, "writer");
+insert or replace into roles (role_id, description) values (3, "owner");
 
 create table if not exists users
 (
@@ -28,9 +29,9 @@ create table if not exists users_ssh_keys
 create table if not exists users_auths
 (
   user_id integer not null references users (user_id) on delete cascade on update cascade,
-  cookie text not null,
+  token text not null,
   ts_start integer not null,
-  primary key (cookie, user_id)
+  primary key (token, user_id)
 );
 
 create table if not exists groups

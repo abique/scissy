@@ -1,5 +1,5 @@
 ========
-Bluegitf
+Scissy
 ========
 
 .. contents::
@@ -46,11 +46,11 @@ Non goals
 
 - have a distributed, scalable, complex architecture
 
-  - bluegitf is not designed to host thousand of repositories, every companies
-    should be able to host its own bluegitf server, and I think that one server
+  - scissy is not designed to host thousand of repositories, every companies
+    should be able to host its own scissy server, and I think that one server
     should be enough to host a company's repositories. And if not, they could
     be able to regroup projects on separated machines. Also, vertical scaling is
-    an option, as bluegitf takes advantage of hard drive and multi-cores.
+    an option, as scissy takes advantage of hard drive and multi-cores.
 
 - be social like github: even if it's cool, github does it very well.
 
@@ -61,16 +61,16 @@ Design
 Components
 ==========
 
-- bluegitf-init, initialize a new bluegitf-environment
-- bluegitf, web server, acl server (used by bluegitf-shell)
-- bluegitf-shell, ensure ACL between ssh and git-shell
+- scissy-init, initialize a new scissy-environment
+- scissy, web server, acl server (used by scissy-shell)
+- scissy-shell, ensure ACL between ssh and git-shell
 
 .. image:: design.png
 
 File system layout
 ==================
 
-- ~/db/bluegitf.sqlite   stores the database
+- ~/db/scissy.sqlite   stores the database
 - ~/.ssh/authorized_keys stores the ssh authorized_keys
 - ~/repos/${repo_id}/    stores the bare git repository
 - ~/conf                 stores the config files

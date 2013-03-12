@@ -1,0 +1,214 @@
+package scissy.pb;
+
+message Void
+{
+}
+
+enum Status
+{
+  kSucceed        = 0;
+  kFailed         = 1;
+  kInvalidSession = 2;
+}
+
+message StatusMsg
+{
+  required Status status = 1;
+  optional string msg    = 2;
+}
+
+enum Role
+{
+  kNone   = 0;
+  kReader = 1;
+  kWriter = 2;
+  kOwner  = 3;
+}
+
+message UserAuth
+{
+  required bytes user     = 1;
+  required bytes password = 2;
+}
+
+message UserCheckAuthToken
+{
+  required bytes user  = 1;
+  required bytes token = 2;
+}
+
+message UserRevokeAuthToken
+{
+  required bytes user  = 1;
+  required bytes token = 2;
+}
+
+message Session
+{
+  required bytes  user   = 1;
+  required bytes  token  = 2;
+  optional bytes  email  = 3;
+  optional Status status = 4;
+  optional string msg    = 5;
+  optional Role   role   = 6;
+}
+
+message UserCreate
+{
+  required bytes user     = 1;
+  required bytes password = 2;
+  required bytes email    = 3;
+}
+
+message UserDelete
+{
+  required bytes user = 1;
+}
+
+message GroupCreate
+{
+  required bytes grp = 1;
+}
+
+message GroupDelete
+{
+  required bytes grp = 1;
+}
+
+message GroupAddUser
+{
+  required bytes grp  = 1;
+  required bytes user = 2;
+  required Role  role = 3;
+}
+
+message GroupRemoveUser
+{
+  required bytes grp  = 1;
+  required bytes user = 2;
+}
+
+message GroupSelector
+{
+  optional bytes  grp    = 1; // the name of the group
+  optional bytes  user   = 2; // the group which contains this user
+  optional uint32 limit  = 3;
+  optional uint32 offset = 4;
+}
+
+message GroupUserSelector
+{
+  optional bytes  grp    = 1;
+  optional bytes  user   = 2;
+  optional Role   role   = 3;
+  optional uint32 limit  = 4;
+  optional uint32 offset = 5;
+}
+
+message GroupInfo
+{
+  required bytes  grp  = 1;
+  required uint32 size = 2;
+}
+
+message GroupList
+{
+  repeated GroupInfo grps = 1;
+}
+
+message UserRole
+{
+  required bytes user = 1;
+  required Role  role = 2;
+}
+
+message GroupUserList
+{
+  repeated UserRole users = 1;
+}
+
+message RepoCreate
+{
+  required bytes repo = 1;
+}
+
+message RepoDelete
+{
+  required bytes repo = 1;
+}
+
+message RepoAddUser
+{
+  required bytes repo = 1;
+  required bytes user = 2;
+  required Role  role = 3;
+}
+
+message RepoAddGroup
+{
+  required bytes repo = 1;
+  required bytes grp  = 2;
+  required Role  role = 3;
+}
+
+message RepoInfo
+{
+  required bytes repo = 1;
+}
+
+message RepoList
+{
+  repeated RepoInfo repos = 1;
+}
+
+message RepoSelector
+{
+  optional bytes  repo   = 1;
+  optional bytes  user   = 2;
+  optional bytes  grp    = 3;
+  optional uint32 limit  = 4;
+  optional uint32 offset = 5;
+}
+
+message RepoPath
+{
+  optional bytes path = 1;
+}
+
+service Service
+{
+  /* session */
+  rpc userAuth(UserAuth) returns (Session);
+  rpc userCheckAuthToken(UserCheckAuthToken) returns (Session);
+  rpc userRevokeAuthToken(UserRevokeAuthToken) returns (StatusMsg);
+
+  /* user management */
+  rpc userCreate(UserCreate) returns (StatusMsg);
+  // rpc userDelete(UserDelete) returns (StatusMsg);
+
+  // /* group management */
+  // rpc groupCreate(GroupCreate) returns (StatusMsg);
+  // rpc groupDelete(GroupDelete) returns (StatusMsg);
+  // rpc groupAddUser(GroupAddUser) returns (StatusMsg);
+  // rpc groupRemoveUser(GroupRemoveUser) returns (StatusMsg);
+
+  // /* groups view */
+  // rpc groupGetInfo(GroupSelector) returns (GroupInfo);
+  // rpc groupsList(GroupSelector) returns (GroupList);
+  // rpc groupUserList(GroupUserSelector) returns (GroupUserList);
+
+  // /* repo management */
+  // rpc repoCreate(RepoCreate) returns (StatusMsg);
+  // rpc repoDelete(RepoDelete) returns (StatusMsg);
+  // rpc repoAddUser(RepoAddUser) returns (StatusMsg);
+  // rpc repoAddGroup(RepoAddGroup) returns (StatusMsg);
+
+  // /* repo view */
+  // rpc repoGetUserRole(RepoSelector) returns (UserRole);
+  // rpc repoGetPath(RepoSelector) returns (RepoPath);
+  // rpc reposGetInfo(RepoSelector) returns (RepoInfo);
+  // rpc reposList(RepoSelector) returns (RepoList);
+  // rpc repoGetCommitLog() returns ();
+  // rpc repoGetCommit() returns ();
+  // rpc repoGetTree() returns ();
+}

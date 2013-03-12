@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(bluegitf C CXX)
+project(scissy C CXX)
 
 enable_testing()
 
 find_package(GnuTLS REQUIRED)
 
-file(STRINGS VERSION BLUEGITF_VERSION)
+file(STRINGS VERSION SCISSY_VERSION)
 
-message("bluegitf version: ${BLUEGITF_VERSION}")
+message("scissy version: ${SCISSY_VERSION}")
 
 add_definitions(
   -std=c++0x
@@ -21,4 +21,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 add_subdirectory(mimosa EXCLUDE_FROM_ALL)
 include_directories(mimosa)
-add_subdirectory(bluegitf)
+add_subdirectory(scissy)

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html ng-app="scissy">
+  <head>
+    <meta charset="utf8" />
+    <link rel="stylesheet" type="text/css" href="/css/scissy.css" />
+    <style>
+      body { padding-top: 50px; }
+    </style>
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/angular.js"></script>
+    <script src="/js/angular-cookies.js"></script>
+    <script src="/js/scissy.js"></script>
+
+    <title>{{title}}</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <div ng-include src="'html/header.html'"></div>
+      <div ng-view></div>
+      <div ng-include src="'html/footer.html'"></div>
+    </div>
+  </body>
+</html>

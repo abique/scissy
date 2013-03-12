@@ -1,6 +1,6 @@
 # dot -T png design.dot >design.png && xv design.png
 
-digraph BluegitfDesign
+digraph ScissyDesign
 {
         fontname="monospace";
         fontsize=8;
@@ -8,8 +8,8 @@ digraph BluegitfDesign
         node [fontname="monospace",fontsize=8,shape="record"];
         edge [fontname="monospace",fontsize=8,shape="record"];
 
-        bluegitf [shape=record,label="{bluegitf|/the monolitic server/}"];
-        bluegitf_shell [shape=record,label="{bluegitf-shell|/ensure ACL/}"];
+        scissy [shape=record,label="{scissy|/the monolitic server/}"];
+        scissy_shell [shape=record,label="{scissy-shell|/ensure ACL/}"];
         ssh [shape=record,label="{ssh}"];
         git_shell [shape=record,label="{git-shell}"];
         firefox [shape=record,label="{firefox}"];
@@ -19,15 +19,15 @@ digraph BluegitfDesign
         repository [shape=database,label="repository"];
         db [shape=database,label="db"];
 
-        firefox -> bluegitf;
+        firefox -> scissy;
         git -> ssh;
-        ssh -> bluegitf_shell;
+        ssh -> scissy_shell;
         ssh -> authorized_keys;
-        authorized_keys -> bluegitf_shell;
-        bluegitf_shell -> bluegitf;
-        bluegitf_shell -> git_shell;
+        authorized_keys -> scissy_shell;
+        scissy_shell -> scissy;
+        scissy_shell -> git_shell;
         git_shell -> repository;
-        bluegitf -> db;
-        bluegitf -> repository;
-        bluegitf -> authorized_keys;
+        scissy -> db;
+        scissy -> repository;
+        scissy -> authorized_keys;
 }

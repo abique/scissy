@@ -26,8 +26,8 @@
 *** parse the public key
     http://thialfihar.org/projects/semantic_rsa_key/
 *** generate the .ssh/authorized_keys
-*** write bluegitf-shell
-**** write a tests suite for bluegitf-shell
+*** write scissy-shell
+**** write a tests suite for scissy-shell
 ** https clone/pull/push
 * groups
 ** DONE create a group
