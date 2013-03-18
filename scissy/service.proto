@@ -31,13 +31,7 @@ message UserAuth
   required bytes password = 2;
 }
 
-message UserCheckAuthToken
-{
-  required bytes user  = 1;
-  required bytes token = 2;
-}
-
-message UserRevokeAuthToken
+message UserAuthToken
 {
   required bytes user  = 1;
   required bytes token = 2;
@@ -45,12 +39,13 @@ message UserRevokeAuthToken
 
 message Session
 {
-  required bytes  user   = 1;
-  required bytes  token  = 2;
-  optional bytes  email  = 3;
-  optional Status status = 4;
-  optional string msg    = 5;
-  optional Role   role   = 6;
+  required bytes  user    = 1;
+  required bytes  token   = 2;
+  optional bytes  email   = 3;
+  optional Status status  = 4;
+  optional string msg     = 5;
+  optional Role   role    = 6;
+  optional uint64 user_id = 7;
 }
 
 message UserCreate
@@ -67,25 +62,30 @@ message UserDelete
 
 message GroupCreate
 {
-  required bytes grp = 1;
+  required UserAuthToken auth = 1;
+  required bytes grp          = 2;
+  required bytes desc         = 3;
 }
 
 message GroupDelete
 {
-  required bytes grp = 1;
+  required UserAuthToken auth = 1;
+  required bytes grp          = 2;
 }
 
 message GroupAddUser
 {
-  required bytes grp  = 1;
-  required bytes user = 2;
-  required Role  role = 3;
+  required UserAuthToken auth = 1;
+  required bytes grp          = 2;
+  required bytes user         = 3;
+  required Role  role         = 4;
 }
 
 message GroupRemoveUser
 {
-  required bytes grp  = 1;
-  required bytes user = 2;
+  required UserAuthToken auth = 1;
+  required bytes grp          = 2;
+  required bytes user         = 3;
 }
 
 message GroupSelector
@@ -107,8 +107,12 @@ message GroupUserSelector
 
 message GroupInfo
 {
-  required bytes  grp  = 1;
-  required uint32 size = 2;
+  optional bytes  grp    = 1;
+  optional uint32 size   = 2;
+  optional uint32 grp_id = 3;
+  optional string desc   = 4;
+  optional Status status = 5;
+  optional string msg    = 6;
 }
 
 message GroupList
@@ -179,18 +183,18 @@ service Service
 {
   /* session */
   rpc userAuth(UserAuth) returns (Session);
-  rpc userCheckAuthToken(UserCheckAuthToken) returns (Session);
-  rpc userRevokeAuthToken(UserRevokeAuthToken) returns (StatusMsg);
+  rpc userCheckAuthToken(UserAuthToken) returns (Session);
+  rpc userRevokeAuthToken(UserAuthToken) returns (StatusMsg);
 
   /* user management */
   rpc userCreate(UserCreate) returns (StatusMsg);
   // rpc userDelete(UserDelete) returns (StatusMsg);
 
   // /* group management */
-  // rpc groupCreate(GroupCreate) returns (StatusMsg);
-  // rpc groupDelete(GroupDelete) returns (StatusMsg);
-  // rpc groupAddUser(GroupAddUser) returns (StatusMsg);
-  // rpc groupRemoveUser(GroupRemoveUser) returns (StatusMsg);
+  rpc groupCreate(GroupCreate) returns (GroupInfo);
+  rpc groupDelete(GroupDelete) returns (StatusMsg);
+  rpc groupAddUser(GroupAddUser) returns (StatusMsg);
+  rpc groupRemoveUser(GroupRemoveUser) returns (StatusMsg);
 
   // /* groups view */
   // rpc groupGetInfo(GroupSelector) returns (GroupInfo);

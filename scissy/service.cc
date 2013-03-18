@@ -158,19 +158,41 @@ namespace scissy
     return true;
   }
 
+  static bool
+  userGetSession(const pb::UserAuthToken & request,
+                 pb::Session & response)
+  {
+    int         role_id;
+    uint64_t    user_id;
+    std::string token = mimosa::stream::filter<mimosa::stream::Base16Decoder>(request.token());
+    auto stmt = Db::prepare(
+      "select role_id, user_id"
+      "  from users natural join users_auths"
+      "  where login = ?");
+    stmt.bind(request.user(), (const void *)token.data(), token.size());
+    if (!stmt.fetch(&role_id, &user_id))
+      return true;
+
+    response.set_user(request.user());
+    response.set_role((pb::Role)role_id);
+    response.set_user_id(user_id);
+    return true;
+  }
+
   bool
-  Service::userCheckAuthToken(pb::UserCheckAuthToken & request,
+  Service::userCheckAuthToken(pb::UserAuthToken & request,
                               pb::Session & response)
   {
     std::string email;
     int         role_id;
+    uint64_t    user_id;
     std::string token = mimosa::stream::filter<mimosa::stream::Base16Decoder>(request.token());
     auto stmt = Db::prepare(
-      "select email, role_id"
+      "select email, role_id, user_id"
       "  from users natural join users_auths"
       "  where login = ?");
     stmt.bind(request.user(), (const void *)token.data(), token.size());
-    if (!stmt.fetch(&email, &role_id)) {
+    if (!stmt.fetch(&email, &role_id, &user_id)) {
       response.set_status(pb::kFailed);
       response.set_msg("session not found");
       return true;
@@ -180,17 +202,18 @@ namespace scissy
     response.set_token(request.token());
     response.set_email(email);
     response.set_role((pb::Role)role_id);
+    response.set_user_id(user_id);
     response.set_status(pb::kSucceed);
     return true;
   }
 
   bool
-  Service::userRevokeAuthToken(pb::UserRevokeAuthToken & request,
+  Service::userRevokeAuthToken(pb::UserAuthToken & request,
                                pb::StatusMsg & response)
   {
     uint64_t user_id;
 
-    if (!Db::getUserId(request.user(), &user_id)) {
+    if (!Db::userGetId(request.user(), &user_id)) {
       response.set_status(pb::kSucceed);
       response.set_msg("user not found");
       return true;
@@ -200,6 +223,133 @@ namespace scissy
     auto stmt = Db::prepare("delete from users_auths where user_id = ? and token = ?");
     stmt.bind(user_id, (const void *)token.data(), token.size()).step();
 
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::groupCreate(pb::GroupCreate & request,
+                       pb::GroupInfo & response)
+  {
+    pb::Session session;
+    std::string err;
+    int64_t grp_id;
+
+    if (!userGetSession(request.auth(), session)) {
+      response.set_status(pb::kInvalidSession);
+      response.set_msg("invalid session");
+      return true;
+    }
+
+    if (!Db::groupCreate(request.grp(), request.desc(), session.user(), &err)) {
+      response.set_status(pb::kFailed);
+      response.set_msg(err);
+      return true;
+    }
+
+    if (!Db::groupGetId(request.grp(), &grp_id)) {
+      response.set_status(pb::kFailed);
+      response.set_msg("failed to get group id");
+      return true;
+    }
+
+    response.set_status(pb::kSucceed);
+    response.set_grp_id(grp_id);
+    response.set_size(1);
+    response.set_grp(request.grp());
+    response.set_desc(request.desc());
+    return true;
+  }
+
+  static bool isGroupOwner(const pb::Session & session,
+                           const std::string & grp)
+  {
+    pb::Role role;
+
+    if (session.role() == pb::kOwner)
+      return true;
+
+    if (!Db::groupGetUserRole(grp, session.user(), &role))
+      return false;
+
+    return role == pb::kOwner;
+  }
+
+  bool
+  Service::groupDelete(pb::GroupDelete & request,
+                       pb::StatusMsg & response)
+  {
+    pb::Session session;
+
+    if (!userGetSession(request.auth(), session)) {
+      response.set_status(pb::kInvalidSession);
+      response.set_msg("invalid session");
+      return true;
+    }
+
+    if (!isGroupOwner(session, request.grp())) {
+        response.set_status(pb::kFailed);
+        response.set_msg("insufficient rights");
+        return true;
+    }
+
+    if (!Db::groupDelete(request.grp())) {
+      response.set_status(pb::kFailed);
+      response.set_msg("failed to delete group");
+      return true;
+    }
+
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::groupAddUser(pb::GroupAddUser & request,
+                        pb::StatusMsg & response)
+  {
+    pb::Session session;
+
+    if (!userGetSession(request.auth(), session)) {
+      response.set_status(pb::kInvalidSession);
+      response.set_msg("invalid session");
+      return true;
+    }
+
+    if (!isGroupOwner(session, request.grp())) {
+        response.set_status(pb::kFailed);
+        response.set_msg("insufficient rights");
+        return true;
+    }
+
+    if (!Db::groupAddUser(request.grp(), request.user(), request.role())) {
+      response.set_status(pb::kFailed);
+      response.set_msg("failed to add user to group");
+      return true;
+    }
+
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::groupRemoveUser(pb::GroupRemoveUser & request,
+                           pb::StatusMsg & response)
+  {
+    pb::Session session;
+
+    if (!userGetSession(request.auth(), session)) {
+      response.set_status(pb::kInvalidSession);
+      response.set_msg("invalid session");
+      return true;
+    }
+
+    if (!isGroupOwner(session, request.grp())) {
+        response.set_status(pb::kFailed);
+        response.set_msg("insufficient rights");
+        return true;
+    }
+
+    Db::groupRemoveUser(request.grp(), request.user());
     response.set_status(pb::kSucceed);
     return true;
   }
