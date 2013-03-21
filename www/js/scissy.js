@@ -1,4 +1,4 @@
-var scissy_module = angular.module('scissy', ['ngCookies']);
+var scissy_module = angular.module('scissy', []);
 scissy_module.config(function($routeProvider) {
     $routeProvider
         .when('/', {controller:indexCtrl, templateUrl:'html/index.html'})
@@ -12,7 +12,7 @@ scissy_module.config(function($routeProvider) {
         .when('/settings', {controller:settingsCtrl, templateUrl:'html/settings.html'});
 });
 
-function resetSession($rootScope, $cookies) {
+function resetSession($rootScope) {
     $rootScope.session = {
         auth: {
             user: null,
@@ -21,47 +21,47 @@ function resetSession($rootScope, $cookies) {
         email: null,
         role: null
     };
-    $cookies.auth_user  = null;
-    $cookies.auth_token = null;
+    localStorage.auth_user  = null;
+    localStorage.auth_token = null;
 }
 
-function userCheckAuthToken($rootScope, $cookies, $http) {
-    if ($cookies.auth_user && $cookies.auth_token) {
+function userCheckAuthToken($rootScope, $http) {
+    if (localStorage.auth_user && localStorage.auth_token) {
         // check the session
         $http.post('/api/userCheckAuthToken',
-                   { 'user':$cookies.auth_user,
-                     'token':$cookies.auth_token })
+                   { 'user':localStorage.auth_user,
+                     'token':localStorage.auth_token })
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed") {
                     $rootScope.session.auth.user  = data.user;
                     $rootScope.session.auth.token = data.token;
                     $rootScope.session.email      = data.email;
                     $rootScope.session.role       = data.role;
-                    $cookies.auth_user            = data.user;
-                    $cookies.auth_token           = data.token;
+                    localStorage.auth_user        = data.user;
+                    localStorage.auth_token       = data.token;
                     return;
                 } else
-                    resetSession($rootScope, $cookies);
+                    resetSession($rootScope);
             })
             .error(function (data, status, headers, config) {
-                resetSession($rootScope, $cookies);
+                resetSession($rootScope);
                 rpcGenericError(data, status, headers, config);
             });
     } else
-        resetSession($rootScope, $cookies);
+        resetSession($rootScope);
 }
 
-scissy_module.run(function($rootScope, $cookies, $http) {
+scissy_module.run(function($rootScope, $http) {
     $rootScope.session = {
         auth: {
-            user: $cookies.auth_user,
-            token: $cookies.auth_token,
+            user: localStorage.auth_user,
+            token: localStorage.auth_token,
         },
         email: null,
         role: null
     };
 
-    userCheckAuthToken($rootScope, $cookies, $http);
+    userCheckAuthToken($rootScope, $http);
 });
 
 function rpcGenericError(data, status, headers, config) {
@@ -71,7 +71,7 @@ function rpcGenericError(data, status, headers, config) {
 function indexCtrl($scope) {
 }
 
-function loginCtrl($scope, $rootScope, $http, $location, $cookies) {
+function loginCtrl($scope, $rootScope, $http, $location) {
     $scope.reset = function() {
         $scope.user = {};
     }
@@ -87,8 +87,8 @@ function loginCtrl($scope, $rootScope, $http, $location, $cookies) {
                     $rootScope.session.auth.token = data.token;
                     $rootScope.session.email      = data.email;
                     $rootScope.session.role       = data.role;
-                    $cookies.auth_user            = data.user;
-                    $cookies.auth_token           = data.token;
+                    localStorage.auth_user        = data.user;
+                    localStorage.auth_token       = data.token;
                     $location.path("/");
                     return;
                 }
@@ -127,10 +127,10 @@ function settingsCtrl($scope) {
 function settingsAccountCtrl($scope, $rootScope) {
 }
 
-function headerCtrl($scope, $rootScope, $http, $cookies) {
+function headerCtrl($scope, $rootScope, $http) {
     $scope.logout = function() {
         $http.post('/api/userRevokeAuthToken', $rootScope.session.auth);
-        resetSession($rootScope, $cookies);
+        resetSession($rootScope);
     };
 }
 
