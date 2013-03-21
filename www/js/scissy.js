@@ -169,19 +169,45 @@ function groupsCtrl($scope, $rootScope, $http, $location) {
 
 function groupCtrl($scope, $rootScope, $http, $routeParams) {
     $scope.groups = [];
-    $scope.group = {"grp":"suce"};
+    $scope.group = {"grp":""};
+    $scope.new_user = {"user":"","role":"kReader"};
+    $scope.is_admin = false;
 
-    $http.post('/api/groupGetInfo', {"grp_id":parseInt($routeParams.grp_id)})
+    $scope.refresh = function() {
+        $http.post('/api/groupGetInfo', {"grp_id":parseInt($routeParams.grp_id)})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.group = data;
             })
-        .error(rpcGenericError);
+            .error(rpcGenericError);
 
-    $http.post('/api/groupUserList', {"grp_id":parseInt($routeParams.grp_id)})
+        $http.post('/api/groupUserList', {"grp_id":parseInt($routeParams.grp_id)})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.users = data.users;
             })
-        .error(rpcGenericError);
+            .error(rpcGenericError);
+    }
+
+    $scope.userAdd = function(new_user) {
+        $http.post('/api/groupAddUser',
+                   { 'auth':$rootScope.session.auth,
+                     'grp':$scope.group.grp,
+                     'user':new_user.user,
+                     'role':new_user.role })
+            .success(function (data, status, headers, config) {
+                new_user.errmsg = null;
+                if (data.status == "kSucceed") {
+                    $scope.refresh();
+                    return;
+                }
+                new_user.errmsg = data.msg;
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.userUpdate = function(user, role) {
+    }
+
+    $scope.refresh();
 }
