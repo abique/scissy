@@ -94,6 +94,7 @@ message GroupSelector
   optional bytes  user   = 2; // the group which contains this user
   optional uint32 limit  = 3;
   optional uint32 offset = 4;
+  optional uint64 grp_id = 5;
 }
 
 message GroupUserSelector
@@ -103,6 +104,7 @@ message GroupUserSelector
   optional Role   role   = 3;
   optional uint32 limit  = 4;
   optional uint32 offset = 5;
+  optional uint64 grp_id = 6;
 }
 
 message GroupInfo
@@ -117,18 +119,23 @@ message GroupInfo
 
 message GroupList
 {
-  repeated GroupInfo grps = 1;
+  repeated GroupInfo grps   = 1;
+  optional Status    status = 2;
+  optional string    msg    = 3;
 }
 
 message UserRole
 {
-  required bytes user = 1;
-  required Role  role = 2;
+  required bytes  user    = 1;
+  required uint64 user_id = 2;
+  required Role   role    = 3;
 }
 
 message GroupUserList
 {
-  repeated UserRole users = 1;
+  repeated UserRole users  = 1;
+  optional Status   status = 2;
+  optional string   msg    = 3;
 }
 
 message RepoCreate
@@ -197,9 +204,9 @@ service Service
   rpc groupRemoveUser(GroupRemoveUser) returns (StatusMsg);
 
   // /* groups view */
-  // rpc groupGetInfo(GroupSelector) returns (GroupInfo);
-  // rpc groupsList(GroupSelector) returns (GroupList);
-  // rpc groupUserList(GroupUserSelector) returns (GroupUserList);
+  rpc groupGetInfo(GroupSelector) returns (GroupInfo);
+  rpc groupsList(GroupSelector) returns (GroupList);
+  rpc groupUserList(GroupUserSelector) returns (GroupUserList);
 
   // /* repo management */
   // rpc repoCreate(RepoCreate) returns (StatusMsg);

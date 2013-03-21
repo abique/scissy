@@ -54,7 +54,7 @@ namespace scissy
     // }
 
     // useful check in dev mode
-    if (scissy::Config::instance().isSecure()) {
+    if (scissy::Config::instance().crackPassword()) {
       const char * errmsg = ::FascistCheck(request.password().c_str(),
                                            ::GetDefaultCracklibDict());
       if (errmsg) {
@@ -350,6 +350,82 @@ namespace scissy
     }
 
     Db::groupRemoveUser(request.grp(), request.user());
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::groupsList(pb::GroupSelector & request,
+                      pb::GroupList & response)
+  {
+    std::string grp;
+    std::string desc;
+    uint64_t    grp_id;
+    uint64_t    size;
+    auto stmt = Db::prepare(
+      "select name, desc, group_id, count(user_id)"
+      " from groups natural left outer join groups_users"
+      " group by group_id");
+
+    while (stmt.fetch(&grp, &desc, &grp_id, &size)) {
+      auto msg = response.add_grps();
+      msg->set_grp(grp);
+      msg->set_grp_id(grp_id);
+      msg->set_desc(desc);
+      msg->set_size(size);
+    }
+
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::groupGetInfo(pb::GroupSelector & request,
+                        pb::GroupInfo & response)
+  {
+    std::string grp;
+    std::string desc;
+    uint64_t    grp_id;
+    uint64_t    size;
+    auto stmt = Db::prepare(
+      "select name, desc, group_id, count(*)"
+      " from groups_users_view"
+      " where group_id = ? or name = ?"
+      " limit 1");
+
+    if (!stmt.bind(request.grp_id(), request.grp())
+        .fetch(&grp, &desc, &grp_id, &size)) {
+      response.set_status(pb::kFailed);
+      response.set_msg("group not found");
+      return true;
+    }
+    response.set_grp(grp);
+    response.set_grp_id(grp_id);
+    response.set_size(size);
+    response.set_desc(desc);
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::groupUserList(pb::GroupUserSelector & request,
+                         pb::GroupUserList & response)
+  {
+    std::string user;
+    uint64_t    user_id;
+    pb::Role    role;
+    auto stmt = Db::prepare(
+      "select user, user_id, role_id"
+      " from groups_users_view"
+      " where group_id = ? or name = ?");
+
+    while (stmt.bind(request.grp_id(), request.grp())
+           .fetch(&user, &user_id, reinterpret_cast<int*> (&role))) {
+      auto msg = response.add_users();
+      msg->set_user(user);
+      msg->set_user_id(user_id);
+      msg->set_role(role);
+    }
     response.set_status(pb::kSucceed);
     return true;
   }

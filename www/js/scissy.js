@@ -2,15 +2,22 @@ var scissy_module = angular.module('scissy', ['ngCookies']);
 scissy_module.config(function($routeProvider) {
     $routeProvider
         .when('/', {controller:indexCtrl, templateUrl:'html/index.html'})
+        .when('/groups', {controller:groupsCtrl, templateUrl:'html/groups.html'})
+        .when('/group-create', {controller:groupCreateCtrl, templateUrl:'html/group-create.html'})
+        .when('/group/:grp_id', {controller:groupCtrl, templateUrl:'html/group.html'})
+        .when('/new-repo', {controller:loginCtrl, templateUrl:'html/new-repo.html'})
         .when('/login', {controller:loginCtrl, templateUrl:'html/login.html'})
         .when('/register', {controller:registerCtrl, templateUrl:'html/register.html'})
+        .when('/repos', {controller:loginCtrl, templateUrl:'html/repos.html'})
         .when('/settings', {controller:settingsCtrl, templateUrl:'html/settings.html'});
 });
 
 function resetSession($rootScope, $cookies) {
     $rootScope.session = {
-        user: null,
-        token: null,
+        auth: {
+            user: null,
+            token: null
+        },
         email: null,
         role: null
     };
@@ -26,12 +33,12 @@ function userCheckAuthToken($rootScope, $cookies, $http) {
                      'token':$cookies.auth_token })
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed") {
-                    $rootScope.session.user  = data.user;
-                    $rootScope.session.token = data.token;
-                    $rootScope.session.email = data.email;
-                    $rootScope.session.role  = data.role;
-                    $cookies.auth_user       = data.user;
-                    $cookies.auth_token      = data.token;
+                    $rootScope.session.auth.user  = data.user;
+                    $rootScope.session.auth.token = data.token;
+                    $rootScope.session.email      = data.email;
+                    $rootScope.session.role       = data.role;
+                    $cookies.auth_user            = data.user;
+                    $cookies.auth_token           = data.token;
                     return;
                 } else
                     resetSession($rootScope, $cookies);
@@ -46,8 +53,10 @@ function userCheckAuthToken($rootScope, $cookies, $http) {
 
 scissy_module.run(function($rootScope, $cookies, $http) {
     $rootScope.session = {
-        user: $cookies.auth_user,
-        token: $cookies.auth_token,
+        auth: {
+            user: $cookies.auth_user,
+            token: $cookies.auth_token,
+        },
         email: null,
         role: null
     };
@@ -74,12 +83,12 @@ function loginCtrl($scope, $rootScope, $http, $location, $cookies) {
             .success(function (data, status, headers, config) {
                 user.errmsg = null;
                 if (data.status == "kSucceed") {
-                    $rootScope.session.user  = data.user;
-                    $rootScope.session.token = data.token;
-                    $rootScope.session.email = data.email;
-                    $rootScope.session.role  = data.role;
-                    $cookies.auth_user       = data.user;
-                    $cookies.auth_token      = data.token;
+                    $rootScope.session.auth.user  = data.user;
+                    $rootScope.session.auth.token = data.token;
+                    $rootScope.session.email      = data.email;
+                    $rootScope.session.role       = data.role;
+                    $cookies.auth_user            = data.user;
+                    $cookies.auth_token           = data.token;
                     $location.path("/");
                     return;
                 }
@@ -120,9 +129,59 @@ function settingsAccountCtrl($scope, $rootScope) {
 
 function headerCtrl($scope, $rootScope, $http, $cookies) {
     $scope.logout = function() {
-        $http.post('/api/userRevokeAuthToken',
-                   { 'user':$rootScope.session.user,
-                     'token':$rootScope.session.token });
+        $http.post('/api/userRevokeAuthToken', $rootScope.session.auth);
         resetSession($rootScope, $cookies);
     };
+}
+
+function groupCreateCtrl($scope, $rootScope, $http, $location) {
+    $scope.reset = function() {
+        $scope.grp = {};
+    }
+
+    $scope.create = function(grp) {
+        $http.post('/api/groupCreate',
+                   { 'auth':$rootScope.session.auth,
+                     'grp':grp.name,
+                     'desc':grp.desc })
+            .success(function (data, status, headers, config) {
+                grp.errmsg = null;
+                if (data.status == "kSucceed") {
+                    $location.path("/group/"+data.grp_id)
+                    return;
+                }
+                grp.errmsg = data.msg;
+            })
+            .error(rpcGenericError);
+    }
+}
+
+function groupsCtrl($scope, $rootScope, $http, $location) {
+    $scope.groups = [];
+
+    $http.post('/api/groupsList', {})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.groups = data.grps;
+            })
+        .error(rpcGenericError);
+}
+
+function groupCtrl($scope, $rootScope, $http, $routeParams) {
+    $scope.groups = [];
+    $scope.group = {"grp":"suce"};
+
+    $http.post('/api/groupGetInfo', {"grp_id":parseInt($routeParams.grp_id)})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.group = data;
+            })
+        .error(rpcGenericError);
+
+    $http.post('/api/groupUserList', {"grp_id":parseInt($routeParams.grp_id)})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.users = data.users;
+            })
+        .error(rpcGenericError);
 }

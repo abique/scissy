@@ -1,23 +1,21 @@
 <h1>Groups</h1>
 
-<a href="/new-group">New group</a><br/>
+<a href="#/group-create">New group</a><br/>
 
 <table class="table table-striped table-condensed">
   <thead>
     <tr>
       <th>Group</th>
-      {{*id}}<th>Role</th>{{/id}}
       <th>Description</th>
+      <th>Size</th>
     </tr>
   </thead>
 
   <tbody>
-    {{*groups}}
-    <tr>
-      <td><a href="/group-detail?group={{name}}">{{name|h}}</a></td>
-      {{*id}}<td>{{role}}</td>{{/id}}
-      <td>{{desc|h}}</td>
+    <tr ng-repeat="group in groups">
+      <td><a href="#/group/{{group.grp_id}}">{{group.grp}}</a></td>
+      <td>{{group.desc}}</td>
+      <td>{{group.size}}</td>
     </tr>
-    {{/groups}}
   </tbody>
 </table>

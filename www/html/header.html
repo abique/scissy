@@ -7,11 +7,11 @@
           <li><a href="#/repos">repositories</a></li>
           <li><a href="#/groups">groups</a></li>
 
-          <li ng-show="session.user"><a href="#/settings">settings</a></li>
-          <li ng-show="session.user"><a href="#/" ng-click="logout()">logout ({{session.user}})</a></li>
+          <li ng-show="session.auth.user"><a href="#/settings">settings</a></li>
+          <li ng-show="session.auth.user"><a href="#/" ng-click="logout()">logout ({{session.auth.user}})</a></li>
 
-          <li ng-hide="session.user"><a href="#/login">login</a></li>
-          <li ng-hide="session.user"><a href="#/register">register</a></li>
+          <li ng-hide="session.auth.user"><a href="#/login">login</a></li>
+          <li ng-hide="session.auth.user"><a href="#/register">register</a></li>
         </ul>
       </div>
     </div>

@@ -25,6 +25,7 @@ namespace scissy
     inline const std::string & dbPath() const { return db_path_; }
     inline const std::string & sshDir() const { return ssh_dir_; }
     inline bool isSecure() const { return is_secure_; }
+    inline bool crackPassword() const { return false; }
 
   private:
     std::string root_dir_;

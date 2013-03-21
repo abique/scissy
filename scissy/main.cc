@@ -35,6 +35,8 @@ int main(int argc, char ** argv)
   scissy::Config::instance();
   scissy::Db::instance();
 
+  scissy::Db::prepare("PRAGMA foreign_keys = ON").exec();
+
   auto dispatch = new mimosa::http::DispatchHandler;
   dispatch->registerHandler(
     "/css/*.css", new mimosa::http::FsHandler(

@@ -26,9 +26,9 @@ namespace scissy
                                      pb::StatusMsg & response) override;
 
 
-      /////////////////
-     // Group stuff //
-    /////////////////
+      ////////////////////////////
+     // Group management stuff //
+    ////////////////////////////
 
     virtual bool groupCreate(pb::GroupCreate & request,
                              pb::GroupInfo & response) override;
@@ -42,6 +42,18 @@ namespace scissy
     virtual bool groupRemoveUser(pb::GroupRemoveUser & request,
                                  pb::StatusMsg & response) override;
 
+      ////////////////
+     // Group View //
+    ////////////////
+
+    virtual bool groupsList(pb::GroupSelector & request,
+                            pb::GroupList & response) override;
+
+    virtual bool groupGetInfo(pb::GroupSelector & request,
+                              pb::GroupInfo & response) override;
+
+    virtual bool groupUserList(pb::GroupUserSelector & request,
+                               pb::GroupUserList & response) override;
   };
 }
 
