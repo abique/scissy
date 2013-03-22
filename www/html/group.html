@@ -14,7 +14,7 @@
     <option value="kWriter">Contributor</option>
     <option value="kReader">Observer</option>
   </select>
-  <button ng-click="userAdd(new_user)" class="btn-primary">Add</button>
+  <button ng-click="addUser(new_user)" class="btn btn-primary">Add</button>
 </form>
 <!-- {{/is-group-admin}} -->
 
@@ -23,22 +23,25 @@
     <tr>
       <th>User</th>
       <th>Role</th>
+      <th>action</th>
     </tr>
   </thead>
 
   <tbody>
     <tr ng-repeat="user in users">
       <td><a href="#/user/{{user.user_id}}">{{user.user}}</a></td>
+      <td>{{user.role}}</td>
       <td>
-        <form method="post" enctype="application/x-www-form-urlencoded"
-              name="register-form" class="form-inline">
-          <select type="text" class="span2">
-            <option value="kOwner" ng-selected="user.role=='kOwner'">Administrator</option>
-            <option value="kWriter" ng-selected="user.role=='kWriter'">Contributor</option>
-            <option value="kReader" ng-selected="user.role=='kReader'">Observer</option>
-            <option value="kNone" ng-selected="user.role=='kNone'">Remove</option>
-          </select>
-        </form>
+        <i class="icon-wrench"></i>
+        <i class="icon-trash" ng-click="removeUser(user)"></i>
+        <!-- <form novalidate class="form-inline"> -->
+        <!--   <select type="text" class="span2"> -->
+        <!--     <option value="kOwner" ng-selected="user.role=='kOwner'">Administrator</option> -->
+        <!--     <option value="kWriter" ng-selected="user.role=='kWriter'">Contributor</option> -->
+        <!--     <option value="kReader" ng-selected="user.role=='kReader'">Observer</option> -->
+        <!--     <option value="kNone" ng-selected="user.role=='kNone'">Remove</option> -->
+        <!--   </select> -->
+        <!-- </form> -->
       </td>
     </tr>
   </tbody>

@@ -189,7 +189,7 @@ function groupCtrl($scope, $rootScope, $http, $routeParams) {
             .error(rpcGenericError);
     }
 
-    $scope.userAdd = function(new_user) {
+    $scope.addUser = function(new_user) {
         $http.post('/api/groupAddUser',
                    { 'auth':$rootScope.session.auth,
                      'grp':$scope.group.grp,
@@ -207,6 +207,22 @@ function groupCtrl($scope, $rootScope, $http, $routeParams) {
     }
 
     $scope.userUpdate = function(user, role) {
+    }
+
+    $scope.removeUser = function(user) {
+        $http.post('/api/groupRemoveUser',
+                   { 'auth':$rootScope.session.auth,
+                     'grp':$scope.group.grp,
+                     'user':user.user })
+            .success(function (data, status, headers, config) {
+                $scope.new_user.errmsg = null;
+                if (data.status == "kSucceed") {
+                    $scope.refresh();
+                    return;
+                }
+                new_user.errmsg = data.msg;
+            })
+            .error(rpcGenericError);
     }
 
     $scope.refresh();
