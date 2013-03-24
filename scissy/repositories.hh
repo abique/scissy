@@ -16,6 +16,8 @@ namespace scissy
                 const std::string & owner,
                 std::string *       error);
 
+    bool remove(const std::string & name);
+
     bool getId(const std::string & name,
                int64_t *           id);
 

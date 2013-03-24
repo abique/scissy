@@ -33,11 +33,8 @@ add_executable(scissyd
 
   # handlers
   clear-cache-handler.cc
-  groups-handler.cc
-  group-detail-handler.cc
   login-handler.cc
   logout-handler.cc
-  new-group-handler.cc
   new-repo-handler.cc
   register-handler.cc
   repos-handler.cc
@@ -50,7 +47,7 @@ add_executable(scissyd
 
 target_link_libraries(scissyd
   scissy-common
-  mimosa-rpc-http
+  mimosa-rpc-json
   mimosa-rpc
   mimosa-tpl
   mimosa-http
@@ -61,6 +58,7 @@ target_link_libraries(scissyd
   sqlite3
   crack
   git2
+  re2
   pthread
   rt
 )

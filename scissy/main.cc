@@ -14,14 +14,11 @@
 
 // handlers
 #include "clear-cache-handler.hh"
-#include "groups-handler.hh"
-#include "group-detail-handler.hh"
 #include "login-handler.hh"
 #include "logout-handler.hh"
 #include "register-handler.hh"
 #include "root-handler.hh"
 #include "new-repo-handler.hh"
-#include "new-group-handler.hh"
 #include "repos-handler.hh"
 #include "settings-handler.hh"
 #include "service.hh"
@@ -56,11 +53,8 @@ int main(int argc, char ** argv)
   dispatch->registerHandler("/login", new scissy::LoginHandler);
   dispatch->registerHandler("/logout", new scissy::LogoutHandler);
   dispatch->registerHandler("/new-repo", new scissy::NewRepoHandler);
-  dispatch->registerHandler("/new-group", new scissy::NewGroupHandler);
   dispatch->registerHandler("/repos", new scissy::ReposHandler);
   dispatch->registerHandler("/settings", new scissy::SettingsHandler);
-  dispatch->registerHandler("/groups", new scissy::GroupsHandler);
-  dispatch->registerHandler("/group-detail", new scissy::GroupDetailHandler);
   dispatch->registerHandler("/api/*", new scissy::pb::ServiceHttpHandler(
                               new scissy::Service, "/api/"));
 

@@ -183,8 +183,13 @@ function groupCtrl($scope, $rootScope, $http, $routeParams) {
 
         $http.post('/api/groupUserList', {"grp_id":parseInt($routeParams.grp_id)})
             .success(function (data, status, headers, config) {
-                if (data.status == "kSucceed")
+                if (data.status == "kSucceed") {
                     $scope.users = data.users;
+                    for (i in data.users) {
+                        if (data.users[i].user == $rootScope.session.auth.user)
+                            $scope.is_admin = (data.users[i].role == "kOwner");
+                    }
+                }
             })
             .error(rpcGenericError);
     }

@@ -1,5 +1,6 @@
 #include <ctime>
-#include <regex>
+
+#include <re2/re2.h>
 
 #include <crack.h>
 
@@ -19,9 +20,8 @@ namespace scissy
   Service::userCreate(pb::UserCreate & request,
                       pb::StatusMsg &  response)
   {
-    // static const std::regex login_match("^[[:alnum:]]+$", std::regex_constants::extended);
-    // static const std::regex email_match("^[-._a-zA-Z0-9]+@[-._a-zA-Z0-9]+$",
-    //                                     std::regex_constants::extended);
+    static const RE2 login_match("^[[:alnum:]]+$");
+    static const RE2 email_match("^[-._a-zA-Z0-9]+@[-._a-zA-Z0-9]+$");
 
     if (request.user().size() > 64) {
       response.set_status(pb::kFailed);
@@ -41,17 +41,17 @@ namespace scissy
       return true;
     }
 
-    // if (!std::regex_match(request.user(), login_match)) {
-    //   response.set_status(pb::kFailed);
-    //   response.set_msg("login contains invalid characters");
-    //   return true;
-    // }
+    if (!RE2::FullMatch(request.user(), login_match)) {
+      response.set_status(pb::kFailed);
+      response.set_msg("login contains invalid characters");
+      return true;
+    }
 
-    // if (!std::regex_match(request.email(), email_match)) {
-    //   response.set_status(pb::kFailed);
-    //   response.set_msg("invalid email");
-    //   return true;
-    // }
+    if (!RE2::FullMatch(request.email(), email_match)) {
+      response.set_status(pb::kFailed);
+      response.set_msg("invalid email");
+      return true;
+    }
 
     // useful check in dev mode
     if (scissy::Config::instance().crackPassword()) {

@@ -21,4 +21,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 add_subdirectory(mimosa EXCLUDE_FROM_ALL)
 include_directories(mimosa)
+
+include(CheckIncludeFiles)
+include(CheckLibraryExists)
+
 add_subdirectory(scissy)
