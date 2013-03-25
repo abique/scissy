@@ -22,7 +22,9 @@ create table if not exists users_ssh_keys
 (
   ssh_key_id integer not null primary key autoincrement,
   user_id integer not null references users (user_id) on delete cascade on update cascade,
+  `key_type` integer not null, 
   `key` text not null,
+  `desc` text not null,
   ts_created integer not null
 );
 
