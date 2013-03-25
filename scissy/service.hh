@@ -25,6 +25,11 @@ namespace scissy
     virtual bool userRevokeAuthToken(pb::UserAuthToken & request,
                                      pb::StatusMsg & response) override;
 
+    virtual bool userAddSshKey(pb::UserSshKey & request,
+                               pb::StatusMsg & response) override;
+
+    virtual bool userRemoveSshKey(pb::UserSshKey & request,
+                                  pb::StatusMsg & response) override;
 
       ////////////////////////////
      // Group management stuff //

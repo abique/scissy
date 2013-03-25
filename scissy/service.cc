@@ -227,6 +227,62 @@ namespace scissy
     return true;
   }
 
+    bool
+    Service::userAddSshKey(pb::UserSshKey & request,
+                           pb::StatusMsg & response)
+    {
+      pb::Session session;
+
+      if (!userCheckAuthToken(*request.mutable_auth(), session) ||
+          session.status() != pb::kSucceed) {
+        response.set_status(pb::kInvalidSession);
+        response.set_msg("invalid session");
+        return false;
+      }
+
+      auto stmt = Db::prepare("insert into users_ssh_keys"
+                              " (user_id, `key_type`, `key`, `desc`, ts_created)"
+                              " values (?, ?, ?, ?, datetime('now'))");
+      if (!stmt.bind(session.user_id(), request.key().type(), request.key().key(),
+                     request.key().desc()).step()) {
+        response.set_status(pb::kFailed);
+        response.set_msg("SQL error");
+        return true;
+      }
+
+      response.set_status(pb::kSucceed);
+      return true;
+    }
+
+    bool
+    Service::userRemoveSshKey(pb::UserSshKey & request,
+                              pb::StatusMsg & response)
+    {
+      pb::Session session;
+
+      if (!userCheckAuthToken(*request.mutable_auth(), session) ||
+          session.status() != pb::kSucceed) {
+        response.set_status(pb::kInvalidSession);
+        response.set_msg("invalid session");
+        return false;
+      }
+
+      auto stmt = Db::prepare("delete from users_ssh_keys"
+                              " where user_id = ? and key_id = ?");
+      if (!stmt.bind(session.user_id(), request.key().key_id()).step()) {
+        response.set_status(pb::kFailed);
+        response.set_msg("SQL error");
+        return true;
+      }
+
+      response.set_status(pb::kSucceed);
+      return true;
+    }
+
+      ////////////////////////////
+     // Group management stuff //
+    ////////////////////////////
+
   bool
   Service::groupCreate(pb::GroupCreate & request,
                        pb::GroupInfo & response)

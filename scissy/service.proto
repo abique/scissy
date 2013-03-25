@@ -25,6 +25,12 @@ enum Role
   kOwner  = 3;
 }
 
+enum SshKeyType
+{
+  kSshKeyRsa = 0;
+  kSshKeyDsa = 1;
+}
+
 message UserAuth
 {
   required bytes user     = 1;
@@ -58,6 +64,20 @@ message UserCreate
 message UserDelete
 {
   required bytes user = 1;
+}
+
+message SshKey
+{
+  required SshKeyType type   = 1;
+  required bytes      key    = 2;
+  optional string     desc   = 3;
+  optional uint64     key_id = 4;
+}
+
+message UserSshKey
+{
+  required SshKey        key  = 1;
+  required UserAuthToken auth = 2;
 }
 
 message GroupCreate
@@ -196,6 +216,8 @@ service Service
   /* user management */
   rpc userCreate(UserCreate) returns (StatusMsg);
   // rpc userDelete(UserDelete) returns (StatusMsg);
+  rpc userAddSshKey(UserSshKey) returns (StatusMsg);
+  rpc userRemoveSshKey(UserSshKey) returns (StatusMsg);
 
   // /* group management */
   rpc groupCreate(GroupCreate) returns (GroupInfo);
