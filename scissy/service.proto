@@ -80,6 +80,19 @@ message UserSshKey
   required UserAuthToken auth = 2;
 }
 
+message UserSshKeySelector
+{
+  required UserAuthToken auth = 2; // if you're admin, you can view others keys
+  required bytes         user = 3; // target
+}
+
+message UserSshKeys
+{
+  repeated SshKey key    = 1;
+  optional Status status = 2;
+  optional string msg    = 3;
+}
+
 message GroupCreate
 {
   required UserAuthToken auth = 1;
@@ -218,14 +231,15 @@ service Service
   // rpc userDelete(UserDelete) returns (StatusMsg);
   rpc userAddSshKey(UserSshKey) returns (StatusMsg);
   rpc userRemoveSshKey(UserSshKey) returns (StatusMsg);
+  rpc userGetSshKeys(UserSshKeySelector) returns (UserSshKeys);
 
-  // /* group management */
+  /* group management */
   rpc groupCreate(GroupCreate) returns (GroupInfo);
   rpc groupDelete(GroupDelete) returns (StatusMsg);
   rpc groupAddUser(GroupAddUser) returns (StatusMsg);
   rpc groupRemoveUser(GroupRemoveUser) returns (StatusMsg);
 
-  // /* groups view */
+  /* groups view */
   rpc groupGetInfo(GroupSelector) returns (GroupInfo);
   rpc groupsList(GroupSelector) returns (GroupList);
   rpc groupUserList(GroupUserSelector) returns (GroupUserList);

@@ -9,8 +9,8 @@ namespace scissy
   {
   public:
 
-      ////////////////
-     // User stuff //
+    ////////////////
+    // User stuff //
     ////////////////
 
     virtual bool userCreate(pb::UserCreate & request,
@@ -31,8 +31,11 @@ namespace scissy
     virtual bool userRemoveSshKey(pb::UserSshKey & request,
                                   pb::StatusMsg & response) override;
 
-      ////////////////////////////
-     // Group management stuff //
+    virtual bool userGetSshKeys(pb::UserSshKeySelector & request,
+                                pb::UserSshKeys & response) override;
+
+    ////////////////////////////
+    // Group management stuff //
     ////////////////////////////
 
     virtual bool groupCreate(pb::GroupCreate & request,
@@ -47,8 +50,8 @@ namespace scissy
     virtual bool groupRemoveUser(pb::GroupRemoveUser & request,
                                  pb::StatusMsg & response) override;
 
-      ////////////////
-     // Group View //
+    ////////////////
+    // Group View //
     ////////////////
 
     virtual bool groupsList(pb::GroupSelector & request,
