@@ -1,6 +1,6 @@
 <div class="row">
   <div class="span8">
-    <form novalidate class="form-horizontal">
+    <form novalidate class="form-horizontal" name="registerForm">
       <fieldset>
 
         <legend>Register yourself!</legend>
@@ -12,7 +12,8 @@
         <div class="control-group">
           <label class="control-label" for="login">Login</label>
           <div class="controls">
-            <input id="login" type="text" class="input-xlarge" ng-model="user.login" required/>
+            <input id="login" name="login" type="text" class="input-xlarge"
+                   ng-model="user.login" ng-pattern="/^[a-zA-Z0-9]+$/" required />
           </div>
         </div>
 

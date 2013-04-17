@@ -14,6 +14,15 @@
 #include "db.hh"
 #include "service.hh"
 
+#define AUTHENTICATE_USER()                             \
+  pb::Session session;                                  \
+                                                        \
+  if (!userGetSession(request.auth(), session)) {       \
+    response.set_status(pb::kInvalidSession);           \
+    response.set_msg("invalid session");                \
+    return true;                                        \
+  }
+
 namespace scissy
 {
   bool
@@ -320,15 +329,10 @@ namespace scissy
   Service::groupCreate(pb::GroupCreate & request,
                        pb::GroupInfo & response)
   {
-    pb::Session session;
     std::string err;
     int64_t grp_id;
 
-    if (!userGetSession(request.auth(), session)) {
-      response.set_status(pb::kInvalidSession);
-      response.set_msg("invalid session");
-      return true;
-    }
+    AUTHENTICATE_USER();
 
     if (!Db::groupCreate(request.grp(), request.desc(), session.user(), &err)) {
       response.set_status(pb::kFailed);
@@ -368,13 +372,7 @@ namespace scissy
   Service::groupDelete(pb::GroupDelete & request,
                        pb::StatusMsg & response)
   {
-    pb::Session session;
-
-    if (!userGetSession(request.auth(), session)) {
-      response.set_status(pb::kInvalidSession);
-      response.set_msg("invalid session");
-      return true;
-    }
+    AUTHENTICATE_USER();
 
     if (!isGroupOwner(session, request.grp())) {
       response.set_status(pb::kFailed);
@@ -396,13 +394,7 @@ namespace scissy
   Service::groupAddUser(pb::GroupAddUser & request,
                         pb::StatusMsg & response)
   {
-    pb::Session session;
-
-    if (!userGetSession(request.auth(), session)) {
-      response.set_status(pb::kInvalidSession);
-      response.set_msg("invalid session");
-      return true;
-    }
+    AUTHENTICATE_USER();
 
     if (!isGroupOwner(session, request.grp())) {
       response.set_status(pb::kFailed);
@@ -424,13 +416,7 @@ namespace scissy
   Service::groupRemoveUser(pb::GroupRemoveUser & request,
                            pb::StatusMsg & response)
   {
-    pb::Session session;
-
-    if (!userGetSession(request.auth(), session)) {
-      response.set_status(pb::kInvalidSession);
-      response.set_msg("invalid session");
-      return true;
-    }
+    AUTHENTICATE_USER();
 
     if (!isGroupOwner(session, request.grp())) {
       response.set_status(pb::kFailed);

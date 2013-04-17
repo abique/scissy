@@ -1,13 +1,13 @@
 #! /bin/bash
 
-LESSC=$HOME/.npm/bin/lessc
+LESSC=$HOME/.npm/bin/recess
 UGLIFYJS=$HOME/.npm/bin/uglifyjs
-ANGULARJS_VERSION=1.0.5
+ANGULARJS_VERSION=1.0.6
 JQUERY_VERSION=1.9.1
 
 cp scissy.less bootstrap/less/ &&
 cd bootstrap/less &&
-$LESSC scissy.less >../../css/scissy.css &&
+$LESSC --compile scissy.less >../../css/scissy.css &&
 cd ../.. &&
 cp bootstrap/img/* img/ &&
 cat bootstrap/js/{bootstrap-transition,bootstrap-alert,bootstrap-button,bootstrap-carousel,bootstrap-collapse,bootstrap-dropdown,bootstrap-modal,bootstrap-tooltip,bootstrap-popover,bootstrap-scrollspy,bootstrap-tab,bootstrap-typeahead}.js >js/bootstrap.js &&

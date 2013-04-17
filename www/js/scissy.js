@@ -9,7 +9,8 @@ scissy_module.config(function($routeProvider) {
         .when('/login', {controller:loginCtrl, templateUrl:'html/login.html'})
         .when('/register', {controller:registerCtrl, templateUrl:'html/register.html'})
         .when('/repos', {controller:loginCtrl, templateUrl:'html/repos.html'})
-        .when('/settings', {controller:settingsCtrl, templateUrl:'html/settings.html'});
+        .when('/settings/account', {controller:settingsAccountCtrl, templateUrl:'html/settings.html'})
+        .when('/settings/ssh-keys', {controller:settingsKeysCtrl, templateUrl:'html/settings.html'});
 });
 
 function resetSession($rootScope) {
@@ -75,6 +76,7 @@ function loginCtrl($scope, $rootScope, $http, $location) {
     $scope.reset = function() {
         $scope.user = {};
     }
+    $scope.reset();
 
     $scope.login = function(user) {
         $http.post('/api/userAuth',
@@ -100,8 +102,12 @@ function loginCtrl($scope, $rootScope, $http, $location) {
 
 function registerCtrl($scope, $http, $location) {
     $scope.reset = function() {
-        $scope.user = {};
+        $scope.user = {
+            login:"",
+            email:""
+        };
     }
+    $scope.reset();
 
     $scope.register = function(user) {
         $http.post('/api/userCreate',
@@ -120,11 +126,14 @@ function registerCtrl($scope, $http, $location) {
     }
 }
 
-function settingsCtrl($scope) {
-
+function settingsAccountCtrl($scope, $rootScope) {
+    $scope.account_class = "active";
+    $scope.content = "html/settings-account.html";
 }
 
-function settingsAccountCtrl($scope, $rootScope) {
+function settingsKeysCtrl($scope, $rootScope) {
+    $scope.keys_class = "active";
+    $scope.content = "html/settings-account.html";
 }
 
 function headerCtrl($scope, $rootScope, $http) {
@@ -138,6 +147,7 @@ function groupCreateCtrl($scope, $rootScope, $http, $location) {
     $scope.reset = function() {
         $scope.grp = {};
     }
+    $scope.reset();
 
     $scope.create = function(grp) {
         $http.post('/api/groupCreate',
