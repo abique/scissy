@@ -10,22 +10,22 @@
   <tbody>
 
     <tr ng-repeat="key in keys">
-      <td>{{name}}</td>
-      <td>{{type}}</td>
-      <td><i class="icon-trash"></i></td>
+      <td>{{key.desc}}</td>
+      <td>{{key.type}}</td>
+      <td><i class="icon-trash" ng-click="removeKey(key)"></i></td>
     </tr>
 
   </tbody>
 </table>
 
 <form no-validate class="form-horizontal">
-  <input type="hidden" name="operation" value="add-key"/>
+  <fieldset>
+    <div class="control-group">
+      <textarea class="textarea span8" name="key" ng-model="new_key" required></textarea>
+    </div>
 
-  <div class="control-group">
-    <textarea class="textarea span8" name="key"></textarea>
-  </div>
-
-  <div class="control-group">
-    <input type="submit" value="Add key" class="btn btn-success"/>
-  </div>
+    <div class="form-actions">
+      <button ng-click="addKey(new_key)" class="btn btn-primary">Add key</button>
+    </div>
+  </fieldset>
 </form>

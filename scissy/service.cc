@@ -277,7 +277,7 @@ namespace scissy
     }
 
     auto stmt = Db::prepare("delete from users_ssh_keys"
-                            " where user_id = ? and key_id = ?");
+                            " where user_id = ? and ssh_key_id = ?");
     if (!stmt.bind(session.user_id(), request.key().key_id()).step()) {
       response.set_status(pb::kFailed);
       response.set_msg("SQL error");
@@ -310,7 +310,7 @@ namespace scissy
                             " where user_id = ?");
     stmt.bind(session.user_id());
     while (stmt.fetch(&key_id, (int*)&type, &key, &desc)) {
-      auto new_key = response.add_key();
+      auto new_key = response.add_keys();
       new_key->set_key_id(key_id);
       new_key->set_type(type);
       new_key->set_key(key);

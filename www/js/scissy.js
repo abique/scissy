@@ -131,9 +131,64 @@ function settingsAccountCtrl($scope, $rootScope) {
     $scope.content = "html/settings-account.html";
 }
 
-function settingsKeysCtrl($scope, $rootScope) {
+function settingsKeysCtrl($scope, $rootScope, $http) {
     $scope.keys_class = "active";
-    $scope.content = "html/settings-account.html";
+    $scope.content = "html/settings-ssh-keys.html";
+    $scope.new_key = "";
+    $scope.keys = []
+
+    $scope.getKeys = function() {
+        $http.post('/api/userGetSshKeys',
+                   { 'auth': $rootScope.session.auth,
+                     'user': $rootScope.session.auth.user
+                   })
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.keys = data.keys;
+            })
+            .error(rpcGenericError);
+    }
+    $scope.getKeys();
+
+    $scope.addKey = function(new_key) {
+        var re = /^(ssh-rsa|ssh-dsa) ([A-Za-z0-9+\/=]+) (.*)?$/g;
+        matches = re.exec(new_key);
+
+        if (matches[1] == "ssh-rsa")
+            type = "kSshKeyRsa";
+        else if (matches[1] == "ssh-rsa")
+            type = "kSshKeyDsa";
+        else {
+            alert("Invalid type: " + matches[1]);
+            return;
+        }
+
+        $http.post('/api/userAddSshKey',
+                   { 'auth': $rootScope.session.auth,
+                     'key': {
+                         'type': type,
+                         'key': matches[2],
+                         'desc': matches[3],
+                     }
+                   })
+            .success(function (data, status, headers, config) {
+                $scope.getKeys();
+                $scope.errmsg = data.msg;
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.removeKey = function(key) {
+        $http.post('/api/userRemoveSshKey',
+                   { 'auth': $rootScope.session.auth,
+                     'key': key
+                   })
+            .success(function (data, status, headers, config) {
+                $scope.getKeys();
+                $scope.errmsg = data.msg;
+            })
+            .error(rpcGenericError);
+    }
 }
 
 function headerCtrl($scope, $rootScope, $http) {

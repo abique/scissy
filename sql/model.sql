@@ -25,7 +25,8 @@ create table if not exists users_ssh_keys
   `key_type` integer not null, 
   `key` text not null,
   `desc` text not null,
-  ts_created integer not null
+  ts_created integer not null,
+  unique (user_id, `key`, `key_type`)
 );
 
 create table if not exists users_auths
