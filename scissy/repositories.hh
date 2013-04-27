@@ -14,6 +14,7 @@ namespace scissy
     bool create(const std::string & name,
                 const std::string & description,
                 const std::string & owner,
+                int64_t *           id,
                 std::string *       error);
 
     bool remove(const std::string & name);

@@ -19,6 +19,12 @@ namespace scissy
                          Config::instance().dbPath(), sqlite3_errmsg(db_));
   }
 
+  int64_t
+  Db::lastInsertRowid()
+  {
+    return sqlite3_last_insert_rowid(Db::instance().db_);
+  }
+
   mimosa::sqlite::Stmt
   Db::prepare(const char *rq)
   {

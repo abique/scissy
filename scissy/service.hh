@@ -62,6 +62,28 @@ namespace scissy
 
     virtual bool groupUserList(pb::GroupUserSelector & request,
                                pb::GroupUserList & response) override;
+
+    ///////////////////////////
+    // Repository management //
+    ///////////////////////////
+
+    virtual bool repoCreate(pb::RepoCreate & request,
+                            pb::RepoInfo & response) override;
+
+    virtual bool repoDelete(pb::RepoDelete & request,
+                            pb::StatusMsg & response) override;
+
+    virtual bool repoAddUser(pb::RepoAddUser & request,
+                             pb::StatusMsg & response) override;
+
+    virtual bool repoRemoveUser(pb::RepoRemoveUser & request,
+                                pb::StatusMsg & response) override;
+
+    virtual bool repoAddGroup(pb::RepoAddGroup & request,
+                              pb::StatusMsg & response) override;
+
+    virtual bool repoRemoveGroup(pb::RepoRemoveGroup & request,
+                                 pb::StatusMsg & response) override;
   };
 }
 

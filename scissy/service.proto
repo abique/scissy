@@ -173,31 +173,55 @@ message GroupUserList
 
 message RepoCreate
 {
-  required bytes repo = 1;
+  required UserAuthToken auth = 1;
+  required bytes         name = 2;
+  required bytes         desc = 3;
 }
 
 message RepoDelete
 {
-  required bytes repo = 1;
+  required UserAuthToken auth    = 1;
+  required int64         repo_id = 2;
 }
 
 message RepoAddUser
 {
-  required bytes repo = 1;
-  required bytes user = 2;
-  required Role  role = 3;
+  required UserAuthToken auth    = 1;
+  required int64         repo_id = 2;
+  required int64         user_id = 3;
+  required Role          role    = 4;
+}
+
+message RepoRemoveUser
+{
+  required UserAuthToken auth    = 1;
+  required int64         repo_id = 2;
+  required int64         user_id = 3;
 }
 
 message RepoAddGroup
 {
-  required bytes repo = 1;
-  required bytes grp  = 2;
-  required Role  role = 3;
+  required UserAuthToken auth    = 1;
+  required int64         repo_id = 2;
+  required int64         grp_id  = 3;
+  required Role          role    = 4;
+}
+
+message RepoRemoveGroup
+{
+  required UserAuthToken auth    = 1;
+  required int64         repo_id = 2;
+  required int64         grp_id  = 3;
 }
 
 message RepoInfo
 {
-  required bytes repo = 1;
+  required Status status = 1;
+  optional string msg    = 2;
+
+  required int64 repo_id   = 3;
+  required bytes repo_name = 4;
+  required bytes repo_desc = 5;
 }
 
 message RepoList
@@ -244,11 +268,13 @@ service Service
   rpc groupsList(GroupSelector) returns (GroupList);
   rpc groupUserList(GroupUserSelector) returns (GroupUserList);
 
-  // /* repo management */
-  // rpc repoCreate(RepoCreate) returns (StatusMsg);
-  // rpc repoDelete(RepoDelete) returns (StatusMsg);
-  // rpc repoAddUser(RepoAddUser) returns (StatusMsg);
-  // rpc repoAddGroup(RepoAddGroup) returns (StatusMsg);
+  /* repo management */
+  rpc repoCreate(RepoCreate) returns (RepoInfo);
+  rpc repoDelete(RepoDelete) returns (StatusMsg);
+  rpc repoAddUser(RepoAddUser) returns (StatusMsg);
+  rpc repoRemoveUser(RepoRemoveUser) returns (StatusMsg);
+  rpc repoAddGroup(RepoAddGroup) returns (StatusMsg);
+  rpc repoRemoveGroup(RepoRemoveGroup) returns (StatusMsg);
 
   // /* repo view */
   // rpc repoGetUserRole(RepoSelector) returns (UserRole);

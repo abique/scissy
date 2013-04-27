@@ -13,6 +13,8 @@ namespace scissy
   public:
     Db();
 
+    static int64_t lastInsertRowid();
+
     static mimosa::sqlite::Stmt prepare(const char *rq);
 
     /**************/

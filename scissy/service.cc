@@ -13,6 +13,7 @@
 #include "config.hh"
 #include "db.hh"
 #include "service.hh"
+#include "repositories.hh"
 
 #define AUTHENTICATE_USER()                             \
   pb::Session session;                                  \
@@ -430,7 +431,7 @@ namespace scissy
   }
 
   bool
-  Service::groupsList(pb::GroupSelector & request,
+  Service::groupsList(pb::GroupSelector & /*request*/,
                       pb::GroupList & response)
   {
     std::string grp;
@@ -502,6 +503,68 @@ namespace scissy
       msg->set_role(role);
     }
     response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  ///////////////////////////
+  // Repository management //
+  ///////////////////////////
+
+  bool
+  Service::repoCreate(pb::RepoCreate & request,
+                      pb::RepoInfo & response)
+  {
+    AUTHENTICATE_USER();
+
+    std::string errmsg;
+    int64_t repo_id;
+
+    if (!Repositories::instance().create(request.name(), request.desc(),
+                                         session.user(), &repo_id, &errmsg)) {
+      response.set_status(pb::kFailed);
+      response.set_msg(errmsg);
+      return true;
+    }
+
+    response.set_repo_name(request.name());
+    response.set_repo_desc(request.desc());
+    response.set_repo_id(repo_id);
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::repoDelete(pb::RepoDelete & request,
+                      pb::StatusMsg & response)
+  {
+    return true;
+  }
+
+  bool
+  Service::repoAddUser(pb::RepoAddUser & request,
+                       pb::StatusMsg & response)
+  {
+    return true;
+  }
+
+  bool
+  Service::repoRemoveUser(pb::RepoRemoveUser & request,
+                          pb::StatusMsg & response)
+  {
+    return true;
+  }
+
+  bool
+  Service::repoAddGroup(pb::RepoAddGroup & request,
+                        pb::StatusMsg & response)
+  {
+    return true;
+  }
+
+  bool
+  Service::repoRemoveGroup(pb::RepoRemoveGroup & request,
+                           pb::StatusMsg & response)
+  {
     return true;
   }
 }

@@ -13,14 +13,7 @@
 #include "repositories.hh"
 
 // handlers
-#include "clear-cache-handler.hh"
-#include "login-handler.hh"
-#include "logout-handler.hh"
-#include "register-handler.hh"
 #include "root-handler.hh"
-#include "new-repo-handler.hh"
-#include "repos-handler.hh"
-#include "settings-handler.hh"
 #include "service.hh"
 
 uint16_t & PORT = *mimosa::options::addOption<uint16_t>("", "port", "the port to use", 19042);
@@ -48,13 +41,6 @@ int main(int argc, char ** argv)
     "/html/*", new mimosa::http::FsHandler(
       scissy::Config::instance().htmlDir(), 1, true));
   dispatch->registerHandler("/", new scissy::RootHandler);
-  dispatch->registerHandler("/clear-cache", new scissy::ClearCacheHandler);
-  dispatch->registerHandler("/register", new scissy::RegisterHandler);
-  dispatch->registerHandler("/login", new scissy::LoginHandler);
-  dispatch->registerHandler("/logout", new scissy::LogoutHandler);
-  dispatch->registerHandler("/new-repo", new scissy::NewRepoHandler);
-  dispatch->registerHandler("/repos", new scissy::ReposHandler);
-  dispatch->registerHandler("/settings", new scissy::SettingsHandler);
   dispatch->registerHandler("/api/*", new scissy::pb::ServiceHttpHandler(
                               new scissy::Service, "/api/"));
 

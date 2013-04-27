@@ -24,22 +24,12 @@ add_executable(scissyd
   config.cc
   db.cc
   groups.cc
-  load-tpl.cc
-  page-footer.cc
-  page-header.cc
   repositories.cc
   role.cc
   session.cc
 
   # handlers
-  clear-cache-handler.cc
-  login-handler.cc
-  logout-handler.cc
-  new-repo-handler.cc
-  register-handler.cc
-  repos-handler.cc
   root-handler.cc
-  settings-handler.cc
 
   # rpc
   service.cc

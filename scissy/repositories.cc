@@ -53,6 +53,7 @@ namespace scissy
   Repositories::create(const std::string & name,
                        const std::string & desc,
                        const std::string & owner,
+                       int64_t *           repo_id,
                        std::string *       error)
   {
     // insert the data into sqlite
@@ -71,7 +72,8 @@ namespace scissy
         *error = "failed to register, internal error";
         return false;
       }
-      return true;
+
+      *repo_id = Db::lastInsertRowid();
     }
 
     // create the repository on the filesystem
@@ -88,6 +90,8 @@ namespace scissy
       if (err != GIT_OK)
       {
         *error = "failed to initialize git repository";
+        auto stmt = Db::prepare("delete from repos where name = ?");
+        stmt.bind(name).exec();
         return false;
       }
 
