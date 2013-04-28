@@ -51,7 +51,7 @@ namespace scissy
                                  pb::StatusMsg & response) override;
 
     ////////////////
-    // Group View //
+    // Group view //
     ////////////////
 
     virtual bool groupsList(pb::GroupSelector & request,
@@ -84,6 +84,15 @@ namespace scissy
 
     virtual bool repoRemoveGroup(pb::RepoRemoveGroup & request,
                                  pb::StatusMsg & response) override;
+
+    /////////////////////
+    // Repository view //
+    /////////////////////
+
+    virtual bool reposList(pb::RepoSelector & request,
+                           pb::RepoList & response) override;
+
+
   };
 }
 

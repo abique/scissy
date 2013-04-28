@@ -221,28 +221,22 @@ message RepoInfo
   required Status status = 1;
   optional string msg    = 2;
 
-  required int64 repo_id   = 3;
-  required bytes repo_name = 4;
-  required bytes repo_desc = 5;
+  required int64 id   = 3;
+  required bytes name = 4;
+  required bytes desc = 5;
 }
 
 message RepoList
 {
-  repeated RepoInfo repos = 1;
+  repeated RepoInfo repos  = 1;
+  optional Status   status = 2;
+  optional string   msg    = 3;
 }
 
 message RepoSelector
 {
-  optional bytes  repo   = 1;
-  optional bytes  user   = 2;
-  optional bytes  grp    = 3;
-  optional uint32 limit  = 4;
-  optional uint32 offset = 5;
-}
-
-message RepoPath
-{
-  optional bytes path = 1;
+  optional uint32 limit  = 1;
+  optional uint32 offset = 2;
 }
 
 service Service
@@ -280,9 +274,8 @@ service Service
 
   // /* repo view */
   // rpc repoGetUserRole(RepoSelector) returns (UserRole);
-  // rpc repoGetPath(RepoSelector) returns (RepoPath);
   // rpc reposGetInfo(RepoSelector) returns (RepoInfo);
-  // rpc reposList(RepoSelector) returns (RepoList);
+  rpc reposList(RepoSelector) returns (RepoList);
   // rpc repoGetCommitLog() returns ();
   // rpc repoGetCommit() returns ();
   // rpc repoGetTree() returns ();

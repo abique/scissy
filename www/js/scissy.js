@@ -10,6 +10,9 @@ scissy_module.config(function($routeProvider) {
         .when('/register', {controller:registerCtrl, templateUrl:'html/register.html'})
         .when('/repos', {controller:reposCtrl, templateUrl:'html/repos.html'})
         .when('/repo-create', {controller:repoCreateCtrl, templateUrl:'html/repo-create.html'})
+        .when('/repo/summary/:repo_id', {controller:repoSummaryCtrl, templateUrl:'html/repo-summary.html'})
+        .when('/repo/tree/:repo_id', {controller:repoTreeCtrl, templateUrl:'html/repo-tree.html'})
+        .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo-log.html'})
         .when('/settings/account', {controller:settingsAccountCtrl, templateUrl:'html/settings.html'})
         .when('/settings/ssh-keys', {controller:settingsKeysCtrl, templateUrl:'html/settings.html'});
 });
@@ -127,7 +130,15 @@ function registerCtrl($scope, $http, $location) {
     }
 }
 
-function reposCtrl($scope, $rootScope) {
+function reposCtrl($scope, $rootScope, $http) {
+    $scope.repos = [];
+
+    $http.post('/api/reposList', {})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.repos = data.repos;
+            })
+        .error(rpcGenericError);
 }
 
 function repoCreateCtrl($scope, $rootScope, $http, $location) {
@@ -151,6 +162,15 @@ function repoCreateCtrl($scope, $rootScope, $http, $location) {
             })
             .error(rpcGenericError);
     }
+}
+
+function repoSummaryCtrl($scope, $rootScope, $http, $location) {
+}
+
+function repoTreeCtrl($scope, $rootScope, $http, $location) {
+}
+
+function repoLogCtrl($scope, $rootScope, $http, $location) {
 }
 
 function settingsAccountCtrl($scope, $rootScope) {

@@ -7,22 +7,18 @@
     <tr>
       <th>Project</th>
       <th>Description</th>
-      <th>Last change</th>
       <th><!-- Shortcuts --></th>
     </tr>
   </thead>
 
   <tbody>
     <tr ng-repeat="repo in repos">
-      <td><a href="/summary?repo={{name}}">{{repo.name}}</a></td>
+      <td><a href="#/summary/{{repo.id}}">{{repo.name}}</a></td>
       <td>{{repo.desc}}</td>
-      <td>{{repo.last_change}}</td>
       <td>
-        <a href="/repo/summary/{{repo.id}}">summary</a> |
-        <a href="/repo/shortlog/{{repo.id}}">shortlog</a> |
-        <a href="/repo/log/{{repo.id}}">log</a> |
-        <a href="/repo/tree/{{repo.id}}">tree</a> |
-        <a href="scissy@localhost:{{repo.name}}">git</a></td>
+        <a href="#/repo/summary/{{repo.id}}">summary</a> |
+        <a href="#/repo/log/{{repo.id}}">log</a> |
+        <a href="#/repo/tree/{{repo.id}}">tree</a></td>
     </tr>
   </tbody>
 </table>

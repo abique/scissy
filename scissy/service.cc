@@ -544,9 +544,9 @@ namespace scissy
       return true;
     }
 
-    response.set_repo_name(request.name());
-    response.set_repo_desc(request.desc());
-    response.set_repo_id(repo_id);
+    response.set_name(request.name());
+    response.set_desc(request.desc());
+    response.set_id(repo_id);
     response.set_status(pb::kSucceed);
     return true;
   }
@@ -634,6 +634,26 @@ namespace scissy
       response.set_msg("");
       response.set_status(pb::kFailed);
       return true;
+    }
+
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::reposList(pb::RepoSelector & request,
+                     pb::RepoList & response)
+  {
+    std::string name;
+    std::string desc;
+    uint64_t    id;
+    auto stmt = Db::prepare("select name, desc, repo_id from repos");
+
+    while (stmt.fetch(&name, &desc, &id)) {
+      auto msg = response.add_repos();
+      msg->set_name(name);
+      msg->set_id(id);
+      msg->set_desc(desc);
     }
 
     response.set_status(pb::kSucceed);
