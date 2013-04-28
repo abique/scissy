@@ -1,27 +1,30 @@
 <div class="row">
   <div class="span8">
-    <form method="post" enctype="application/x-www-form-urlencoded" name="new-repo-form"
-          class="form-horizontal">
+    <form novalidate class="form-horizontal">
       <fieldset>
         <legend>New repository</legend>
+
+        <div class="alert alert-error" ng-show="repo.errmsg">
+          {{repo.errmsg}}
+        </div>
 
         <div class="control-group">
           <label class="control-label" for="name">Name</label>
           <div class="controls">
-            <input name="name" id="name" type="text" class="input-xlarge" value="{{name}}"/>
+            <input id="name" type="text" class="input-xlarge" ng-model="repo.name"/>
           </div>
         </div>
 
         <div class="control-group">
           <label class="control-label" for="desc">Desc</label>
           <div class="controls">
-            <input name="desc" id="desc" type="text" class="input-xlarge" value="{{desc}}"/>
+            <input id="desc" type="text" class="input-xlarge" ng-model="repo.desc"/>
           </div>
         </div>
 
         <div class="form-actions">
-          <input type="reset" value="Reset" class="btn"/>
-          <input type="submit" value="Create" class="btn btn-primary"/>
+          <button ng-click="create(repo)" class="btn btn-primary">Create</button>
+          <button ng-click="reset()" class="btn">Reset</button>
         </div>
       </fieldset>
     </form>

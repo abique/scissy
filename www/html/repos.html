@@ -1,6 +1,6 @@
 <h1>Repositories</h1>
 
-<a href="/new-repo">New repository</a><br/>
+<a href="#/repo-create">New repository</a><br/>
 
 <table class="table table-striped table-condensed">
   <thead>
@@ -13,18 +13,16 @@
   </thead>
 
   <tbody>
-    {{*repos}}
-    <tr>
-      <td><a href="/summary?repo={{name}}">{{name|h}}</a></td>
-      <td>{{desc|h}}</td>
-      <td>{{last_change}}</td>
+    <tr ng-repeat="repo in repos">
+      <td><a href="/summary?repo={{name}}">{{repo.name}}</a></td>
+      <td>{{repo.desc}}</td>
+      <td>{{repo.last_change}}</td>
       <td>
-        <a href="/summary?repo={{name}}">summary</a> |
-        <a href="/shortlog?repo={{name}}">shortlog</a> |
-        <a href="/log?repo={{name}}">log</a> |
-        <a href="/tree?repo={{name}}">tree</a> |
-        <a href="scissy@localhost:{{name}}">git</a></td>
+        <a href="/repo/summary/{{repo.id}}">summary</a> |
+        <a href="/repo/shortlog/{{repo.id}}">shortlog</a> |
+        <a href="/repo/log/{{repo.id}}">log</a> |
+        <a href="/repo/tree/{{repo.id}}">tree</a> |
+        <a href="scissy@localhost:{{repo.name}}">git</a></td>
     </tr>
-    {{/repos}}
   </tbody>
 </table>

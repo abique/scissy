@@ -8,7 +8,8 @@ scissy_module.config(function($routeProvider) {
         .when('/new-repo', {controller:loginCtrl, templateUrl:'html/new-repo.html'})
         .when('/login', {controller:loginCtrl, templateUrl:'html/login.html'})
         .when('/register', {controller:registerCtrl, templateUrl:'html/register.html'})
-        .when('/repos', {controller:loginCtrl, templateUrl:'html/repos.html'})
+        .when('/repos', {controller:reposCtrl, templateUrl:'html/repos.html'})
+        .when('/repo-create', {controller:repoCreateCtrl, templateUrl:'html/repo-create.html'})
         .when('/settings/account', {controller:settingsAccountCtrl, templateUrl:'html/settings.html'})
         .when('/settings/ssh-keys', {controller:settingsKeysCtrl, templateUrl:'html/settings.html'});
 });
@@ -121,6 +122,32 @@ function registerCtrl($scope, $http, $location) {
                     return;
                 }
                 user.errmsg = data.msg;
+            })
+            .error(rpcGenericError);
+    }
+}
+
+function reposCtrl($scope, $rootScope) {
+}
+
+function repoCreateCtrl($scope, $rootScope, $http, $location) {
+    $scope.reset = function() {
+        $scope.repo = {};
+    }
+    $scope.reset();
+
+    $scope.create = function(grp) {
+        $http.post('/api/repoCreate',
+                   { 'auth':$rootScope.session.auth,
+                     'name':grp.name,
+                     'desc':grp.desc })
+            .success(function (data, status, headers, config) {
+                grp.errmsg = null;
+                if (data.status == "kSucceed") {
+                    $location.path("/repo/summary/"+data.repo_id)
+                    return;
+                }
+                grp.errmsg = data.msg;
             })
             .error(rpcGenericError);
     }
