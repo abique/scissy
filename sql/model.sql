@@ -75,19 +75,3 @@ create table if not exists repos_users
   role_id integer not null references roles (role_id) on delete cascade on update cascade,
   primary key (repo_id, user_id)
 );
-
--- Views
-
-create view if not exists groups_users_view as
-   select group_id, user_id, groups.name as name, login as user, groups_users.role_id as role_id,
-          user_id, groups.desc as desc
-      from groups join groups_users using (group_id) join users using (user_id);
-
-create view if not exists repos_users_view as
-    select repo_name, repo_id, `user`, user_id, min(role_id) from
-        (select repos.`name` as repo_name, repo_id, users.login as `user`, user_id, repos_users.role_id
-            from repos join repos_users using (repo_id) join users using (user_id)
-    union
-        select repos.`name` as repo_name, repo_id, `user`, user_id, repos_groups.role_id
-            from repos join repos_groups using (repo_id) join groups_users_view using (group_id))
-        group by user_id;

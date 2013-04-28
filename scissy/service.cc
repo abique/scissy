@@ -24,6 +24,24 @@
     return true;                                        \
   }
 
+#define CHECK_REPO_ROLE(RepoId, UserId, RoleId)         \
+  do {                                                  \
+    pb::Role role;                                      \
+                                                        \
+    if (!Repositories::instance().getUserRole(          \
+          RepoId, UserId, &role)) {                     \
+      response.set_msg("database error");               \
+      response.set_status(pb::kFailed);                 \
+      return false;                                     \
+    }                                                   \
+                                                        \
+    if (role < RoleId) {                                \
+      response.set_msg("insufficient rights");          \
+      response.set_status(pb::kInsufficientRight);      \
+      return true;                                      \
+    }                                                   \
+  } while (0)
+
 namespace scissy
 {
   bool
@@ -520,7 +538,7 @@ namespace scissy
     int64_t repo_id;
 
     if (!Repositories::instance().create(request.name(), request.desc(),
-                                         session.user(), &repo_id, &errmsg)) {
+                                         session.user_id(), &repo_id, &errmsg)) {
       response.set_status(pb::kFailed);
       response.set_msg(errmsg);
       return true;
@@ -537,6 +555,16 @@ namespace scissy
   Service::repoDelete(pb::RepoDelete & request,
                       pb::StatusMsg & response)
   {
+    AUTHENTICATE_USER();
+    CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
+
+    if (!Repositories::instance().remove(request.repo_id())) {
+      response.set_msg("database error");
+      response.set_status(pb::kFailed);
+      return true;
+    }
+
+    response.set_status(pb::kSucceed);
     return true;
   }
 
@@ -544,6 +572,17 @@ namespace scissy
   Service::repoAddUser(pb::RepoAddUser & request,
                        pb::StatusMsg & response)
   {
+    AUTHENTICATE_USER();
+    CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
+
+    if (!Repositories::instance().addUser(
+          request.repo_id(), request.user_id(), request.role())) {
+      response.set_msg("");
+      response.set_status(pb::kFailed);
+      return true;
+    }
+
+    response.set_status(pb::kSucceed);
     return true;
   }
 
@@ -551,6 +590,17 @@ namespace scissy
   Service::repoRemoveUser(pb::RepoRemoveUser & request,
                           pb::StatusMsg & response)
   {
+    AUTHENTICATE_USER();
+    CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
+
+    if (!Repositories::instance().removeUser(
+          request.repo_id(), request.user_id())) {
+      response.set_msg("");
+      response.set_status(pb::kFailed);
+      return true;
+    }
+
+    response.set_status(pb::kSucceed);
     return true;
   }
 
@@ -558,6 +608,17 @@ namespace scissy
   Service::repoAddGroup(pb::RepoAddGroup & request,
                         pb::StatusMsg & response)
   {
+    AUTHENTICATE_USER();
+    CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
+
+    if (!Repositories::instance().addGroup(
+          request.repo_id(), request.grp_id(), request.role())) {
+      response.set_msg("");
+      response.set_status(pb::kFailed);
+      return true;
+    }
+
+    response.set_status(pb::kSucceed);
     return true;
   }
 
@@ -565,6 +626,17 @@ namespace scissy
   Service::repoRemoveGroup(pb::RepoRemoveGroup & request,
                            pb::StatusMsg & response)
   {
+    AUTHENTICATE_USER();
+    CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
+
+    if (!Repositories::instance().removeGroup(
+          request.repo_id(), request.grp_id())) {
+      response.set_msg("");
+      response.set_status(pb::kFailed);
+      return true;
+    }
+
+    response.set_status(pb::kSucceed);
     return true;
   }
 }

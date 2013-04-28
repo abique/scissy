@@ -26,7 +26,6 @@ add_executable(scissyd
   groups.cc
   repositories.cc
   role.cc
-  session.cc
 
   # handlers
   root-handler.cc

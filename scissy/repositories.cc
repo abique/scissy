@@ -6,6 +6,7 @@
 #include "config.hh"
 #include "db.hh"
 #include "repositories.hh"
+#include "log.hh"
 
 namespace scissy
 {
@@ -18,15 +19,35 @@ namespace scissy
   }
 
   bool
-  Repositories::addOwner(const std::string & name,
-                         const std::string & owner)
+  Repositories::addUser(int64_t repo_id, int64_t user_id, pb::Role role)
   {
     auto stmt = Db::prepare(
-      "insert into repos_users (repo_id, user_id, role_id) values"
-      " ((select repo_id from repos where name = ?),"
-      " (select user_id from users where login = ?),"
-      " 0)");
-    return stmt.bind(name, owner).step() == SQLITE_DONE;
+      "insert into repos_users (repo_id, user_id, role_id) values (?, ?, ?)");
+    return stmt.bind(repo_id, user_id, role).step() == SQLITE_DONE;
+  }
+
+  bool
+  Repositories::removeUser(int64_t repo_id, int64_t user_id)
+  {
+    auto stmt = Db::prepare(
+      "delete from repos_users where repo_id = ? and user_id = ?");
+    return stmt.bind(repo_id, user_id).step() == SQLITE_DONE;
+  }
+
+  bool
+  Repositories::addGroup(int64_t repo_id, int64_t group_id, pb::Role role)
+  {
+    auto stmt = Db::prepare(
+      "insert into repos_groups (repo_id, group_id, role_id) values (?, ?, ?)");
+    return stmt.bind(repo_id, group_id, role).step() == SQLITE_DONE;
+  }
+
+  bool
+  Repositories::removeGroup(int64_t repo_id, int64_t group_id)
+  {
+    auto stmt = Db::prepare(
+      "delete from repos_groups where repo_id = ? and group_id = ?");
+    return stmt.bind(repo_id, group_id).step() == SQLITE_DONE;
   }
 
   bool
@@ -38,21 +59,40 @@ namespace scissy
   }
 
   bool
-  Repositories::getRepoPath(const std::string & name,
-                            std::string *       path)
+  Repositories::getUserRole(int64_t repo_id, int64_t user_id, pb::Role * role)
   {
-    int64_t repo_id = 0;
-    if (!getId(name, &repo_id))
-      return false;
+    int role1;
+    *role = pb::kNone;
 
-    *path = mimosa::format::str("%s/%x", Config::instance().repoDir(), repo_id);
+    // check users
+    auto stmt = Db::prepare("select role_id from repos_users"
+                            " where repo_id = ? and user_id = ?"
+                            "select min(repos_groups.role_id, groups_user.role_id)"
+                            " group from repos_groups natural join groups_users"
+                            " where repo_id = ? and user_id = ?");
+    while (stmt.bind(repo_id, user_id, repo_id, user_id).fetch(&role1)) {
+      if (!pb::Role_IsValid(role1)) {
+        log->critical("getUserRole(%d, %d): invalid role %d", repo_id, user_id, role1);
+        return false;
+      }
+
+      if (role1 > *role)
+        *role = static_cast<pb::Role> (role1);
+    }
+
     return true;
+  }
+
+  std::string
+  Repositories::getRepoPath(int64_t repo_id)
+  {
+    return mimosa::format::str("%s/%x", Config::instance().repoDir(), repo_id);
   }
 
   bool
   Repositories::create(const std::string & name,
                        const std::string & desc,
-                       const std::string & owner,
+                       int64_t             user_id,
                        int64_t *           repo_id,
                        std::string *       error)
   {
@@ -78,17 +118,10 @@ namespace scissy
 
     // create the repository on the filesystem
     {
-      std::string path;
-      if (!getRepoPath(name, &path))
-      {
-        *error = "failed to get the repo path";
-        return false;
-      }
-
+      std::string path = getRepoPath(*repo_id);
       git_repository * repo = nullptr;
       int err = git_repository_init(&repo, path.c_str(), true);
-      if (err != GIT_OK)
-      {
+      if (err != GIT_OK) {
         *error = "failed to initialize git repository";
         auto stmt = Db::prepare("delete from repos where name = ?");
         stmt.bind(name).exec();
@@ -98,14 +131,22 @@ namespace scissy
       git_repository_free(repo);
     }
 
-    if (!addOwner(name, owner))
-    {
+    if (!addUser(*repo_id, user_id, pb::kOwner)) {
       *error = "failed to set owner";
       auto stmt = Db::prepare("delete from repos where name = ?");
       stmt.bind(name).exec();
       return false;
     }
 
+    return true;
+  }
+
+  bool
+  Repositories::remove(int64_t repo_id)
+  {
+    auto stmt = Db::prepare("delete from repos where repo_id = ?");
+    stmt.bind(repo_id).exec();
+    // XXX rm
     return true;
   }
 }

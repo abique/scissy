@@ -6,9 +6,11 @@ message Void
 
 enum Status
 {
-  kSucceed        = 0;
-  kFailed         = 1;
-  kInvalidSession = 2;
+  kSucceed           = 0;
+  kFailed            = 1;
+  kInvalidSession    = 2;
+  kNotImplemented    = 3;
+  kInsufficientRight = 4;
 }
 
 message StatusMsg
