@@ -11,6 +11,7 @@
 #include "config.hh"
 #include "db.hh"
 #include "repositories.hh"
+#include "gen-authorized-keys.hh"
 
 // handlers
 #include "root-handler.hh"
@@ -26,6 +27,8 @@ int main(int argc, char ** argv)
   scissy::Db::instance();
 
   scissy::Db::prepare("PRAGMA foreign_keys = ON").exec();
+
+  scissy::genAuthorizedKeys();
 
   auto dispatch = new mimosa::http::DispatchHandler;
   dispatch->registerHandler(

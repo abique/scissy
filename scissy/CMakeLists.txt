@@ -26,6 +26,8 @@ add_executable(scissyd
   groups.cc
   repositories.cc
   role.cc
+  gen-authorized-keys.cc
+  ssh-key-type.cc
 
   # handlers
   root-handler.cc

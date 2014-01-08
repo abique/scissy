@@ -14,6 +14,7 @@
 #include "db.hh"
 #include "service.hh"
 #include "repositories.hh"
+#include "gen-authorized-keys.hh"
 
 #define AUTHENTICATE_USER()                             \
   pb::Session session;                                  \
@@ -278,6 +279,7 @@ namespace scissy
       return true;
     }
 
+    genAuthorizedKeys();
     response.set_status(pb::kSucceed);
     return true;
   }
@@ -641,7 +643,7 @@ namespace scissy
   }
 
   bool
-  Service::reposList(pb::RepoSelector & request,
+  Service::reposList(pb::RepoSelector & /*request*/,
                      pb::RepoList & response)
   {
     std::string name;
