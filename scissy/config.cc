@@ -23,6 +23,7 @@ namespace scissy
       db_path_(ROOT),
       ssh_dir_(ROOT),
       authorized_keys_path_(ROOT),
+      unix_socket_path_(ROOT),
       is_secure_(!UNSECURE)
   {
     www_dir_.append("/www");
@@ -37,5 +38,6 @@ namespace scissy
     db_path_.append("/db/db.sqlite");
     ssh_dir_.append("/.ssh");
     authorized_keys_path_.append("/.ssh/authorized_keys");
+    unix_socket_path_.append("/socket");
   }
 }

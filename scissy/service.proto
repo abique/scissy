@@ -11,6 +11,7 @@ enum Status
   kInvalidSession    = 2;
   kNotImplemented    = 3;
   kInsufficientRight = 4;
+  kNotFound          = 5;
 }
 
 message StatusMsg
@@ -161,9 +162,10 @@ message GroupList
 
 message UserRole
 {
-  required bytes  user    = 1;
-  required uint64 user_id = 2;
-  required Role   role    = 3;
+  optional Status status  = 1;
+  optional bytes  user    = 2;
+  required uint64 user_id = 3;
+  required Role   role    = 4;
 }
 
 message GroupUserList
@@ -216,14 +218,20 @@ message RepoRemoveGroup
   required int64         grp_id  = 3;
 }
 
+message RepoName
+{
+  required bytes name = 1;
+}
+
 message RepoInfo
 {
   required Status status = 1;
   optional string msg    = 2;
 
-  required int64 id   = 3;
-  required bytes name = 4;
-  required bytes desc = 5;
+  required int64 id        = 3;
+  required bytes name      = 4;
+  required bytes desc      = 5;
+  required bool  is_public = 6;
 }
 
 message RepoList
@@ -237,6 +245,25 @@ message RepoSelector
 {
   optional uint32 limit  = 1;
   optional uint32 offset = 2;
+}
+
+message AccessUserRepo
+{
+  required int64 repo_id   = 1;
+  required int64 user_id   = 2;
+}
+
+message ShellControl
+{
+  required int64 user_id   = 1;
+  required bytes repo_name = 2;
+}
+
+message ShellStatus
+{
+  required Status status    = 1;
+  optional bytes  repo_path = 2;
+  required Role   role      = 3;
 }
 
 service Service
@@ -273,10 +300,15 @@ service Service
   rpc repoRemoveGroup(RepoRemoveGroup) returns (StatusMsg);
 
   // /* repo view */
-  // rpc repoGetUserRole(RepoSelector) returns (UserRole);
   // rpc reposGetInfo(RepoSelector) returns (RepoInfo);
   rpc reposList(RepoSelector) returns (RepoList);
   // rpc repoGetCommitLog() returns ();
   // rpc repoGetCommit() returns ();
   // rpc repoGetTree() returns ();
+
+  /* access control */
+  rpc accessUserRepo(AccessUserRepo) returns (UserRole);
+
+  /* ssh shell */
+  rpc shellControl(ShellControl) returns (ShellStatus);
 }

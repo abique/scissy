@@ -65,10 +65,11 @@ namespace scissy
     *role = pb::kNone;
 
     // check users
-    auto stmt = Db::prepare("select role_id from repos_users"
-                            " where repo_id = ? and user_id = ?"
-                            "select min(repos_groups.role_id, groups_user.role_id)"
-                            " group from repos_groups natural join groups_users"
+    auto stmt = Db::prepare(" select role_id from repos_users"
+                            "  where repo_id = ? and user_id = ? "
+                            "union "
+                            " select min(repos_groups.role_id, groups_users.role_id)"
+                            " from repos_groups natural join groups_users"
                             " where repo_id = ? and user_id = ?");
     while (stmt.bind(repo_id, user_id, repo_id, user_id).fetch(&role1)) {
       if (!pb::Role_IsValid(role1)) {

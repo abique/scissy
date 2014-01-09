@@ -92,7 +92,19 @@ namespace scissy
     virtual bool reposList(pb::RepoSelector & request,
                            pb::RepoList & response) override;
 
+    ////////////////////
+    // Access control //
+    ////////////////////
 
+    virtual bool accessUserRepo(pb::AccessUserRepo & request,
+                                pb::UserRole & response) override;
+
+    ///////////////
+    // Ssh shell //
+    ///////////////
+
+    virtual bool shellControl(pb::ShellControl & request,
+                              pb::ShellStatus & response) override;
   };
 }
 

@@ -12,6 +12,7 @@
 #include <mimosa/stream/fd-stream.hh>
 
 #include "service.pb.h"
+#include "log.hh"
 
 enum Action
 {
@@ -20,9 +21,9 @@ enum Action
   kGitUploadArchive,
 };
 
-auto & USER = *mimosa::options::addOption<std::string>("", "user", "the user", "");
+auto & USER_ID = *mimosa::options::addOption<int64_t>("", "user-id", "user id", 0);
 auto & SOCKET_PATH = *mimosa::options::addOption<std::string>(
-  "", "socket-path", "path to scissyd's unix socket", "");
+  "", "socket", "unix socket to scissyd", "");
 
 static bool parseCmd(const char *  cmd,
                      Action *      action,
@@ -70,7 +71,7 @@ static bool parseCmd(const char *  cmd,
   return true;
 }
 
-bool checkAcl(const std::string & user,
+bool checkAcl(int64_t             user_id,
               Action              action,
               const std::string & repo_name,
               std::string *       repo_path)
@@ -89,33 +90,21 @@ bool checkAcl(const std::string & user,
   // create a service stub
   scissy::pb::Service::Client service(channel);
 
-  {
-    // prepare the request
-    auto request = new scissy::pb::RepoSelector;
-    request->set_repo(repo_name);
-
-    // make the call
-    auto call = service.repoGetPath(request);
-    call->wait(); // wait for the call to complete
-
-    if (call->isCanceled())
-      return false;
-
-    *repo_path = call->response().path();
-  }
-
   // prepare the request
-  auto request = new scissy::pb::RepoSelector;
-  request->set_user(user);
-  request->set_repo(repo_name);
+  auto request = new scissy::pb::ShellControl;
+  request->set_repo_name(repo_name);
+  request->set_user_id(user_id);
 
   // make the call
-  auto call = service.repoGetUserRole(request);
-  call->wait(); // wait for the call to complete
+  auto call = service.shellControl(request);
+  call->wait();
 
-  if (call->isCanceled())
+  // check response
+  if (call->isCanceled() ||
+      call->response().status() == scissy::pb::kFailed)
     return false;
 
+  *repo_path = call->response().repo_path();
   switch (call->response().role())
   {
   case scissy::pb::kNone:
@@ -145,7 +134,7 @@ bool runAction(Action action, const std::string & repo_path)
     "git-upload-archive"
   };
 
-  execlp(pathes[action], pathes[action], repo_path.c_str());
+  execlp(pathes[action], pathes[action], repo_path.c_str(), nullptr);
   return false;
 }
 
@@ -157,16 +146,14 @@ int main(int argc, char ** argv)
   Action       action;
   std::string  repo_name;
 
-  if (!parseCmd(cmd, &action, &repo_name))
-  {
-    fprintf(stderr, "failed to parse command: %s\n", cmd);
+  if (!parseCmd(cmd, &action, &repo_name)) {
+    scissy::log->error("failed to parse command: %s", cmd);
     return 1;
   }
 
   std::string repo_path;
-  if (!checkAcl(USER, action, repo_name, &repo_path))
-  {
-    fprintf(stderr, "operation forbidden\n");
+  if (!checkAcl(USER_ID, action, repo_name, &repo_path)) {
+    scissy::log->error("operation forbidden");
     return 1;
   }
 

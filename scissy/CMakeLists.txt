@@ -3,19 +3,20 @@ mimosa_protoc(service)
 add_library(scissy-common
   service.pb.cc
   log.cc
+  ssh-key-type.cc
   )
 
-# add_executable(scissy-shell
-#   shell.cc)
+add_executable(scissy-shell
+  shell.cc)
 
-# target_link_libraries(scissy-shell
-#   scissy-common
-#   mimosa-rpc
-#   mimosa
-#   protobuf
-#   gnutls
-#   pthread
-#   rt)
+target_link_libraries(scissy-shell
+  scissy-common
+  mimosa-rpc
+  mimosa
+  protobuf
+  gnutls
+  pthread
+  rt)
 
 add_executable(scissyd
   main.cc
@@ -27,7 +28,6 @@ add_executable(scissyd
   repositories.cc
   role.cc
   gen-authorized-keys.cc
-  ssh-key-type.cc
 
   # handlers
   root-handler.cc

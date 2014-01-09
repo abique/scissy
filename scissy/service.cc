@@ -642,6 +642,10 @@ namespace scissy
     return true;
   }
 
+  /////////////////////
+  // Repository view //
+  /////////////////////
+
   bool
   Service::reposList(pb::RepoSelector & /*request*/,
                      pb::RepoList & response)
@@ -649,15 +653,63 @@ namespace scissy
     std::string name;
     std::string desc;
     uint64_t    id;
-    auto stmt = Db::prepare("select name, desc, repo_id from repos");
+    int         is_public;
+    auto stmt = Db::prepare("select name, desc, repo_id, is_public from repos");
 
-    while (stmt.fetch(&name, &desc, &id)) {
+    while (stmt.fetch(&name, &desc, &id, &is_public)) {
       auto msg = response.add_repos();
       msg->set_name(name);
       msg->set_id(id);
       msg->set_desc(desc);
+      msg->set_is_public(is_public);
     }
 
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  ////////////////////
+  // Access control //
+  ////////////////////
+
+  bool
+  Service::accessUserRepo(pb::AccessUserRepo & request,
+                          pb::UserRole & response)
+  {
+    pb::Role role = pb::kNone;
+
+    if (!Repositories::instance().getUserRole(
+          request.repo_id(), request.user_id(), &role)) {
+      response.set_status(pb::kFailed);
+      response.set_user_id(request.user_id());
+      response.set_role(pb::kNone);
+      return true;
+    }
+
+    response.set_user_id(request.user_id());
+    response.set_role(role);
+    return true;
+  }
+
+  ///////////////
+  // Ssh shell //
+  ///////////////
+
+  bool
+  Service::shellControl(pb::ShellControl & request,
+                        pb::ShellStatus & response)
+  {
+    int64_t  repo_id;
+    pb::Role role;
+
+    if (!Repositories::instance().getId(request.repo_name(), &repo_id) ||
+        !Repositories::instance().getUserRole(repo_id, request.user_id(), &role)) {
+      response.set_status(pb::kNotFound);
+      return true;
+    }
+
+    response.set_repo_path(Repositories::instance().getRepoPath(repo_id));
+    response.set_role(role);
     response.set_status(pb::kSucceed);
     return true;
   }
