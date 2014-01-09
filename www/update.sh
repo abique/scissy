@@ -2,8 +2,8 @@
 
 LESSC=$HOME/.npm/bin/recess
 UGLIFYJS=$HOME/.npm/bin/uglifyjs
-ANGULARJS_VERSION=1.0.6
-JQUERY_VERSION=1.9.1
+ANGULARJS_VERSION=1.2.7
+JQUERY_VERSION=1.10.2
 
 cp scissy.less bootstrap/less/ &&
 cd bootstrap/less &&
