@@ -9,8 +9,8 @@ cp scissy.less bootstrap/less/ &&
 cd bootstrap/less &&
 $LESSC --compile scissy.less >../../css/scissy.css &&
 cd ../.. &&
-cp bootstrap/img/* img/ &&
-cat bootstrap/js/{bootstrap-transition,bootstrap-alert,bootstrap-button,bootstrap-carousel,bootstrap-collapse,bootstrap-dropdown,bootstrap-modal,bootstrap-tooltip,bootstrap-popover,bootstrap-scrollspy,bootstrap-tab,bootstrap-typeahead}.js >js/bootstrap.js &&
+cp bootstrap/fonts/* fonts/ &&
+cat bootstrap/js/{transition,alert,button,carousel,collapse,dropdown,modal,tooltip,popover,scrollspy,tab,affix}.js >js/bootstrap.js &&
 $UGLIFYJS js/bootstrap.js >js/bootstrap.min.js &&
 wget http://code.jquery.com/jquery-${JQUERY_VERSION}.min.js -O js/jquery.min.js &&
 wget http://code.jquery.com/jquery-${JQUERY_VERSION}.js -O js/jquery.js &&
