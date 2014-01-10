@@ -1,4 +1,6 @@
-var scissy_module = angular.module('scissy', []);
+'use strict';
+
+var scissy_module = angular.module('scissy', ['ngRoute']);
 scissy_module.config(function($routeProvider) {
     $routeProvider
         .when('/', {controller:indexCtrl, templateUrl:'html/index.html'})
