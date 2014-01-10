@@ -13,12 +13,14 @@
 
   <tbody>
     <tr ng-repeat="repo in repos">
-      <td><a href="#/summary/{{repo.id}}">{{repo.name}}</a></td>
+      <td><a href="#/repo/summary/{{repo.id}}">{{repo.name}}</a></td>
       <td>{{repo.desc}}</td>
       <td>
         <a href="#/repo/summary/{{repo.id}}">summary</a> |
         <a href="#/repo/log/{{repo.id}}">log</a> |
-        <a href="#/repo/tree/{{repo.id}}">tree</a></td>
+        <a href="#/repo/tree/{{repo.id}}">tree</a> |
+        <a href="#/repo/admin/{{repo.id}}">admin</a>
+      </td>
     </tr>
   </tbody>
 </table>

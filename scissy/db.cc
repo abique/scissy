@@ -47,44 +47,35 @@ namespace scissy
   /***************/
 
   bool
-  Db::groupGetUserRole(const std::string & group,
-                       const std::string & user,
-                       pb::Role *          role)
+  Db::groupGetUserRole(int64_t group_id, int64_t user_id, pb::Role * role)
   {
     auto stmt = prepare(
-      "select role_id from groups_users_view"
-      " where name = ? and user = ?");
-    return stmt.bind(group, user).fetch(reinterpret_cast<int *>(role));
+      "select role_id from groups_users"
+      " where group_id = ? and user_id = ?");
+    return stmt.bind(group_id, user_id).fetch(reinterpret_cast<int *>(role));
   }
 
   bool
-  Db::groupAddUser(const std::string & group,
-                   const std::string & user,
-                   pb::Role            role)
+  Db::groupAddUser(int64_t grp_id, int64_t user_id, pb::Role role)
   {
     auto stmt = prepare(
       "insert into groups_users (group_id, user_id, role_id) values"
-      " ((select group_id from groups where name = ?),"
-      " (select user_id from users where login = ?),"
-      " ?)");
-    return stmt.bind(group, user, role).step() == SQLITE_DONE;
+      " (?, ?, ?)");
+    return stmt.bind(grp_id, user_id, role).step() == SQLITE_DONE;
   }
 
   void
-  Db::groupRemoveUser(const std::string & group,
-                      const std::string & user)
+  Db::groupRemoveUser(int64_t grp_id, int64_t user_id)
   {
     auto stmt = prepare(
       "delete from groups_users"
-      " where group_id = (select group_id from groups where name = ?)"
-      " and user_id = (select user_id from users where login = ?)");
-    stmt.bind(group, user).exec();
+      " where group_id = ? and user_id = ?");
+    stmt.bind(grp_id, user_id).exec();
   }
 
   bool
   Db::groupCreate(const std::string & group,
                   const std::string & desc,
-                  const std::string & owner,
                   std::string *       error)
   {
     // insert the data into sqlite
@@ -105,14 +96,6 @@ namespace scissy
       }
     }
 
-    if (!groupAddUser(group, owner, pb::kOwner))
-    {
-      *error = "failed to set owner";
-      auto stmt = Db::prepare("delete from groups where name = ?");
-      stmt.bind(group).exec();
-      return false;
-    }
-
     return true;
   }
 
@@ -125,9 +108,9 @@ namespace scissy
   }
 
   bool
-  Db::groupDelete(const std::string & group)
+  Db::groupDelete(int64_t grp_id)
   {
-    auto stmt = prepare("delete from groups where name = ?");
-    return stmt.bind(group).step();
+    auto stmt = prepare("delete from groups where group_id = ?");
+    return stmt.bind(grp_id).step();
   }
 }

@@ -11,7 +11,7 @@ namespace scissy
   {
   public:
     bool getUserRole(const std::string & group,
-                     const std::string & user,
+                     int64_t             user_id,
                      Role *              role);
 
     bool addUser(const std::string & group,

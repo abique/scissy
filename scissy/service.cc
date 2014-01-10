@@ -25,6 +25,46 @@
     return true;                                        \
   }
 
+#define SET_GRP_ID(Msg)                                         \
+  do {                                                          \
+    if ((Msg).has_grp_id())                                     \
+      break;                                                    \
+    if (!(Msg).has_grp()) {                                     \
+      if (!(Msg).has_grp_id()) {                                \
+        response.set_status(pb::kFailed);                       \
+        response.set_msg("need to specify grp or grp_id");      \
+        return true;                                            \
+      }                                                         \
+      int64_t grp_id__;                                         \
+      if (!Db::groupGetId((Msg).grp(), &grp_id__)) {            \
+        response.set_status(pb::kNotFound);                     \
+        response.set_msg("group not found");                    \
+        return true;                                            \
+      }                                                         \
+      (Msg).set_grp_id(grp_id__);                               \
+    }                                                           \
+  } while (0)
+
+#define SET_USER_ID(Msg)                                        \
+  do {                                                          \
+    if ((Msg).has_user_id())                                    \
+      break;                                                    \
+    if (!(Msg).has_user()) {                                    \
+      if (!(Msg).has_user_id()) {                               \
+        response.set_status(pb::kFailed);                       \
+        response.set_msg("need to specify user or user_id");    \
+        return true;                                            \
+      }                                                         \
+      int64_t user_id__;                                        \
+      if (!Db::groupGetId((Msg).user(), &user_id__)) {          \
+        response.set_status(pb::kNotFound);                     \
+        response.set_msg("group not found");                    \
+        return true;                                            \
+      }                                                         \
+      (Msg).set_user_id(user_id__);                             \
+    }                                                           \
+  } while (0)
+
 #define CHECK_REPO_ROLE(RepoId, UserId, RoleId)         \
   do {                                                  \
     pb::Role role;                                      \
@@ -354,8 +394,9 @@ namespace scissy
     int64_t grp_id;
 
     AUTHENTICATE_USER();
+    SET_GRP_ID(request);
 
-    if (!Db::groupCreate(request.grp(), request.desc(), session.user(), &err)) {
+    if (!Db::groupCreate(request.grp(), request.desc(), &err)) {
       response.set_status(pb::kFailed);
       response.set_msg(err);
       return true;
@@ -367,6 +408,19 @@ namespace scissy
       return true;
     }
 
+    if (!Db::groupGetId(request.grp(), &grp_id)) {
+      response.set_status(pb::kFailed);
+      response.set_msg("failed to get group id");
+      return true;
+    }
+
+    if (!Db::groupAddUser(grp_id, session.user_id(), pb::kOwner)) {
+      response.set_status(pb::kFailed);
+      response.set_msg("failed to set owner");
+      Db::groupDelete(grp_id);
+      return true;
+    }
+
     response.set_status(pb::kSucceed);
     response.set_grp_id(grp_id);
     response.set_size(1);
@@ -375,15 +429,14 @@ namespace scissy
     return true;
   }
 
-  static bool isGroupOwner(const pb::Session & session,
-                           const std::string & grp)
+  static bool isGroupOwner(const pb::Session & session, int64_t grp_id)
   {
-    pb::Role role;
+    pb::Role role = pb::kNone;
 
     if (session.role() == pb::kOwner)
       return true;
 
-    if (!Db::groupGetUserRole(grp, session.user(), &role))
+    if (!Db::groupGetUserRole(grp_id, session.user_id(), &role))
       return false;
 
     return role == pb::kOwner;
@@ -394,14 +447,15 @@ namespace scissy
                        pb::StatusMsg & response)
   {
     AUTHENTICATE_USER();
+    SET_GRP_ID(request);
 
-    if (!isGroupOwner(session, request.grp())) {
+    if (!isGroupOwner(session, request.grp_id())) {
       response.set_status(pb::kFailed);
       response.set_msg("insufficient rights");
       return true;
     }
 
-    if (!Db::groupDelete(request.grp())) {
+    if (!Db::groupDelete(request.grp_id())) {
       response.set_status(pb::kFailed);
       response.set_msg("failed to delete group");
       return true;
@@ -416,14 +470,16 @@ namespace scissy
                         pb::StatusMsg & response)
   {
     AUTHENTICATE_USER();
+    SET_GRP_ID(request);
+    SET_USER_ID(request);
 
-    if (!isGroupOwner(session, request.grp())) {
+    if (!isGroupOwner(session, request.grp_id())) {
       response.set_status(pb::kFailed);
       response.set_msg("insufficient rights");
       return true;
     }
 
-    if (!Db::groupAddUser(request.grp(), request.user(), request.role())) {
+    if (!Db::groupAddUser(request.grp_id(), request.user_id(), request.role())) {
       response.set_status(pb::kFailed);
       response.set_msg("failed to add user to group");
       return true;
@@ -438,14 +494,16 @@ namespace scissy
                            pb::StatusMsg & response)
   {
     AUTHENTICATE_USER();
+    SET_GRP_ID(request);
+    SET_USER_ID(request);
 
-    if (!isGroupOwner(session, request.grp())) {
+    if (!isGroupOwner(session, request.grp_id())) {
       response.set_status(pb::kFailed);
       response.set_msg("insufficient rights");
       return true;
     }
 
-    Db::groupRemoveUser(request.grp(), request.user());
+    Db::groupRemoveUser(request.grp_id(), request.user_id());
     response.set_status(pb::kSucceed);
     return true;
   }
@@ -485,7 +543,7 @@ namespace scissy
     uint64_t    size;
     auto stmt = Db::prepare(
       "select name, desc, group_id, count(*)"
-      " from groups_users_view"
+      " from groups natural join groups_users"
       " where group_id = ? or name = ?"
       " limit 1");
 
@@ -511,8 +569,8 @@ namespace scissy
     uint64_t    user_id;
     pb::Role    role;
     auto stmt = Db::prepare(
-      "select user, user_id, role_id"
-      " from groups_users_view"
+      "select login, user_id, groups_users.role_id"
+      " from groups natural join groups_users join users using (user_id)"
       " where group_id = ? or name = ?");
 
     while (stmt.bind(request.grp_id(), request.grp())

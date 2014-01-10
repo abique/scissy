@@ -43,13 +43,13 @@ namespace scissy
 
   bool
   Groups::getUserRole(const std::string & group,
-                      const std::string & user,
+                      int64_t             user_id,
                       Role *              role)
   {
     auto stmt = Db::prepare(
-      "select role_id from groups_users_view"
-      " where name = ? and user = ?");
-    return stmt.bind(group, user).fetch(reinterpret_cast<int *>(role));
+      "select role_id from groups_users"
+      " where name = ? and user_id = ?");
+    return stmt.bind(group, user_id).fetch(reinterpret_cast<int *>(role));
   }
 
   bool

@@ -99,29 +99,35 @@ message UserSshKeys
 message GroupCreate
 {
   required UserAuthToken auth = 1;
-  required bytes grp          = 2;
-  required bytes desc         = 3;
+  optional bytes grp          = 2;
+  optional int64 grp_id       = 3;
+  required bytes desc         = 4;
 }
 
 message GroupDelete
 {
-  required UserAuthToken auth = 1;
-  required bytes grp          = 2;
+  required UserAuthToken auth   = 1;
+  optional int64         grp_id = 2;
+  optional bytes         grp    = 3;
 }
 
 message GroupAddUser
 {
   required UserAuthToken auth = 1;
-  required bytes grp          = 2;
-  required bytes user         = 3;
-  required Role  role         = 4;
+  optional bytes grp          = 2;
+  optional int64 grp_id       = 3;
+  optional bytes user         = 4;
+  optional int64 user_id      = 5;
+  required Role  role         = 6;
 }
 
 message GroupRemoveUser
 {
   required UserAuthToken auth = 1;
-  required bytes grp          = 2;
-  required bytes user         = 3;
+  optional bytes grp          = 2;
+  optional int64 grp_id       = 3;
+  optional bytes user         = 4;
+  optional int64 user_id      = 5;
 }
 
 message GroupSelector

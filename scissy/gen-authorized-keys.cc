@@ -20,7 +20,7 @@ namespace scissy
 
     auto stmt = Db::prepare("select user_id, `key_type`, `key` from users_ssh_keys");
     while (stmt.fetch(&user_id, &key_type, &key)) {
-      out << "command=\"/home/abique/develop/scissy/build/scissy/scissy-shell -socket "
+      out << "command=\"scissy-shell -socket "
           << Config::instance().unixSocketPath()
           << " -user-id " << user_id
           << "\",no-port-forwarding,no-pty,no-X11-forwarding "

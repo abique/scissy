@@ -27,26 +27,14 @@ namespace scissy
     /* group stuff */
     /***************/
 
-    static bool groupGetUserRole(const std::string & group,
-                                 const std::string & user,
-                                 pb::Role *          role);
-
-    static bool groupAddUser(const std::string & group,
-                             const std::string & user,
-                             pb::Role            role);
-
-    static void groupRemoveUser(const std::string & group,
-                                const std::string & user);
-
-    static bool groupCreate(const std::string & group,
+    static bool groupGetUserRole(int64_t group_id, int64_t user_id, pb::Role * role);
+    static bool groupAddUser(int64_t grp_id, int64_t user_id, pb::Role role);
+    static void groupRemoveUser(int64_t grp_id, int64_t user_id);
+    static bool groupCreate(const std::string & grp,
                             const std::string & desc,
-                            const std::string & owner,
                             std::string *       error);
-
-    static bool groupDelete(const std::string & group);
-
-    static bool groupGetId(const std::string & group,
-                           int64_t *           id);
+    static bool groupDelete(int64_t grp_id);
+    static bool groupGetId(const std::string & group, int64_t * grp_id);
 
   private:
     mimosa::sqlite::Db db_;
