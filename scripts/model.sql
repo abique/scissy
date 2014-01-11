@@ -12,8 +12,8 @@ insert or replace into roles (role_id, description) values (3, "owner");
 create table if not exists users
 (
   user_id integer not null primary key autoincrement,
-  login varchar(128) not null unique,
-  email varchar(256) not null unique,
+  login text not null unique,
+  email text not null unique,
   password blob not null, -- sha512(password)
   role_id integer not null default 2
 );
@@ -40,7 +40,7 @@ create table if not exists users_auths
 create table if not exists groups
 (
   group_id integer not null primary key autoincrement,
-  `name` varchar(32) not null unique,
+  `name` text not null unique,
   `desc` text not null default ''
 );
 

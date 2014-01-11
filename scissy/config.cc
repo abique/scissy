@@ -7,11 +7,11 @@ std::string & REPOS = *mimosa::options::addOption<std::string>(
 bool & UNSECURE = *mimosa::options::addSwitch(
   "", "unsecure", "disable https, usefull for dev");
 std::string & SSL_KEY = *mimosa::options::addOption<std::string>(
-  "", "ssl-key", "ssl key", "/etc/scissy/key.pem");
+  "", "ssl-key", "ssl key", "/etc/scissy/server.key");
 std::string & SSL_CERT = *mimosa::options::addOption<std::string>(
-  "", "ssl-cert", "ssl certificate", "/etc/scissy/cert.pem");
+  "", "ssl-cert", "ssl certificate", "/etc/scissy/server.crt");
 std::string & WWW = *mimosa::options::addOption<std::string>(
-  "", "www", "www data", "/usr/share/scissy/www");
+  "", "www", "www data", INSTALL_PREFIX "/share/scissy/www");
 std::string & DB = *mimosa::options::addOption<std::string>(
   "", "db", "sqlite database", "/var/lib/scissy/db.sqlite");
 std::string & AUTH_KEYS = *mimosa::options::addOption<std::string>(
@@ -20,8 +20,8 @@ std::string & AUTH_KEYS = *mimosa::options::addOption<std::string>(
 std::string & SOCKET = *mimosa::options::addOption<std::string>(
   "", "socket", "local socket for scissy-shell",
   "/var/run/scissy/socket");
-bool & CRACK = *mimosa::options::addOption<bool>(
-  "", "crack-password", "check password with cracklib", false);
+bool & CRACK = *mimosa::options::addSwitch(
+  "", "crack-password", "check password with cracklib");
 
 namespace scissy
 {

@@ -9,8 +9,10 @@ find_package(GnuTLS REQUIRED)
 file(STRINGS VERSION SCISSY_VERSION)
 
 message("scissy version: ${SCISSY_VERSION}")
+message("PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 add_definitions(
+  -DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}"
   -std=c++0x
   -D_GNU_SOURCE -D_LARGEFILE64_SOURCE
   -Wall -Wextra -Werror=return-type
@@ -32,3 +34,6 @@ install(
   DESTINATION share/scissy/www
   PATTERN *.less EXCLUDE
   PATTERN update.sh EXCLUDE)
+
+install(FILES scripts/model.sql DESTINATION share/scissy)
+install(FILES scripts/scissy-init DESTINATION bin)

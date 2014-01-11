@@ -1,0 +1,13 @@
+#! /bin/bash
+
+if [[ $# -ne 2 ]] ; then
+    echo "usage: $0 <db.sqlite> <user>"
+    exit
+fi
+
+DB="$1"
+USER="$2"
+
+sqlite3 /var/lib/scissy/db.sqlite <<EOF
+update users set role_id = 3 where login = $USER
+EOF
