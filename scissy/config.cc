@@ -2,42 +2,43 @@
 
 #include "config.hh"
 
-std::string & ROOT = * mimosa::options::addOption<std::string>(
-  "", "root", "scissy root directory", "/srv/scissy");
+std::string & REPOS = *mimosa::options::addOption<std::string>(
+  "", "repos", "repositories prefix", "/var/lib/scissy");
 bool & UNSECURE = *mimosa::options::addSwitch(
   "", "unsecure", "disable https, usefull for dev");
+std::string & SSL_KEY = *mimosa::options::addOption<std::string>(
+  "", "ssl-key", "ssl key", "/etc/scissy/key.pem");
+std::string & SSL_CERT = *mimosa::options::addOption<std::string>(
+  "", "ssl-cert", "ssl certificate", "/etc/scissy/cert.pem");
+std::string & WWW = *mimosa::options::addOption<std::string>(
+  "", "www", "www data", "/usr/share/scissy/www");
+std::string & DB = *mimosa::options::addOption<std::string>(
+  "", "db", "sqlite database", "/var/lib/scissy/db.sqlite");
+std::string & AUTH_KEYS = *mimosa::options::addOption<std::string>(
+  "", "auth-keys", "path to ~/.ssh/authorized_keys",
+  "/var/lib/scissy/.ssh/authorized_keys");
+std::string & SOCKET = *mimosa::options::addOption<std::string>(
+  "", "socket", "local socket for scissy-shell",
+  "/var/run/scissy/socket");
+bool & CRACK = *mimosa::options::addOption<bool>(
+  "", "crack-password", "check password with cracklib", false);
 
 namespace scissy
 {
   Config::Config()
-    : root_dir_(ROOT),
-      www_dir_(ROOT),
-      css_dir_(ROOT),
-      js_dir_(ROOT),
-      fonts_dir_(ROOT),
-      html_dir_(ROOT),
-      key_pem_(ROOT),
-      cert_pem_(ROOT),
-      repo_dir_(ROOT),
-      db_dir_(ROOT),
-      db_path_(ROOT),
-      ssh_dir_(ROOT),
-      authorized_keys_path_(ROOT),
-      unix_socket_path_(ROOT),
-      is_secure_(!UNSECURE)
+    : www_(WWW),
+      ssl_key_(SSL_KEY),
+      ssl_cert_(SSL_CERT),
+      repos_(REPOS),
+      db_(DB),
+      auth_keys_(AUTH_KEYS),
+      socket_(SOCKET),
+      is_secure_(!UNSECURE),
+      crack_passwords_(CRACK)
   {
-    www_dir_.append("/www");
-    css_dir_.append("/www/css");
-    js_dir_.append("/www/js");
-    fonts_dir_.append("/www/fonts");
-    html_dir_.append("/www/html");
-    key_pem_.append("/conf/key.pem");
-    cert_pem_.append("/conf/cert.pem");
-    repo_dir_.append("/repos");
-    db_dir_.append("/db");
-    db_path_.append("/db/db.sqlite");
-    ssh_dir_.append("/.ssh");
-    authorized_keys_path_.append("/.ssh/authorized_keys");
-    unix_socket_path_.append("/socket");
+    css_   = www_ + "/css";
+    js_    = www_ + "/js";
+    fonts_ = www_ + "/fonts";
+    html_  = www_ + "/html";
   }
 }

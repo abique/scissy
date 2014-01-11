@@ -138,7 +138,7 @@ namespace scissy
     }
 
     // useful check in dev mode
-    if (scissy::Config::instance().crackPassword()) {
+    if (scissy::Config::instance().crackPasswords()) {
       const char * errmsg = ::FascistCheck(request.password().c_str(),
                                            ::GetDefaultCracklibDict());
       if (errmsg) {

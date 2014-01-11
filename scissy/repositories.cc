@@ -87,7 +87,7 @@ namespace scissy
   std::string
   Repositories::getRepoPath(int64_t repo_id)
   {
-    return mimosa::format::str("%s/%x", Config::instance().repoDir(), repo_id);
+    return mimosa::format::str("%s/%x", Config::instance().repos(), repo_id);
   }
 
   bool

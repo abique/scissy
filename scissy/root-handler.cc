@@ -11,6 +11,6 @@ namespace scissy
                       mimosa::http::ResponseWriter & response) const
   {
     return mimosa::http::FsHandler::streamFile(
-      request, response, Config::instance().htmlDir() + "/page.html");
+      request, response, Config::instance().html() + "/page.html");
   }
 }

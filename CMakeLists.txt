@@ -26,3 +26,9 @@ include(CheckIncludeFiles)
 include(CheckLibraryExists)
 
 add_subdirectory(scissy)
+
+install(
+  DIRECTORY www/
+  DESTINATION share/scissy/www
+  PATTERN *.less EXCLUDE
+  PATTERN update.sh EXCLUDE)

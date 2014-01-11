@@ -39,21 +39,21 @@ int main(int argc, char ** argv)
   service_map->add(service);
   mimosa::rpc::Server::Ptr rpc_server = new mimosa::rpc::Server;
   rpc_server->setServiceMap(service_map.get());
-  rpc_server->listenUnix(scissy::Config::instance().unixSocketPath());
+  rpc_server->listenUnix(scissy::Config::instance().socket());
 
   auto dispatch = new mimosa::http::DispatchHandler;
   dispatch->registerHandler(
     "/css/*.css", new mimosa::http::FsHandler(
-      scissy::Config::instance().cssDir(), 1, true));
+      scissy::Config::instance().css(), 1, true));
   dispatch->registerHandler(
     "/js/*", new mimosa::http::FsHandler(
-      scissy::Config::instance().jsDir(), 1, true));
+      scissy::Config::instance().js(), 1, true));
   dispatch->registerHandler(
     "/fonts/*", new mimosa::http::FsHandler(
-      scissy::Config::instance().fontsDir(), 1, true));
+      scissy::Config::instance().fonts(), 1, true));
   dispatch->registerHandler(
     "/html/*", new mimosa::http::FsHandler(
-      scissy::Config::instance().htmlDir(), 1, true));
+      scissy::Config::instance().html(), 1, true));
   dispatch->registerHandler("/", new scissy::RootHandler);
   dispatch->registerHandler("/api/*", new scissy::pb::ServiceHttpHandler(
                               service, "/api/"));
@@ -64,8 +64,8 @@ int main(int argc, char ** argv)
   mimosa::http::Server::Ptr http_server(new mimosa::http::Server);
   http_server->setHandler(log_handler);
   if (scissy::Config::instance().isSecure())
-    http_server->setSecure(scissy::Config::instance().certPem(),
-                           scissy::Config::instance().keyPem());
+    http_server->setSecure(scissy::Config::instance().sslCert(),
+                           scissy::Config::instance().sslKey());
 
   if (!http_server->listenInet4(PORT)) {
     mimosa::log::fatal("failed to listen on the port %d: %s",

@@ -12,39 +12,34 @@ namespace scissy
   public:
     Config();
 
-    inline const std::string & rootDir() const { return root_dir_; }
-    inline const std::string & wwwDir() const { return www_dir_; }
-    inline const std::string & cssDir() const { return css_dir_; }
-    inline const std::string & jsDir() const { return js_dir_; }
-    inline const std::string & fontsDir() const { return fonts_dir_; }
-    inline const std::string & htmlDir() const { return html_dir_; }
-    inline const std::string & keyPem() const { return key_pem_; }
-    inline const std::string & certPem() const { return cert_pem_; }
-    inline const std::string & repoDir() const { return repo_dir_; }
-    inline const std::string & dbDir() const { return db_dir_; }
-    inline const std::string & dbPath() const { return db_path_; }
-    inline const std::string & sshDir() const { return ssh_dir_; }
-    inline const std::string & authorizedKeysPath() const { return authorized_keys_path_; }
-    inline const std::string & unixSocketPath() const { return unix_socket_path_; }
+    inline const std::string & www() const { return www_; }
+    inline const std::string & css() const { return css_; }
+    inline const std::string & js() const { return js_; }
+    inline const std::string & fonts() const { return fonts_; }
+    inline const std::string & html() const { return html_; }
+    inline const std::string & sslKey() const { return ssl_key_; }
+    inline const std::string & sslCert() const { return ssl_cert_; }
+    inline const std::string & repos() const { return repos_; }
+    inline const std::string & db() const { return db_; }
+    inline const std::string & authKeys() const { return auth_keys_; }
+    inline const std::string & socket() const { return socket_; }
     inline bool isSecure() const { return is_secure_; }
-    inline bool crackPassword() const { return false; }
+    inline bool crackPasswords() const { return crack_passwords_; }
 
   private:
-    std::string root_dir_;
-    std::string www_dir_;
-    std::string css_dir_;
-    std::string js_dir_;
-    std::string fonts_dir_;
-    std::string html_dir_;
-    std::string key_pem_;
-    std::string cert_pem_;
-    std::string repo_dir_;
-    std::string db_dir_;
-    std::string db_path_;
-    std::string ssh_dir_;
-    std::string authorized_keys_path_;
-    std::string unix_socket_path_;
+    std::string www_;
+    std::string css_;
+    std::string js_;
+    std::string fonts_;
+    std::string html_;
+    std::string ssl_key_;
+    std::string ssl_cert_;
+    std::string repos_;
+    std::string db_;
+    std::string auth_keys_;
+    std::string socket_;
     bool is_secure_;
+    bool crack_passwords_;
   };
 }
 

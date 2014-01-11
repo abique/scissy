@@ -10,13 +10,13 @@ namespace scissy
   Db::Db()
     : db_()
   {
-    int err = db_.open(Config::instance().dbPath().c_str(),
+    int err = db_.open(Config::instance().db().c_str(),
                        SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE |
                        SQLITE_OPEN_FULLMUTEX, nullptr);
 
     if (err != SQLITE_OK)
       mimosa::log::fatal("failed to open sqlite database: %s: %s",
-                         Config::instance().dbPath(), sqlite3_errmsg(db_));
+                         Config::instance().db(), sqlite3_errmsg(db_));
   }
 
   int64_t
