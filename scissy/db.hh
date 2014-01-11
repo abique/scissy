@@ -21,7 +21,7 @@ namespace scissy
     /* user stuff */
     /**************/
 
-    static bool userGetId(const std::string & user, uint64_t * user_id);
+    static bool userGetId(const std::string & user, int64_t * user_id);
 
     /***************/
     /* group stuff */
@@ -35,6 +35,12 @@ namespace scissy
                             std::string *       error);
     static bool groupDelete(int64_t grp_id);
     static bool groupGetId(const std::string & group, int64_t * grp_id);
+
+    /**************/
+    /* repo stuff */
+    /**************/
+
+    static bool repoGetId(const std::string & repo, int64_t * repo_id);
 
   private:
     mimosa::sqlite::Db db_;

@@ -31,16 +31,7 @@
       <td><a href="#/user/{{user.user_id}}">{{user.user}}</a></td>
       <td>{{user.role}}</td>
       <td ng-show="is_admin">
-        <i class="icon-wrench"></i>
-        <i class="icon-trash" ng-click="removeUser(user)"></i>
-        <!-- <form novalidate class="form-inline"> -->
-        <!--   <select type="text" class="span2"> -->
-        <!--     <option value="kOwner" ng-selected="user.role=='kOwner'">Administrator</option> -->
-        <!--     <option value="kWriter" ng-selected="user.role=='kWriter'">Contributor</option> -->
-        <!--     <option value="kReader" ng-selected="user.role=='kReader'">Observer</option> -->
-        <!--     <option value="kNone" ng-selected="user.role=='kNone'">Remove</option> -->
-        <!--   </select> -->
-        <!-- </form> -->
+        <span class="glyphicon glyphicon-trash" ng-click="removeUser(user)"></span>
       </td>
     </tr>
   </tbody>

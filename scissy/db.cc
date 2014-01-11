@@ -36,7 +36,7 @@ namespace scissy
   /**************/
 
   bool
-  Db::userGetId(const std::string & user, uint64_t * user_id)
+  Db::userGetId(const std::string & user, int64_t * user_id)
   {
     auto stmt = prepare("select user_id from users where login = ?");
     return stmt.bind(user).fetch(user_id);
@@ -112,5 +112,16 @@ namespace scissy
   {
     auto stmt = prepare("delete from groups where group_id = ?");
     return stmt.bind(grp_id).step();
+  }
+
+  /**************/
+  /* repo stuff */
+  /**************/
+
+  bool
+  Db::repoGetId(const std::string & repo, int64_t * repo_id)
+  {
+    auto stmt = prepare("select repo_id from repos where `name` = ?");
+    return stmt.bind(repo).fetch(repo_id);
   }
 }

@@ -15,6 +15,7 @@
 #include "service.hh"
 #include "repositories.hh"
 #include "gen-authorized-keys.hh"
+#include "log.hh"
 
 #define AUTHENTICATE_USER()                             \
   pb::Session session;                                  \
@@ -30,19 +31,17 @@
     if ((Msg).has_grp_id())                                     \
       break;                                                    \
     if (!(Msg).has_grp()) {                                     \
-      if (!(Msg).has_grp_id()) {                                \
-        response.set_status(pb::kFailed);                       \
-        response.set_msg("need to specify grp or grp_id");      \
-        return true;                                            \
-      }                                                         \
-      int64_t grp_id__;                                         \
-      if (!Db::groupGetId((Msg).grp(), &grp_id__)) {            \
-        response.set_status(pb::kNotFound);                     \
-        response.set_msg("group not found");                    \
-        return true;                                            \
-      }                                                         \
-      (Msg).set_grp_id(grp_id__);                               \
+      response.set_status(pb::kFailed);                         \
+      response.set_msg("need to specify grp or grp_id");        \
+      return true;                                              \
     }                                                           \
+    int64_t grp_id__;                                           \
+    if (!Db::groupGetId((Msg).grp(), &grp_id__)) {              \
+      response.set_status(pb::kNotFound);                       \
+      response.set_msg("group not found");                      \
+      return true;                                              \
+    }                                                           \
+    (Msg).set_grp_id(grp_id__);                                 \
   } while (0)
 
 #define SET_USER_ID(Msg)                                        \
@@ -50,38 +49,54 @@
     if ((Msg).has_user_id())                                    \
       break;                                                    \
     if (!(Msg).has_user()) {                                    \
-      if (!(Msg).has_user_id()) {                               \
-        response.set_status(pb::kFailed);                       \
-        response.set_msg("need to specify user or user_id");    \
-        return true;                                            \
-      }                                                         \
-      int64_t user_id__;                                        \
-      if (!Db::groupGetId((Msg).user(), &user_id__)) {          \
-        response.set_status(pb::kNotFound);                     \
-        response.set_msg("group not found");                    \
-        return true;                                            \
-      }                                                         \
-      (Msg).set_user_id(user_id__);                             \
+      response.set_status(pb::kFailed);                         \
+      response.set_msg("need to specify user or user_id");      \
+      return true;                                              \
     }                                                           \
+    int64_t user_id__;                                          \
+    if (!Db::userGetId((Msg).user(), &user_id__)) {             \
+      response.set_status(pb::kNotFound);                       \
+      response.set_msg("user not found");                       \
+      return true;                                              \
+    }                                                           \
+    (Msg).set_user_id(user_id__);                               \
+  } while (0)
+
+#define SET_REPO_ID(Msg)                                        \
+  do {                                                          \
+    if ((Msg).has_repo_id())                                    \
+      break;                                                    \
+    if (!(Msg).has_repo()) {                                    \
+      response.set_status(pb::kFailed);                         \
+      response.set_msg("need to specify repo or repo_id");      \
+      return true;                                              \
+    }                                                           \
+    int64_t repo_id__;                                          \
+    if (!Db::repoGetId((Msg).repo(), &repo_id__)) {             \
+      response.set_status(pb::kNotFound);                       \
+      response.set_msg("repository not found");                 \
+      return true;                                              \
+    }                                                           \
+    (Msg).set_repo_id(repo_id__);                               \
   } while (0)
 
 #define CHECK_REPO_ROLE(RepoId, UserId, RoleId)         \
-  do {                                                  \
-    pb::Role role;                                      \
+      do {                                              \
+        pb::Role role;                                  \
                                                         \
-    if (!Repositories::instance().getUserRole(          \
-          RepoId, UserId, &role)) {                     \
-      response.set_msg("database error");               \
-      response.set_status(pb::kFailed);                 \
-      return false;                                     \
-    }                                                   \
+        if (!Repositories::instance().getUserRole(      \
+              RepoId, UserId, &role)) {                 \
+          response.set_msg("database error");           \
+          response.set_status(pb::kFailed);             \
+          return false;                                 \
+        }                                               \
                                                         \
-    if (role < RoleId) {                                \
-      response.set_msg("insufficient rights");          \
-      response.set_status(pb::kInsufficientRight);      \
-      return true;                                      \
-    }                                                   \
-  } while (0)
+        if (role < RoleId) {                            \
+          response.set_msg("insufficient rights");      \
+          response.set_status(pb::kInsufficientRight);  \
+          return true;                                  \
+        }                                               \
+      } while (0)
 
 namespace scissy
 {
@@ -280,7 +295,7 @@ namespace scissy
   Service::userRevokeAuthToken(pb::UserAuthToken & request,
                                pb::StatusMsg & response)
   {
-    uint64_t user_id;
+    int64_t user_id;
 
     if (!Db::userGetId(request.user(), &user_id)) {
       response.set_status(pb::kSucceed);
@@ -438,7 +453,6 @@ namespace scissy
 
     if (!Db::groupGetUserRole(grp_id, session.user_id(), &role))
       return false;
-
     return role == pb::kOwner;
   }
 
@@ -470,6 +484,9 @@ namespace scissy
                         pb::StatusMsg & response)
   {
     AUTHENTICATE_USER();
+
+    log->critical("has_grp_id: %d", request.has_grp_id());
+
     SET_GRP_ID(request);
     SET_USER_ID(request);
 
@@ -562,8 +579,8 @@ namespace scissy
   }
 
   bool
-  Service::groupUserList(pb::GroupUserSelector & request,
-                         pb::GroupUserList & response)
+  Service::groupListMembers(pb::GroupMemberSelector & request,
+                            pb::MemberList & response)
   {
     std::string user;
     uint64_t    user_id;
@@ -616,6 +633,7 @@ namespace scissy
                       pb::StatusMsg & response)
   {
     AUTHENTICATE_USER();
+    SET_REPO_ID(request);
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
     if (!Repositories::instance().remove(request.repo_id())) {
@@ -633,6 +651,8 @@ namespace scissy
                        pb::StatusMsg & response)
   {
     AUTHENTICATE_USER();
+    SET_REPO_ID(request);
+    SET_USER_ID(request);
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
     if (!Repositories::instance().addUser(
@@ -651,6 +671,8 @@ namespace scissy
                           pb::StatusMsg & response)
   {
     AUTHENTICATE_USER();
+    SET_REPO_ID(request);
+    SET_USER_ID(request);
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
     if (!Repositories::instance().removeUser(
@@ -669,6 +691,8 @@ namespace scissy
                         pb::StatusMsg & response)
   {
     AUTHENTICATE_USER();
+    SET_REPO_ID(request);
+    SET_GRP_ID(request);
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
     if (!Repositories::instance().addGroup(
@@ -687,6 +711,8 @@ namespace scissy
                            pb::StatusMsg & response)
   {
     AUTHENTICATE_USER();
+    SET_REPO_ID(request);
+    SET_GRP_ID(request);
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
     if (!Repositories::instance().removeGroup(
@@ -726,26 +752,69 @@ namespace scissy
     return true;
   }
 
-  ////////////////////
-  // Access control //
-  ////////////////////
-
   bool
-  Service::accessUserRepo(pb::AccessUserRepo & request,
-                          pb::UserRole & response)
+  Service::repoGetInfo(pb::RepoSelector & request,
+                       pb::RepoInfo & response)
   {
-    pb::Role role = pb::kNone;
+    std::string name;
+    std::string desc;
+    int         is_public;
 
-    if (!Repositories::instance().getUserRole(
-          request.repo_id(), request.user_id(), &role)) {
-      response.set_status(pb::kFailed);
-      response.set_user_id(request.user_id());
-      response.set_role(pb::kNone);
+    SET_REPO_ID(request);
+
+    auto stmt = Db::prepare("select `name`, `desc`, is_public from repos"
+                            " where repo_id = ?");
+    stmt.bind(request.repo_id());
+
+    if (!stmt.fetch(&name, &desc, &is_public)) {
+      response.set_msg("repository not found");
+      response.set_status(pb::kNotFound);
       return true;
     }
 
-    response.set_user_id(request.user_id());
-    response.set_role(role);
+    response.set_id(request.repo_id());
+    response.set_name(name);
+    response.set_desc(desc);
+    response.set_is_public(is_public);
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::repoListMembers(pb::RepoSelector & request,
+                           pb::MemberList & response)
+  {
+    int64_t id;
+    std::string name;
+    pb::Role role;
+
+    {
+      auto stmt = Db::prepare("select group_id, `name`, repos_groups.role_id"
+                              " from repos_groups join groups using (group_id)"
+                              " where repo_id = ?");
+      stmt.bind(request.repo_id());
+      while (stmt.fetch(&id, &name, reinterpret_cast<int *>(&role))) {
+        auto msg = response.add_groups();
+        msg->set_grp_id(id);
+        msg->set_grp(name);
+        msg->set_role(role);
+      }
+    }
+
+    {
+      auto stmt = Db::prepare("select user_id, `login`, repos_users.role_id"
+                              " from repos_users join users using (user_id)"
+                              " where repo_id = ?");
+      stmt.bind(request.repo_id());
+      while (stmt.fetch(&id, &name, reinterpret_cast<int *>(&role))) {
+        auto msg = response.add_users();
+        msg->set_user_id(id);
+        msg->set_user(name);
+        msg->set_role(role);
+      }
+    }
+
+    response.set_status(pb::kSucceed);
     return true;
   }
 

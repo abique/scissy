@@ -60,8 +60,8 @@ namespace scissy
     virtual bool groupGetInfo(pb::GroupSelector & request,
                               pb::GroupInfo & response) override;
 
-    virtual bool groupUserList(pb::GroupUserSelector & request,
-                               pb::GroupUserList & response) override;
+    virtual bool groupListMembers(pb::GroupMemberSelector & request,
+                                  pb::MemberList & response) override;
 
     ///////////////////////////
     // Repository management //
@@ -92,12 +92,11 @@ namespace scissy
     virtual bool reposList(pb::RepoSelector & request,
                            pb::RepoList & response) override;
 
-    ////////////////////
-    // Access control //
-    ////////////////////
+    virtual bool repoGetInfo(pb::RepoSelector & request,
+                             pb::RepoInfo & response) override;
 
-    virtual bool accessUserRepo(pb::AccessUserRepo & request,
-                                pb::UserRole & response) override;
+    virtual bool repoListMembers(pb::RepoSelector & request,
+                                 pb::MemberList & response) override;
 
     ///////////////
     // Ssh shell //

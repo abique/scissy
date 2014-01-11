@@ -15,6 +15,7 @@ scissy_module.config(function($routeProvider) {
         .when('/repo/summary/:repo_id', {controller:repoSummaryCtrl, templateUrl:'html/repo-summary.html'})
         .when('/repo/tree/:repo_id', {controller:repoTreeCtrl, templateUrl:'html/repo-tree.html'})
         .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo-log.html'})
+        .when('/repo/admin/:repo_id', {controller:repoAdminCtrl, templateUrl:'html/repo-admin.html'})
         .when('/settings/account', {controller:settingsAccountCtrl, templateUrl:'html/settings.html'})
         .when('/settings/ssh-keys', {controller:settingsKeysCtrl, templateUrl:'html/settings.html'});
 });
@@ -175,6 +176,95 @@ function repoTreeCtrl($scope, $rootScope, $http, $location) {
 function repoLogCtrl($scope, $rootScope, $http, $location) {
 }
 
+function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
+    $scope.repo = {"name":"", "id":parseInt($routeParams.repo_id),
+                   "desc":"", "is_public": false};
+    $scope.members = [];
+    $scope.users = [];
+    $scope.groups = [];
+    $scope.new_user = {"user":"","role":"kReader"};
+    $scope.new_group = {"group":"","role":"kReader"};
+    $scope.is_admin = false;
+
+    $scope.refresh = function() {
+        $http.post('/api/repoGetInfo', {"repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.repo = data;
+            })
+            .error(rpcGenericError);
+
+        $http.post('/api/repoListMembers', {"repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed") {
+                    $scope.users = data.users;
+                    $scope.groups = data.groups;
+                    var i;
+                    for (i in data.users) {
+                        if (data.users[i].user == $rootScope.session.auth.user)
+                            $scope.is_admin = (data.users[i].role == "kOwner");
+                    }
+                }
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.addUser = function(new_user) {
+        $http.post('/api/repoAddUser',
+                   { 'auth':$rootScope.session.auth,
+                     'repo_id':$scope.repo.id,
+                     'user':new_user.user,
+                     'role':new_user.role })
+            .success(function (data, status, headers, config) {
+                new_user.errmsg = null;
+                if (data.status == "kSucceed") {
+                    $scope.refresh();
+                    return;
+                }
+                new_user.errmsg = data.msg;
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.addGroup = function(new_group) {
+        $http.post('/api/repoAddGroup',
+                   { 'auth':$rootScope.session.auth,
+                     'repo_id':$scope.repo.id,
+                     'grp':new_group.group,
+                     'role':new_group.role })
+            .success(function (data, status, headers, config) {
+                new_group.errmsg = null;
+                if (data.status == "kSucceed") {
+                    $scope.refresh();
+                    return;
+                }
+                new_group.errmsg = data.msg;
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.userUpdate = function(user, role) {
+    }
+
+    $scope.removeUser = function(user) {
+        $http.post('/api/repoRemoveUser',
+                   { 'auth':$rootScope.session.auth,
+                     'repo_id':$scope.repo.id,
+                     'user':user.user })
+            .success(function (data, status, headers, config) {
+                $scope.new_user.errmsg = null;
+                if (data.status == "kSucceed") {
+                    $scope.refresh();
+                    return;
+                }
+                new_user.errmsg = data.msg;
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.refresh();
+}
+
 function settingsAccountCtrl($scope, $rootScope) {
     $scope.account_class = "active";
     $scope.content = "html/settings-account.html";
@@ -201,12 +291,12 @@ function settingsKeysCtrl($scope, $rootScope, $http) {
 
     $scope.addKey = function(new_key) {
         var re = /^(ssh-rsa|ssh-dsa) ([A-Za-z0-9+\/=]+) (.*)?$/g;
-        matches = re.exec(new_key);
+        var matches = re.exec(new_key);
 
         if (matches[1] == "ssh-rsa")
-            type = "kSshKeyRsa";
+            var type = "kSshKeyRsa";
         else if (matches[1] == "ssh-rsa")
-            type = "kSshKeyDsa";
+            var type = "kSshKeyDsa";
         else {
             alert("Invalid type: " + matches[1]);
             return;
@@ -295,10 +385,11 @@ function groupCtrl($scope, $rootScope, $http, $routeParams) {
             })
             .error(rpcGenericError);
 
-        $http.post('/api/groupUserList', {"grp_id":parseInt($routeParams.grp_id)})
+        $http.post('/api/groupListMembers', {"grp_id":parseInt($routeParams.grp_id)})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed") {
                     $scope.users = data.users;
+                    var i;
                     for (i in data.users) {
                         if (data.users[i].user == $rootScope.session.auth.user)
                             $scope.is_admin = (data.users[i].role == "kOwner");

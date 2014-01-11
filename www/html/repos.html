@@ -7,7 +7,8 @@
     <tr>
       <th>Repository</th>
       <th>Description</th>
-      <th><!-- Shortcuts --></th>
+      <th>Idle</th>
+      <th>Links</th>
     </tr>
   </thead>
 
@@ -15,6 +16,7 @@
     <tr ng-repeat="repo in repos">
       <td><a href="#/repo/summary/{{repo.id}}">{{repo.name}}</a></td>
       <td>{{repo.desc}}</td>
+      <td></td>
       <td>
         <a href="#/repo/summary/{{repo.id}}">summary</a> |
         <a href="#/repo/log/{{repo.id}}">log</a> |

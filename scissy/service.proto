@@ -54,7 +54,7 @@ message Session
   optional Status status  = 4;
   optional string msg     = 5;
   optional Role   role    = 6;
-  optional uint64 user_id = 7;
+  optional int64  user_id = 7;
 }
 
 message UserCreate
@@ -136,24 +136,25 @@ message GroupSelector
   optional bytes  user   = 2; // the group which contains this user
   optional uint32 limit  = 3;
   optional uint32 offset = 4;
-  optional uint64 grp_id = 5;
+  optional int64  grp_id = 5;
 }
 
-message GroupUserSelector
+message GroupMemberSelector
 {
-  optional bytes  grp    = 1;
-  optional bytes  user   = 2;
-  optional Role   role   = 3;
-  optional uint32 limit  = 4;
-  optional uint32 offset = 5;
-  optional uint64 grp_id = 6;
+  optional bytes  grp     = 1;
+  optional int64  grp_id  = 2;
+  optional bytes  user    = 3;
+  optional int64  user_id = 4;
+  optional Role   role    = 5;
+  optional uint32 limit   = 6;
+  optional uint32 offset  = 7;
 }
 
 message GroupInfo
 {
   optional bytes  grp    = 1;
   optional uint32 size   = 2;
-  optional uint32 grp_id = 3;
+  optional int64  grp_id = 3;
   optional string desc   = 4;
   optional Status status = 5;
   optional string msg    = 6;
@@ -166,19 +167,22 @@ message GroupList
   optional string    msg    = 3;
 }
 
-message UserRole
+message Member
 {
   optional Status status  = 1;
   optional bytes  user    = 2;
-  required uint64 user_id = 3;
+  optional int64  user_id = 3;
   required Role   role    = 4;
+  optional bytes  grp     = 5;
+  optional int64  grp_id  = 6;
 }
 
-message GroupUserList
+message MemberList
 {
-  repeated UserRole users  = 1;
-  optional Status   status = 2;
-  optional string   msg    = 3;
+  optional Status status = 1;
+  optional string msg    = 2;
+  repeated Member groups = 3;
+  repeated Member users  = 4;
 }
 
 message RepoCreate
@@ -191,37 +195,46 @@ message RepoCreate
 message RepoDelete
 {
   required UserAuthToken auth    = 1;
-  required int64         repo_id = 2;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
 }
 
 message RepoAddUser
 {
   required UserAuthToken auth    = 1;
-  required int64         repo_id = 2;
-  required int64         user_id = 3;
-  required Role          role    = 4;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
+  optional int64         user_id = 4;
+  optional bytes         user    = 5;
+  required Role          role    = 6;
 }
 
 message RepoRemoveUser
 {
   required UserAuthToken auth    = 1;
-  required int64         repo_id = 2;
-  required int64         user_id = 3;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
+  optional int64         user_id = 4;
+  optional bytes         user    = 5;
 }
 
 message RepoAddGroup
 {
   required UserAuthToken auth    = 1;
-  required int64         repo_id = 2;
-  required int64         grp_id  = 3;
-  required Role          role    = 4;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
+  optional int64         grp_id  = 4;
+  optional bytes         grp     = 5;
+  required Role          role    = 6;
 }
 
 message RepoRemoveGroup
 {
   required UserAuthToken auth    = 1;
-  required int64         repo_id = 2;
-  required int64         grp_id  = 3;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
+  optional int64         grp_id  = 4;
+  optional bytes         grp     = 5;
 }
 
 message RepoName
@@ -240,17 +253,31 @@ message RepoInfo
   required bool  is_public = 6;
 }
 
+message RepoMembers
+{
+  required Status status = 1;
+  optional string msg    = 2;
+
+  repeated int64  users_id  = 3;
+  repeated bytes  users     = 4;
+  repeated int64  groups_id = 5;
+  repeated bytes  groups    = 6;
+}
+
 message RepoList
 {
   repeated RepoInfo repos  = 1;
   optional Status   status = 2;
   optional string   msg    = 3;
+  optional int32    idle   = 4; // seconds
 }
 
 message RepoSelector
 {
-  optional uint32 limit  = 1;
-  optional uint32 offset = 2;
+  optional uint32 limit   = 1;
+  optional uint32 offset  = 2;
+  optional int64  repo_id = 3;
+  optional bytes  repo    = 4;
 }
 
 message AccessUserRepo
@@ -295,7 +322,7 @@ service Service
   /* groups view */
   rpc groupGetInfo(GroupSelector) returns (GroupInfo);
   rpc groupsList(GroupSelector) returns (GroupList);
-  rpc groupUserList(GroupUserSelector) returns (GroupUserList);
+  rpc groupListMembers(GroupMemberSelector) returns (MemberList);
 
   /* repo management */
   rpc repoCreate(RepoCreate) returns (RepoInfo);
@@ -306,14 +333,12 @@ service Service
   rpc repoRemoveGroup(RepoRemoveGroup) returns (StatusMsg);
 
   // /* repo view */
-  // rpc reposGetInfo(RepoSelector) returns (RepoInfo);
   rpc reposList(RepoSelector) returns (RepoList);
+  rpc repoGetInfo(RepoSelector) returns (RepoInfo);
+  rpc repoListMembers(RepoSelector) returns (MemberList);
   // rpc repoGetCommitLog() returns ();
   // rpc repoGetCommit() returns ();
   // rpc repoGetTree() returns ();
-
-  /* access control */
-  rpc accessUserRepo(AccessUserRepo) returns (UserRole);
 
   /* ssh shell */
   rpc shellControl(ShellControl) returns (ShellStatus);
