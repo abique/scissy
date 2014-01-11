@@ -1,6 +1,6 @@
 mimosa_protoc(service)
 
-add_library(scissy-common
+add_library(scissy-common SHARED
   service.pb.cc
   log.cc
   ssh-key-type.cc
@@ -53,3 +53,8 @@ target_link_libraries(scissyd
   pthread
   rt
 )
+
+install(TARGETS scissy-common scissyd scissy-shell
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
