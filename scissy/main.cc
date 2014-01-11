@@ -49,8 +49,8 @@ int main(int argc, char ** argv)
     "/js/*", new mimosa::http::FsHandler(
       scissy::Config::instance().jsDir(), 1, true));
   dispatch->registerHandler(
-    "/img/*", new mimosa::http::FsHandler(
-      scissy::Config::instance().imgDir(), 1, true));
+    "/fonts/*", new mimosa::http::FsHandler(
+      scissy::Config::instance().fontsDir(), 1, true));
   dispatch->registerHandler(
     "/html/*", new mimosa::http::FsHandler(
       scissy::Config::instance().htmlDir(), 1, true));

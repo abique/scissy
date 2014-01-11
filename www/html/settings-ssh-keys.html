@@ -12,21 +12,21 @@
     <tr ng-repeat="key in keys">
       <td>{{key.desc}}</td>
       <td>{{key.type}}</td>
-      <td><i class="glyphicon-trash" ng-click="removeKey(key)"></i></td>
+      <td><span class="glyphicon glyphicon-trash" ng-click="removeKey(key)"></span></td>
     </tr>
 
   </tbody>
 </table>
 
-<form no-validate class="form-horizontal">
+<form no-validate role="form">
   <fieldset>
-    <div class="control-group">
-      <textarea class="textarea span8" name="key" ng-model="new_key" required
-                placeholder="key-type key desc"></textarea>
+    <div class="form-group">
+      <textarea class="form-control textarea col-md-8" name="key" ng-model="new_key"
+                required placeholder="key-type key desc"></textarea>
     </div>
 
     <div class="form-actions">
-      <button ng-click="addKey(new_key)" class="btn btn-primary">Add key</button>
+      <button ng-click="addKey(new_key)" class="form-control btn btn-primary">Add key</button>
     </div>
   </fieldset>
 </form>

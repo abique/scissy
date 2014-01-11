@@ -16,7 +16,7 @@ namespace scissy
     inline const std::string & wwwDir() const { return www_dir_; }
     inline const std::string & cssDir() const { return css_dir_; }
     inline const std::string & jsDir() const { return js_dir_; }
-    inline const std::string & imgDir() const { return img_dir_; }
+    inline const std::string & fontsDir() const { return fonts_dir_; }
     inline const std::string & htmlDir() const { return html_dir_; }
     inline const std::string & keyPem() const { return key_pem_; }
     inline const std::string & certPem() const { return cert_pem_; }
@@ -34,7 +34,7 @@ namespace scissy
     std::string www_dir_;
     std::string css_dir_;
     std::string js_dir_;
-    std::string img_dir_;
+    std::string fonts_dir_;
     std::string html_dir_;
     std::string key_pem_;
     std::string cert_pem_;

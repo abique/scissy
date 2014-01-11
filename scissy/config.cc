@@ -14,7 +14,7 @@ namespace scissy
       www_dir_(ROOT),
       css_dir_(ROOT),
       js_dir_(ROOT),
-      img_dir_(ROOT),
+      fonts_dir_(ROOT),
       html_dir_(ROOT),
       key_pem_(ROOT),
       cert_pem_(ROOT),
@@ -29,7 +29,7 @@ namespace scissy
     www_dir_.append("/www");
     css_dir_.append("/www/css");
     js_dir_.append("/www/js");
-    img_dir_.append("/www/img");
+    fonts_dir_.append("/www/fonts");
     html_dir_.append("/www/html");
     key_pem_.append("/conf/key.pem");
     cert_pem_.append("/conf/cert.pem");

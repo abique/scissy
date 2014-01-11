@@ -1,49 +1,37 @@
-<form no-validate class="form-horizontal">
+<form no-validate role="form">
 
   <input type="hidden" name="operation" value="account" />
 
-  <fieldset>
-    <div class="control-group">
-      <label class="control-label" for="login">Login</label>
-      <div class="controls">
-        <span name="login" id="login" type="text" class="input-xlarge uneditable-input">
-          {{session.auth.user}}
-        </span>
-      </div>
-    </div>
+  <div class="form-group">
+    <label for="login">Login</label>
+    <span name="login" id="login" type="test" class="input-xlarge uneditable-input">
+      {{session.auth.user}}
+    </span>
+  </div>
 
-    <div class="control-group">
-      <label class="control-label" for="email">Email</label>
-      <div class="controls">
-        <input name="email" id="email" type="text" class="input-xlarge"
-               value="{{session.email}}"/>
-      </div>
-    </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input name="email" id="email" type="text" class="form-control"
+           value="{{session.email}}" place-holder="Email"/>
+  </div>
 
-    <div class="control-group">
-      <label class="control-label" for="old-password">Old Password</label>
-      <div class="controls">
-        <input name="old-password" id="old-password" type="password" class="input-xlarge"/>
-      </div>
-    </div>
+  <div class="form-group">
+    <label class="control-label" for="old-password">Old Password</label>
+    <input name="old-password" id="old-password" type="password" class="form-control"/>
+  </div>
 
-    <div class="control-group">
-      <label class="control-label" for="new-password">New password</label>
-      <div class="controls">
-        <input name="new-password" id="new-password" type="password" class="input-xlarge"/>
-      </div>
-    </div>
+  <div class="form-group">
+    <label class="control-label" for="new-password">New password</label>
+    <input name="new-password" id="new-password" type="password" class="form-control"/>
+  </div>
 
-    <div class="control-group">
-      <label class="control-label" for="new-password2">Confirm new password</label>
-      <div class="controls">
-        <input name="new-password2" id="new-password2" type="password" class="input-xlarge"/>
-      </div>
-    </div>
+  <div class="form-group">
+    <label class="control-label" for="new-password2">Confirm new password</label>
+    <input name="new-password2" id="new-password2" type="password" class="form-control"/>
+  </div>
 
-    <div class="form-actions">
-      <input type="submit" value="Update" class="btn btn-success"/>
-    </div>
+  <div class="form-actions">
+    <input type="submit" value="Update" class="btn btn-success"/>
+  </div>
 
-  </fieldset>
 </form>
