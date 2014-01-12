@@ -1,13 +1,6 @@
 #! /bin/bash
 
-if [[ $# -ne 0 -o "${1:0:1}" = "-" ]] ; then
-    echo "usage: $0 <scissy root>"
-    exit
-fi
-
-ROOT="$1"
-
-cd "$ROOT"
+cd
 mkdir -m 0700 .ssh
 sqlite3 </usr/share/scissy/model.sql db.sqlite
 chmod 0700 db.sqlite
