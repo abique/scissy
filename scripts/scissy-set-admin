@@ -2,5 +2,5 @@
 
 cd
 sqlite3 /var/lib/scissy/db.sqlite <<EOF
-update users set role_id = 3 where login = $1
+update users set role_id = 3 where login = '$1'
 EOF

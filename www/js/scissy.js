@@ -12,10 +12,10 @@ scissy_module.config(function($routeProvider) {
         .when('/register', {controller:registerCtrl, templateUrl:'html/register.html'})
         .when('/repos', {controller:reposCtrl, templateUrl:'html/repos.html'})
         .when('/repo-create', {controller:repoCreateCtrl, templateUrl:'html/repo-create.html'})
-        .when('/repo/summary/:repo_id', {controller:repoSummaryCtrl, templateUrl:'html/repo-summary.html'})
-        .when('/repo/tree/:repo_id', {controller:repoTreeCtrl, templateUrl:'html/repo-tree.html'})
-        .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo-log.html'})
-        .when('/repo/admin/:repo_id', {controller:repoAdminCtrl, templateUrl:'html/repo-admin.html'})
+        .when('/repo/summary/:repo_id', {controller:repoSummaryCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/tree/:repo_id', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/admin/:repo_id', {controller:repoAdminCtrl, templateUrl:'html/repo.html'})
         .when('/settings/account', {controller:settingsAccountCtrl, templateUrl:'html/settings.html'})
         .when('/settings/ssh-keys', {controller:settingsKeysCtrl, templateUrl:'html/settings.html'});
 });
@@ -167,16 +167,37 @@ function repoCreateCtrl($scope, $rootScope, $http, $location) {
     }
 }
 
-function repoSummaryCtrl($scope, $rootScope, $http, $location) {
+function repoSummaryCtrl($scope, $rootScope, $http, $location, $routeParams) {
+    $scope.summary_class = "active";
+    $scope.content = "html/repo-summary.html";
+    $scope.repo = {"name":"", "desc":"", "is_public":true,
+                   "id":parseInt($routeParams.repo_id)};
+
+    $scope.refresh = function() {
+        $http.post('/api/repoGetInfo', {"repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.repo = data;
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.refresh();
 }
 
-function repoTreeCtrl($scope, $rootScope, $http, $location) {
+function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
+    $scope.tree_class = "active";
+    $scope.content = "html/repo-tree.html";
 }
 
-function repoLogCtrl($scope, $rootScope, $http, $location) {
+function repoLogCtrl($scope, $rootScope, $http, $location, $routeParams) {
+    $scope.log_class = "active";
+    $scope.content = "html/repo-log.html";
 }
 
 function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
+    $scope.admin_class = "active";
+    $scope.content = "html/repo-admin.html";
     $scope.repo = {"name":"", "id":parseInt($routeParams.repo_id),
                    "desc":"", "is_public": false};
     $scope.members = [];

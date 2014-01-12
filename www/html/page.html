@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="/css/scissy.css" />
     <style>
       body { padding-top: 50px; }
+      #container-view { margin-top: 20px; }
     </style>
     <script src="/js/jquery.js"></script>
     <script src="/js/bootstrap.js"></script>
@@ -19,7 +20,7 @@
   <body>
     <div class="container">
       <div ng-include src="'html/header.html'"></div>
-      <div ng-view></div>
+      <div id="container-view" ng-view></div>
       <div ng-include src="'html/footer.html'"></div>
     </div>
   </body>

@@ -1,49 +1,38 @@
 <div class="row">
-  <div class="col-md-8">
-    <form novalidate class="form-horizontal" name="registerForm">
-      <fieldset>
+  <div class="col-md-4">
+    <form novalidate role="form" name="registerForm">
+      <h3>Register yourself!</h3>
 
-        <legend>Register yourself!</legend>
+      <div class="alert alert-danger" ng-show="user.errmsg">
+        {{user.errmsg}}
+      </div>
 
-        <div class="alert alert-danger" ng-show="user.errmsg">
-          {{user.errmsg}}
-        </div>
+      <div class="form-group">
+        <label for="login">Login</label>
+        <input id="login" name="login" type="text" class="form-control"
+               ng-model="user.login" ng-pattern="/^[a-zA-Z0-9]+$/" required />
+      </div>
 
-        <div class="form-group">
-          <label class="control-label" for="login">Login</label>
-          <div class="controls">
-            <input id="login" name="login" type="text" class="input-xlarge"
-                   ng-model="user.login" ng-pattern="/^[a-zA-Z0-9]+$/" required />
-          </div>
-        </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" class="form-control" ng-model="user.email" required/>
+      </div>
 
-        <div class="form-group">
-          <label class="control-label" for="email">Email</label>
-          <div class="controls">
-            <input id="email" type="email" class="input-xlarge" ng-model="user.email" required/>
-          </div>
-        </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" class="form-control" ng-model="user.password" required/>
+      </div>
 
-        <div class="form-group">
-          <label class="control-label" for="password">Password</label>
-          <div class="controls">
-            <input id="password" type="password" class="input-xlarge" ng-model="user.password" required/>
-          </div>
-        </div>
+      <div class="form-group">
+        <label for="password2">Password (again)</label>
+        <input id="password2" type="password" class="form-control" ng-model="user.password2" required/>
+      </div>
 
-        <div class="form-group">
-          <label class="control-label" for="password2">Password (again)</label>
-          <div class="controls">
-            <input id="password2" type="password" class="input-xlarge" ng-model="user.password2" required/>
-          </div>
-        </div>
+      <div class="form-actions">
+        <button ng-click="register(user)" class="btn btn-primary">Register</button>
+        <button ng-click="reset()" class="btn">Reset</button>
+      </div>
 
-        <div class="form-actions">
-          <button ng-click="register(user)" class="btn btn-primary">Register</button>
-          <button ng-click="reset()" class="btn">Reset</button>
-        </div>
-
-      </fieldset>
     </form>
   </div>
 </div>
