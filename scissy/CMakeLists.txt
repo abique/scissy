@@ -42,6 +42,7 @@ target_link_libraries(scissyd
   mimosa-rpc
   mimosa-tpl
   mimosa-http
+  mimosa-fs
   mimosa-sqlite
   mimosa
   gnutls

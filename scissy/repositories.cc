@@ -1,5 +1,6 @@
 #include <mimosa/format/format.hh>
 #include <mimosa/sqlite/sqlite.hh>
+#include <mimosa/fs/rm.hh>
 
 #include <git2.h>
 
@@ -147,7 +148,20 @@ namespace scissy
   {
     auto stmt = Db::prepare("delete from repos where repo_id = ?");
     stmt.bind(repo_id).exec();
-    // XXX rm
+    mimosa::fs::rm(getRepoPath(repo_id), true, true);
+    return true;
+  }
+
+  bool
+  Repositories::isPublic(int64_t repo_id, bool * is_public)
+  {
+    int tmp;
+    auto stmt = Db::prepare("select is_public from repos where repo_id = ?");
+    stmt.bind(repo_id);
+
+    if (!stmt.fetch(&tmp))
+      return false;
+    *is_public = !!tmp;
     return true;
   }
 }

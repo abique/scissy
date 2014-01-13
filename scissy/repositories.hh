@@ -31,6 +31,8 @@ namespace scissy
 
     bool getUserRole(int64_t repo_id, int64_t user_id, pb::Role * role);
 
+    bool isPublic(int64_t repo_id, bool * is_public);
+
   private:
     Repositories();
     ~Repositories();
