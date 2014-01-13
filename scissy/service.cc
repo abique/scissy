@@ -828,15 +828,18 @@ namespace scissy
   {
     int64_t  repo_id;
     pb::Role role;
+    bool     is_public;
 
     if (!Repositories::instance().getId(request.repo_name(), &repo_id) ||
-        !Repositories::instance().getUserRole(repo_id, request.user_id(), &role)) {
+        !Repositories::instance().getUserRole(repo_id, request.user_id(), &role) ||
+        !Repositories::instance().isPublic(repo_id, &is_public)) {
       response.set_status(pb::kNotFound);
       return true;
     }
 
     response.set_repo_path(Repositories::instance().getRepoPath(repo_id));
     response.set_role(role);
+    response.set_is_public(is_public);
     response.set_status(pb::kSucceed);
     return true;
   }

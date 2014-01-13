@@ -105,6 +105,9 @@ bool checkAcl(int64_t             user_id,
     return false;
 
   *repo_path = call->response().repo_path();
+  if (call->response().is_public() && action == kGitReceivePack)
+    return true;
+
   switch (call->response().role())
   {
   case scissy::pb::kNone:
