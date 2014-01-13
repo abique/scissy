@@ -16,6 +16,7 @@ add_definitions(
   -std=c++0x
   -D_GNU_SOURCE -D_LARGEFILE64_SOURCE
   -Wall -Wextra -Werror=return-type
+  -DSCISSY_VERSION="${SCISSY_VERSION}"
   ${GNUTLS_DEFINITIONS})
 
 set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -std=c99")

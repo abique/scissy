@@ -1,4 +1,5 @@
 mimosa_protoc(service)
+mimosa_protoc(config)
 
 add_library(scissy-common SHARED
   service.pb.cc
@@ -20,6 +21,7 @@ target_link_libraries(scissy-shell
 
 add_executable(scissyd
   main.cc
+  config.pb.cc
 
   # web logic and common stuff
   config.cc

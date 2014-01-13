@@ -9,6 +9,7 @@
 #include <mimosa/stream/base16-decoder.hh>
 #include <mimosa/stream/base16-encoder.hh>
 #include <mimosa/log/log.hh>
+#include <mimosa/uptime.hh>
 
 #include "config.hh"
 #include "db.hh"
@@ -100,6 +101,25 @@
 
 namespace scissy
 {
+  /////////////
+  // Service //
+  /////////////
+
+  bool
+  Service::serviceInfo(pb::Void & request,
+                       pb::ServiceInfo & response)
+  {
+    response.set_clone_user(Config::instance().cloneUser());
+    response.set_clone_host(Config::instance().cloneHost());
+    response.set_version(SCISSY_VERSION);
+    response.set_uptime(mimosa::uptime());
+    return true;
+  }
+
+  ////////////////
+  // User stuff //
+  ////////////////
+
   bool
   Service::userCreate(pb::UserCreate & request,
                       pb::StatusMsg &  response)

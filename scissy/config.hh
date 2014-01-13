@@ -25,6 +25,8 @@ namespace scissy
     inline const std::string & socket() const { return socket_; }
     inline bool isSecure() const { return is_secure_; }
     inline bool crackPasswords() const { return crack_passwords_; }
+    inline const std::string & cloneUser() const { return clone_user_; }
+    inline const std::string & cloneHost() const { return clone_host_; }
 
   private:
     std::string www_;
@@ -40,6 +42,8 @@ namespace scissy
     std::string socket_;
     bool is_secure_;
     bool crack_passwords_;
+    std::string clone_user_;
+    std::string clone_host_;
   };
 }
 

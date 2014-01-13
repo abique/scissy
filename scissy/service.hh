@@ -9,6 +9,13 @@ namespace scissy
   {
   public:
 
+    /////////////
+    // Service //
+    /////////////
+
+    virtual bool serviceInfo(pb::Void & request,
+                             pb::ServiceInfo & response) override;
+
     ////////////////
     // User stuff //
     ////////////////

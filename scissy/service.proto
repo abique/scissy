@@ -20,6 +20,14 @@ message StatusMsg
   optional string msg    = 2;
 }
 
+message ServiceInfo
+{
+  required bytes clone_user = 1;
+  required bytes clone_host = 2;
+  required bytes version    = 3;
+  required int32 uptime     = 4;
+}
+
 enum Role
 {
   kNone   = 0;
@@ -302,6 +310,9 @@ message ShellStatus
 
 service Service
 {
+  /* service */
+  rpc serviceInfo(Void) returns (ServiceInfo);
+
   /* session */
   rpc userAuth(UserAuth) returns (Session);
   rpc userCheckAuthToken(UserAuthToken) returns (Session);
