@@ -1,0 +1,15 @@
+{
+    "repos_root" : "/home/abique/develop/scissy/repos",
+    "db" : "/home/abique/develop/scissy/db.sqlite",
+    "www_root" : "/usr/share/scissy/www",
+    "socket" : "/var/run/scissy/socket",
+    "crack_passwords" : false,
+    "clone_user" : "abique",
+    "clone_host" : "localhost",
+    "listen" : [
+        {
+            "addr" : "0.0.0.0",
+            "port" : 19043,
+        }
+    ]
+}

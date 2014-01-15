@@ -19,8 +19,6 @@
 #include "root-handler.hh"
 #include "service.hh"
 
-uint16_t & PORT = *mimosa::options::addOption<uint16_t>("", "port", "the port to use", 19042);
-
 int main(int argc, char ** argv)
 {
   bool stop = false;
@@ -61,28 +59,33 @@ int main(int argc, char ** argv)
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);
 
-  mimosa::http::Server::Ptr http_server(new mimosa::http::Server);
-  http_server->setHandler(log_handler);
-  if (scissy::Config::instance().isSecure())
-    http_server->setSecure(scissy::Config::instance().sslCert(),
-                           scissy::Config::instance().sslKey());
+  std::vector<mimosa::Thread *> threads;
+  for (auto & it : scissy::Config::instance().listens()) {
+    mimosa::http::Server::Ptr http_server(new mimosa::http::Server);
+    http_server->setHandler(log_handler);
+    if (it.isSslEnabled())
+      http_server->setSecure(it.ssl_cert_, it.ssl_key_);
 
-  if (!http_server->listenInet4(PORT)) {
-    mimosa::log::fatal("failed to listen on the port %d: %s",
-                       PORT, ::strerror(errno));
-    return 1;
+    if (!http_server->listenInet4(it.port_)) {
+      mimosa::log::fatal("failed to listen on the port %d: %s",
+                         it.port_, ::strerror(errno));
+      return 1;
+    }
+
+    threads.push_back(new mimosa::Thread([&stop, http_server] {
+          while (!stop)
+            http_server->serveOne();
+        }));
+    threads.back()->start();
   }
 
-  mimosa::Thread rpc_thread([&stop, rpc_server] {
-      while (!stop)
-        rpc_server->serveOne();
-    });
-  rpc_thread.start();
-
   while (!stop)
-    http_server->serveOne();
+    rpc_server->serveOne();
 
-  rpc_thread.join();
+  for (auto & thread : threads) {
+    thread->join();
+    delete thread;
+  }
 
   scissy::Repositories::release();
   scissy::Db::release();

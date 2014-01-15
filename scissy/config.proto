@@ -1,0 +1,21 @@
+package scissy.pb;
+
+message ListenAddr
+{
+  required bytes addr       = 1;
+  required int32 port       = 2;
+  optional bytes ssl_key    = 4;
+  optional bytes ssl_cert   = 5;
+}
+
+message Config
+{
+  optional bytes repos_root      = 1;
+  optional bytes www_root        = 2;
+  optional bytes db              = 3;
+  optional bytes socket          = 4;
+  optional bool  crack_passwords = 5;
+  optional bytes clone_user      = 6;
+  optional bytes clone_host      = 7;
+  repeated ListenAddr listen     = 8;
+}
