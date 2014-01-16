@@ -2,4 +2,4 @@ build
 *.pb.h
 *.pb.cc
 doc/html
-repos
+data

@@ -35,5 +35,15 @@ namespace scissy
     clone_host_ = cfg.has_clone_host() ? cfg.clone_host() : "localhost";
     auth_keys_ = pw->pw_dir;
     auth_keys_.append("/.ssh/authorized_keys");
+
+    for (int i = 0; i < cfg.listen_size(); ++i) {
+      Listen listen;
+      auto l           = cfg.listen(i);
+      listen.addr_     = l.addr();
+      listen.port_     = l.port();
+      listen.ssl_key_  = l.ssl_key();
+      listen.ssl_cert_ = l.ssl_cert();
+      listens_.push_back(listen);
+    }
   }
 }
