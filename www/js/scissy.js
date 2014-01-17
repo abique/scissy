@@ -33,6 +33,16 @@ function resetSession($rootScope) {
     localStorage.auth_token = null;
 }
 
+function getServerInfo($rootScope, $http) {
+    $http.post('/api/serviceInfo', {})
+            .success(function (data, status, headers, config) {
+                $rootScope.service_info = data;
+            })
+            .error(function (data, status, headers, config) {
+                rpcGenericError(data, status, headers, config);
+            });
+}
+
 function userCheckAuthToken($rootScope, $http) {
     if (localStorage.auth_user && localStorage.auth_token) {
         // check the session
@@ -61,15 +71,22 @@ function userCheckAuthToken($rootScope, $http) {
 
 scissy_module.run(function($rootScope, $http) {
     $rootScope.session = {
-        auth: {
-            user: localStorage.auth_user,
-            token: localStorage.auth_token,
+        "auth": {
+            "user": localStorage.auth_user,
+            "token": localStorage.auth_token,
         },
-        email: null,
-        role: null
+        "email": null,
+        "role": null
+    };
+    $rootScope.service_info = {
+        "clone_user" : "XXX",
+        "clone_host" : "XXX",
+        "version" : "XXX",
+        "uptime" : 0
     };
 
     userCheckAuthToken($rootScope, $http);
+    getServerInfo($rootScope, $http);
 });
 
 function rpcGenericError(data, status, headers, config) {
