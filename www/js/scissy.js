@@ -175,7 +175,7 @@ function repoCreateCtrl($scope, $rootScope, $http, $location) {
             .success(function (data, status, headers, config) {
                 grp.errmsg = null;
                 if (data.status == "kSucceed") {
-                    $location.path("/repo/summary/"+data.repo_id)
+                    $location.path("/repo/summary/"+data.id)
                     return;
                 }
                 grp.errmsg = data.msg;
@@ -205,11 +205,37 @@ function repoSummaryCtrl($scope, $rootScope, $http, $location, $routeParams) {
 function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
     $scope.tree_class = "active";
     $scope.content = "html/repo-tree.html";
+    $scope.repo = {"name":"", "desc":"", "is_public":true,
+                   "id":parseInt($routeParams.repo_id)};
+
+    $scope.refresh = function() {
+        $http.post('/api/repoGetInfo', {"repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.repo = data;
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.refresh();
 }
 
 function repoLogCtrl($scope, $rootScope, $http, $location, $routeParams) {
     $scope.log_class = "active";
     $scope.content = "html/repo-log.html";
+    $scope.repo = {"name":"", "desc":"", "is_public":true,
+                   "id":parseInt($routeParams.repo_id)};
+
+    $scope.refresh = function() {
+        $http.post('/api/repoGetInfo', {"repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.repo = data;
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.refresh();
 }
 
 function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {

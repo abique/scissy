@@ -18,4 +18,5 @@ message Config
   optional bytes clone_user      = 6;
   optional bytes clone_host      = 7;
   repeated ListenAddr listen     = 8;
+  optional bytes authorized_keys = 9;
 }

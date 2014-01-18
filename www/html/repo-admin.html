@@ -3,13 +3,17 @@
     {{new_user.errmsg}}
   </div>
 
-  <form novalidate class="form-inline">
-    <input type="text" placeholder="Login" class="span2" ng-model="new_user.user"/>
-    <select name="role" type="text" class="span2" ng-model="new_user.role">
-      <option value="kOwner">Administrator</option>
-      <option value="kWriter">Contributor</option>
-      <option value="kReader">Observer</option>
-    </select>
+  <form novalidate class="form-inline" role="form">
+    <div class="form-group">
+      <input type="text" placeholder="Login" class="form-control" ng-model="new_user.user"/>
+    </div>
+    <div class="form-group">
+      <select name="role" type="text" class="form-control" ng-model="new_user.role">
+        <option value="kOwner">Administrator</option>
+        <option value="kWriter">Contributor</option>
+        <option value="kReader">Observer</option>
+      </select>
+    </div>
     <button ng-click="addUser(new_user)" class="btn btn-primary">Add</button>
   </form>
 </div>
@@ -39,13 +43,17 @@
     {{new_group.errmsg}}
   </div>
 
-  <form novalidate class="form-inline">
-    <input type="text" placeholder="Group" class="span2" ng-model="new_group.group"/>
-    <select name="role" type="text" class="span2" ng-model="new_group.role">
-      <option value="kOwner">Administrator</option>
-      <option value="kWriter">Contributor</option>
-      <option value="kReader">Observer</option>
-    </select>
+  <form novalidate class="form-inline" role="form">
+    <div class="form-group">
+      <input type="text" placeholder="Group" class="form-control" ng-model="new_group.group"/>
+    </div>
+    <div class="form-group">
+      <select name="role" type="text" class="form-control" ng-model="new_group.role">
+        <option value="kOwner">Administrator</option>
+        <option value="kWriter">Contributor</option>
+        <option value="kReader">Observer</option>
+      </select>
+    </div>
     <button ng-click="addGroup(new_group)" class="btn btn-primary">Add</button>
   </form>
 </div>

@@ -1,5 +1,6 @@
 {
     "repos_root" : "/var/lib/scissy",
+    "authorized_keys" : "/var/lib/scissy/.ssh/authorized_keys"
     "db" : "/var/lib/scissy/db.sqlite",
     "www_root" : "/usr/share/scissy/www",
     "socket" : "/var/run/scissy/socket",

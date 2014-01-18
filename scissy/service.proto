@@ -108,8 +108,7 @@ message GroupCreate
 {
   required UserAuthToken auth = 1;
   optional bytes grp          = 2;
-  optional int64 grp_id       = 3;
-  required bytes desc         = 4;
+  required bytes desc         = 3;
 }
 
 message GroupDelete

@@ -28,13 +28,17 @@ namespace scissy
 
     repos_ = cfg.has_repos_root() ? cfg.repos_root() : "/var/lib/scissy";
     db_ = cfg.has_db() ? cfg.db() : "/var/lib/scissy/db.sqlite";
-    auth_keys_ = "/var/lib/scissy/.ssh/authorized_keys";
     socket_ = cfg.has_socket() ? cfg.socket() : "/var/run/scissy/socket";
     crack_passwords_ = cfg.has_crack_passwords() ? cfg.crack_passwords() : false;
     clone_user_ = cfg.has_clone_user() ? cfg.clone_user() : pw->pw_name;
     clone_host_ = cfg.has_clone_host() ? cfg.clone_host() : "localhost";
-    auth_keys_ = pw->pw_dir;
-    auth_keys_.append("/.ssh/authorized_keys");
+
+    if (cfg.has_authorized_keys())
+      auth_keys_ = cfg.authorized_keys();
+    else {
+      auth_keys_ = pw->pw_dir;
+      auth_keys_.append("/.ssh/authorized_keys");
+    }
 
     for (int i = 0; i < cfg.listen_size(); ++i) {
       Listen listen;

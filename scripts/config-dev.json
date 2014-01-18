@@ -1,5 +1,6 @@
 {
     "repos_root" : "/home/abique/develop/scissy/data",
+    "authorized_keys" : "/home/abique/develop/scissy/data/authorized_keys",
     "db" : "/home/abique/develop/scissy/data/db.sqlite",
     "www_root" : "/home/abique/develop/scissy/www",
     "socket" : "/home/abique/develop/scissy/data/socket",

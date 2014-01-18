@@ -1,25 +1,17 @@
 <div class="row">
-  <div class="col-md-6">
-    <h1>repo: {{repo.name}}</h1>
+  <div class="col-md-12">
+      <h2>repo: {{repo.name}}</h2>
 
     <ul class="nav nav-tabs">
       <li ng-class="summary_class"><a href="#/repo/summary/{{repo.id}}">summary</a></li>
-      <li ng-class="refs_class"><a href="#/repo/refs/{{repo.id}}">refs</a></li>
       <li ng-class="tree_class"><a href="#/repo/tree/{{repo.id}}">tree</a></li>
-      <li ng-class="tree_class"><a href="#/repo/commit/{{repo.id}}">commit</a></li>
       <li ng-class="log_class"><a href="#/repo/log/{{repo.id}}">log</a></li>
-      <li ng-class="log_class"><a href="#/repo/log/{{repo.id}}">diff</a></li>
-      <li ng-class="log_class"><a href="#/repo/log/{{repo.id}}">stats</a></li>
       <li ng-class="admin_class"><a href="#/repo/admin/{{repo.id}}">admin</a></li>
     </ul>
 
     {{isActive(section, 'summary')}}
-    {{isActive(section, 'refs')}}
     {{isActive(section, 'tree')}}
-    {{isActive(section, 'commit')}}
     {{isActive(section, 'log')}}
-    {{isActive(section, 'diff')}}
-    {{isActive(section, 'stats')}}
     {{isActive(section, 'admin')}}
     {{section}}
 

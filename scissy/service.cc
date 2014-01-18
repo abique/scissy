@@ -429,7 +429,6 @@ namespace scissy
     int64_t grp_id;
 
     AUTHENTICATE_USER();
-    SET_GRP_ID(request);
 
     if (!Db::groupCreate(request.grp(), request.desc(), &err)) {
       response.set_status(pb::kFailed);
@@ -556,7 +555,8 @@ namespace scissy
     auto stmt = Db::prepare(
       "select name, desc, group_id, count(user_id)"
       " from groups natural left outer join groups_users"
-      " group by group_id");
+      " group by group_id"
+      " order by name");
 
     while (stmt.fetch(&grp, &desc, &grp_id, &size)) {
       auto msg = response.add_grps();
@@ -758,7 +758,8 @@ namespace scissy
     std::string desc;
     uint64_t    id;
     int         is_public;
-    auto stmt = Db::prepare("select name, desc, repo_id, is_public from repos");
+    auto stmt = Db::prepare("select name, desc, repo_id, is_public"
+                            " from repos order by name");
 
     while (stmt.fetch(&name, &desc, &id, &is_public)) {
       auto msg = response.add_repos();
@@ -811,7 +812,8 @@ namespace scissy
     {
       auto stmt = Db::prepare("select group_id, `name`, repos_groups.role_id"
                               " from repos_groups join groups using (group_id)"
-                              " where repo_id = ?");
+                              " where repo_id = ?"
+                              " order by `name`");
       stmt.bind(request.repo_id());
       while (stmt.fetch(&id, &name, reinterpret_cast<int *>(&role))) {
         auto msg = response.add_groups();
@@ -824,7 +826,8 @@ namespace scissy
     {
       auto stmt = Db::prepare("select user_id, `login`, repos_users.role_id"
                               " from repos_users join users using (user_id)"
-                              " where repo_id = ?");
+                              " where repo_id = ?"
+                              " order by `login`");
       stmt.bind(request.repo_id());
       while (stmt.fetch(&id, &name, reinterpret_cast<int *>(&role))) {
         auto msg = response.add_users();
