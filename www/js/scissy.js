@@ -191,10 +191,18 @@ function repoSummaryCtrl($scope, $rootScope, $http, $location, $routeParams) {
                    "id":parseInt($routeParams.repo_id)};
 
     $scope.refresh = function() {
-        $http.post('/api/repoGetInfo', {"repo_id":$scope.repo.id})
+        $http.post('/api/repoGetInfo', {'auth':$rootScope.session.auth,
+                                        "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.repo = data;
+            })
+            .error(rpcGenericError);
+        $http.post('/api/repoListBranches', {'auth':$rootScope.session.auth,
+                                             "repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.branches = data.branches;
             })
             .error(rpcGenericError);
     }

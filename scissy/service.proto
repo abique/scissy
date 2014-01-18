@@ -12,6 +12,7 @@ enum Status
   kNotImplemented    = 3;
   kInsufficientRight = 4;
   kNotFound          = 5;
+  kInternalError     = 6;
 }
 
 message StatusMsg
@@ -281,10 +282,12 @@ message RepoList
 
 message RepoSelector
 {
-  optional uint32 limit   = 1;
-  optional uint32 offset  = 2;
-  optional int64  repo_id = 3;
-  optional bytes  repo    = 4;
+  optional uint32        limit     = 1;
+  optional uint32        offset    = 2;
+  optional int64         repo_id   = 3;
+  optional bytes         repo      = 4;
+  optional UserAuthToken auth      = 5;
+  optional bytes         commit_id = 6;
 }
 
 message AccessUserRepo
@@ -305,6 +308,36 @@ message ShellStatus
   optional bytes  repo_path = 2;
   required Role   role      = 3;
   required bool   is_public = 4;
+}
+
+message GitBranch
+{
+  required bytes name = 1;
+}
+
+message GitBranches
+{
+  optional Status    status   = 1;
+  optional bytes     msg      = 2;
+  repeated GitBranch branches = 3;
+}
+
+message GitSignature
+{
+  optional bytes  name  = 1;
+  optional bytes  email = 2;
+  optional uint32 time  = 3;
+}
+
+message GitCommit
+{
+  optional Status       status     = 1;
+  required bytes        id         = 2;
+  repeated bytes        parents_id = 3;
+  optional bytes        msg        = 2;
+  optional uint32       time       = 3;
+  required GitSignature commiter   = 4;
+  required GitSignature author     = 5;
 }
 
 service Service
@@ -347,6 +380,7 @@ service Service
   rpc reposList(RepoSelector) returns (RepoList);
   rpc repoGetInfo(RepoSelector) returns (RepoInfo);
   rpc repoListMembers(RepoSelector) returns (MemberList);
+  rpc repoListBranches(RepoSelector) returns (GitBranches);
   // rpc repoGetCommitLog() returns ();
   // rpc repoGetCommit() returns ();
   // rpc repoGetTree() returns ();

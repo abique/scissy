@@ -17,6 +17,7 @@
 #include "repositories.hh"
 #include "gen-authorized-keys.hh"
 #include "log.hh"
+#include "repository.hh"
 
 #define AUTHENTICATE_USER()                             \
   pb::Session session;                                  \
@@ -99,6 +100,27 @@
         }                                               \
       } while (0)
 
+#define CHECK_PUBLIC_REPO(Msg)                                          \
+    do {                                                                \
+      bool is_public;                                                   \
+                                                                        \
+      SET_REPO_ID(request);                                             \
+                                                                        \
+      if (!Repositories::instance().isPublic(                           \
+            request.repo_id(), &is_public)) {                           \
+        response.set_status(pb::kNotFound);                             \
+        response.set_msg("repository not found");                       \
+        return true;                                                    \
+      }                                                                 \
+                                                                        \
+      if (!is_public) {                                                 \
+        AUTHENTICATE_USER();                                            \
+        CHECK_REPO_ROLE(request.repo_id(), session.user_id(),           \
+                        pb::kReader);                                   \
+      }                                                                 \
+    } while (0)
+
+
 namespace scissy
 {
   /////////////
@@ -106,7 +128,7 @@ namespace scissy
   /////////////
 
   bool
-  Service::serviceInfo(pb::Void & request,
+  Service::serviceInfo(pb::Void & /*request*/,
                        pb::ServiceInfo & response)
   {
     response.set_clone_user(Config::instance().cloneUser());
@@ -777,11 +799,11 @@ namespace scissy
   Service::repoGetInfo(pb::RepoSelector & request,
                        pb::RepoInfo & response)
   {
+    CHECK_PUBLIC_REPO(request);
+
     std::string name;
     std::string desc;
     int         is_public;
-
-    SET_REPO_ID(request);
 
     auto stmt = Db::prepare("select `name`, `desc`, is_public from repos"
                             " where repo_id = ?");
@@ -805,6 +827,8 @@ namespace scissy
   Service::repoListMembers(pb::RepoSelector & request,
                            pb::MemberList & response)
   {
+    CHECK_PUBLIC_REPO(request);
+
     int64_t id;
     std::string name;
     pb::Role role;
@@ -841,6 +865,36 @@ namespace scissy
     return true;
   }
 
+  static int repoListBranchesCb(const char   *branch_name,
+                                git_branch_t  /*branch_type*/,
+                                void         *payload)
+  {
+    auto branches = reinterpret_cast<pb::GitBranches *>(payload);
+    auto branch = branches->add_branches();
+    branch->set_name(branch_name);
+    return 0;
+  }
+
+  bool
+  Service::repoListBranches(pb::RepoSelector & request,
+                            pb::GitBranches & response)
+  {
+    CHECK_PUBLIC_REPO(request);
+
+    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+
+    if (!repo) {
+      response.set_status(pb::kInternalError);
+      response.set_msg("internal error");
+      return true;
+    }
+
+    git_branch_foreach(repo, GIT_BRANCH_LOCAL | GIT_BRANCH_REMOTE, repoListBranchesCb, &response);
+
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
   ///////////////
   // Ssh shell //
   ///////////////
@@ -867,3 +921,4 @@ namespace scissy
     return true;
   }
 }
+

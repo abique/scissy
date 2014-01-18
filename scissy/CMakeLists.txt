@@ -28,6 +28,7 @@ add_executable(scissyd
   db.cc
   groups.cc
   repositories.cc
+  repository.cc
   role.cc
   gen-authorized-keys.cc
 

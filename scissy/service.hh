@@ -105,6 +105,9 @@ namespace scissy
     virtual bool repoListMembers(pb::RepoSelector & request,
                                  pb::MemberList & response) override;
 
+    virtual bool repoListBranches(pb::RepoSelector & request,
+                                  pb::GitBranches & response) override;
+
     ///////////////
     // Ssh shell //
     ///////////////
