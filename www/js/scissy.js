@@ -16,6 +16,7 @@ scissy_module.config(function($routeProvider) {
         .when('/repo/tree/:repo_id', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
         .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo.html'})
         .when('/repo/admin/:repo_id', {controller:repoAdminCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/commit/:repo_id/:revision', {controller:repoCommitCtrl, templateUrl:'html/repo.html'})
         .when('/settings/account', {controller:settingsAccountCtrl, templateUrl:'html/settings.html'})
         .when('/settings/ssh-keys', {controller:settingsKeysCtrl, templateUrl:'html/settings.html'});
 });
@@ -217,7 +218,9 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
                    "id":parseInt($routeParams.repo_id)};
 
     $scope.refresh = function() {
-        $http.post('/api/repoGetInfo', {"repo_id":$scope.repo.id})
+        $http.post('/api/repoGetInfo', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.repo = data;
@@ -235,7 +238,30 @@ function repoLogCtrl($scope, $rootScope, $http, $location, $routeParams) {
                    "id":parseInt($routeParams.repo_id)};
 
     $scope.refresh = function() {
-        $http.post('/api/repoGetInfo', {"repo_id":$scope.repo.id})
+        $http.post('/api/repoGetInfo', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.repo = data;
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.refresh();
+}
+
+function repoCommitCtrl($scope, $rootScope, $http, $location, $routeParams) {
+    $scope.commit_class = "active";
+    $scope.content = "html/repo-commit.html";
+    $scope.repo = {"name":"", "desc":"", "is_public":true,
+                   "id":parseInt($routeParams.repo_id)};
+    $scope.revision = $routeParams.revision;
+
+    $scope.refresh = function() {
+        $http.post('/api/repoGetInfo', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.repo = data;
@@ -259,14 +285,18 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
     $scope.is_admin = false;
 
     $scope.refresh = function() {
-        $http.post('/api/repoGetInfo', {"repo_id":$scope.repo.id})
+        $http.post('/api/repoGetInfo', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.repo = data;
             })
             .error(rpcGenericError);
 
-        $http.post('/api/repoListMembers', {"repo_id":$scope.repo.id})
+        $http.post('/api/repoListMembers', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed") {
                     $scope.users = data.users;

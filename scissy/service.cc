@@ -19,6 +19,8 @@
 #include "log.hh"
 #include "repository.hh"
 
+#include "git-commit.hh"
+
 #define AUTHENTICATE_USER()                             \
   pb::Session session;                                  \
                                                         \
@@ -83,22 +85,22 @@
   } while (0)
 
 #define CHECK_REPO_ROLE(RepoId, UserId, RoleId)         \
-      do {                                              \
-        pb::Role role;                                  \
+    do {                                                \
+      pb::Role role;                                    \
                                                         \
-        if (!Repositories::instance().getUserRole(      \
-              RepoId, UserId, &role)) {                 \
-          response.set_msg("database error");           \
-          response.set_status(pb::kFailed);             \
-          return false;                                 \
-        }                                               \
+      if (!Repositories::instance().getUserRole(        \
+            RepoId, UserId, &role)) {                   \
+        response.set_msg("database error");             \
+        response.set_status(pb::kFailed);               \
+        return false;                                   \
+      }                                                 \
                                                         \
-        if (role < RoleId) {                            \
-          response.set_msg("insufficient rights");      \
-          response.set_status(pb::kInsufficientRight);  \
-          return true;                                  \
+      if (role < RoleId) {                              \
+        response.set_msg("insufficient rights");        \
+        response.set_status(pb::kInsufficientRight);    \
+        return true;                                    \
         }                                               \
-      } while (0)
+    } while (0)
 
 #define CHECK_PUBLIC_REPO(Msg)                                          \
     do {                                                                \
@@ -882,7 +884,6 @@ namespace scissy
     CHECK_PUBLIC_REPO(request);
 
     Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
-
     if (!repo) {
       response.set_status(pb::kInternalError);
       response.set_msg("internal error");
@@ -891,6 +892,38 @@ namespace scissy
 
     git_branch_foreach(repo, GIT_BRANCH_LOCAL | GIT_BRANCH_REMOTE, repoListBranchesCb, &response);
 
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::repoGetCommit(pb::CommitSelector & request,
+                         pb::GitCommit & response)
+  {
+    CHECK_PUBLIC_REPO(request);
+
+    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    if (!repo) {
+      response.set_status(pb::kInternalError);
+      response.set_msg("internal error");
+      return true;
+    }
+
+    git_oid oid;
+    if (git_oid_fromstrp(&oid, request.revision().c_str())) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("commit not found");
+      return true;
+    }
+
+    GitCommit commit(repo, &oid);
+    if (commit.status()) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("commit not found");
+      return true;
+    }
+
+    commit.copyTo(&response);
     response.set_status(pb::kSucceed);
     return true;
   }

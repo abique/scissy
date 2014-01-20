@@ -23,12 +23,16 @@ add_executable(scissyd
   main.cc
   config.pb.cc
 
+  # git
+  git-commit.cc
+  repository.cc
+  git-signature.cc
+
   # web logic and common stuff
   config.cc
   db.cc
   groups.cc
   repositories.cc
-  repository.cc
   role.cc
   gen-authorized-keys.cc
 

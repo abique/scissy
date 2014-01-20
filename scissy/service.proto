@@ -290,6 +290,14 @@ message RepoSelector
   optional bytes         commit_id = 6;
 }
 
+message CommitSelector
+{
+  optional UserAuthToken auth     = 1;
+  required bytes         revision = 2;
+  optional int64         repo_id  = 3;
+  optional bytes         repo     = 4;
+}
+
 message AccessUserRepo
 {
   required int64 repo_id   = 1;
@@ -324,20 +332,23 @@ message GitBranches
 
 message GitSignature
 {
-  optional bytes  name  = 1;
-  optional bytes  email = 2;
-  optional uint32 time  = 3;
+  optional bytes  name        = 1;
+  optional bytes  email       = 2;
+  optional uint32 time        = 3;
+  optional uint32 time_offset = 4;
 }
 
 message GitCommit
 {
-  optional Status       status     = 1;
-  required bytes        id         = 2;
-  repeated bytes        parents_id = 3;
-  optional bytes        msg        = 2;
-  optional uint32       time       = 3;
-  required GitSignature commiter   = 4;
-  required GitSignature author     = 5;
+  optional Status       status      = 1;
+  optional bytes        id          = 2;
+  repeated bytes        parents_id  = 3;
+  optional bytes        msg         = 4;
+  optional uint32       time        = 5;
+  optional uint32       time_offset = 6;
+  optional GitSignature commiter    = 7;
+  optional GitSignature author      = 8;
+  optional bytes        tree_id     = 9;
 }
 
 service Service
@@ -382,7 +393,7 @@ service Service
   rpc repoListMembers(RepoSelector) returns (MemberList);
   rpc repoListBranches(RepoSelector) returns (GitBranches);
   // rpc repoGetCommitLog() returns ();
-  // rpc repoGetCommit() returns ();
+  rpc repoGetCommit(CommitSelector) returns (GitCommit);
   // rpc repoGetTree() returns ();
 
   /* ssh shell */
