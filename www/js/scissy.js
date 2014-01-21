@@ -105,8 +105,8 @@ function loginCtrl($scope, $rootScope, $http, $location) {
 
     $scope.login = function(user) {
         $http.post('/api/userAuth',
-                   { 'user':user.login,
-                     'password':user.password })
+                   { 'user':$scope.user.login,
+                     'password':$scope.user.password })
             .success(function (data, status, headers, config) {
                 user.errmsg = null;
                 if (data.status == "kSucceed") {

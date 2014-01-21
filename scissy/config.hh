@@ -14,7 +14,7 @@ namespace scissy
     Config();
 
     struct Listen {
-      inline bool isSslEnabled() const { return !ssl_key_.empty() && ssl_cert_.empty(); }
+      inline bool isSslEnabled() const { return !ssl_key_.empty() && !ssl_cert_.empty(); }
 
       std::string addr_;
       uint16_t port_;
