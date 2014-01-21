@@ -36,5 +36,6 @@ install(
   PATTERN *.less EXCLUDE
   PATTERN update.sh EXCLUDE)
 
-install(FILES scripts/model.sql DESTINATION share/scissy)
+install(FILES sql/model.sql DESTINATION share/scissy)
 install(FILES scripts/scissy-init DESTINATION bin)
+install(FILES config/config.json DESTINATION /etc/scissy/)

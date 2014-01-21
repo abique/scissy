@@ -3,7 +3,7 @@
 PROJECT=scissy
 VERSION=$(<VERSION)
 DISTDIR=$PROJECT-$VERSION
-DISTFILES='AUTHORS CMakeLists.txt Doxyfile dist.sh LICENSE README scissy VERSION mimosa www INSTALL systemd scripts'
+DISTFILES='AUTHORS CMakeLists.txt Doxyfile dist.sh LICENSE README scissy VERSION mimosa www INSTALL systemd scripts sql config'
 
 sed -i "s/PROJECT_NUMBER.*/PROJECT_NUMBER=$VERSION/g" Doxyfile
 rm -rf $DISTDIR
