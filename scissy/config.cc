@@ -18,7 +18,8 @@ namespace scissy
     struct passwd *pw = getpwent();
     pb::Config cfg;
     mimosa::stream::Stream::Ptr in = mimosa::stream::FdStream::openFile(CONFIG.c_str());
-    mimosa::rpc::jsonDecode(in, &cfg);
+    if (in)
+      mimosa::rpc::jsonDecode(in, &cfg);
 
     www_ = cfg.has_www_root() ? cfg.www_root() : INSTALL_PREFIX "/share/scissy/www";
     css_   = www_ + "/css";

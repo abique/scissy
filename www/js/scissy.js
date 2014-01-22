@@ -168,18 +168,19 @@ function repoCreateCtrl($scope, $rootScope, $http, $location) {
     }
     $scope.reset();
 
-    $scope.create = function(grp) {
+    $scope.create = function(repo) {
         $http.post('/api/repoCreate',
                    { 'auth':$rootScope.session.auth,
-                     'name':grp.name,
-                     'desc':grp.desc })
+                     'name':repo.name,
+                     'desc':repo.desc,
+                     'is_public':repo.is_public})
             .success(function (data, status, headers, config) {
-                grp.errmsg = null;
+                repo.errmsg = null;
                 if (data.status == "kSucceed") {
                     $location.path("/repo/summary/"+data.id)
                     return;
                 }
-                grp.errmsg = data.msg;
+                repo.errmsg = data.msg;
             })
             .error(rpcGenericError);
     }

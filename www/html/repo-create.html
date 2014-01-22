@@ -19,6 +19,12 @@
                  ng-model="repo.desc"/>
         </div>
 
+        <div class="form-group checkbox">
+          <label for="desc">
+            <input type="checkbox" id="is_public" ng-model="repo.is_public" />Public
+          </label>
+        </div>
+
         <div class="form-actions">
           <button ng-click="create(repo)" class="btn btn-primary">Create</button>
           <button ng-click="reset()" class="btn">Reset</button>

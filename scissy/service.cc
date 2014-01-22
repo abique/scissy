@@ -658,8 +658,9 @@ namespace scissy
     std::string errmsg;
     int64_t repo_id;
 
-    if (!Repositories::instance().create(request.name(), request.desc(),
-                                         session.user_id(), &repo_id, &errmsg)) {
+    if (!Repositories::instance().create(
+          request.name(), request.desc(), request.is_public(),
+          session.user_id(), &repo_id, &errmsg)) {
       response.set_status(pb::kFailed);
       response.set_msg(errmsg);
       return true;
@@ -668,6 +669,7 @@ namespace scissy
     response.set_name(request.name());
     response.set_desc(request.desc());
     response.set_id(repo_id);
+    response.set_is_public(request.is_public());
     response.set_status(pb::kSucceed);
     return true;
   }

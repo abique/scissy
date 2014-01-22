@@ -195,9 +195,10 @@ message MemberList
 
 message RepoCreate
 {
-  required UserAuthToken auth = 1;
-  required bytes         name = 2;
-  required bytes         desc = 3;
+  required UserAuthToken auth      = 1;
+  required bytes         name      = 2;
+  required bytes         desc      = 3;
+  required bool          is_public = 4;
 }
 
 message RepoDelete

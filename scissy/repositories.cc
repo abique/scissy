@@ -94,14 +94,16 @@ namespace scissy
   bool
   Repositories::create(const std::string & name,
                        const std::string & desc,
+                       bool                is_public,
                        int64_t             user_id,
                        int64_t *           repo_id,
                        std::string *       error)
   {
     // insert the data into sqlite
     {
-      auto stmt = Db::prepare("insert or fail into repos (name, desc) values (?, ?)");
-      int err = stmt.bind(name, desc).step();
+      auto stmt = Db::prepare("insert or fail into repos (name, desc, is_public)"
+                              " values (?, ?, ?)");
+      int err = stmt.bind(name, desc, is_public).step();
 
       if (err == SQLITE_CONSTRAINT)
       {

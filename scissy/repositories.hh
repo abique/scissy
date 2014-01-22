@@ -18,6 +18,7 @@ namespace scissy
 
     bool create(const std::string & name,
                 const std::string & description,
+                bool                is_public,
                 int64_t             user_id,
                 int64_t *           repo_id,
                 std::string *       error);
