@@ -201,6 +201,16 @@ message RepoCreate
   required bool          is_public = 4;
 }
 
+message RepoUpdate
+{
+  required UserAuthToken auth      = 1;
+  optional int64         repo_id   = 2;
+  optional bytes         repo      = 3;
+  optional bytes         name      = 4;
+  optional bytes         desc      = 5;
+  optional bytes         is_public = 6;
+}
+
 message RepoDelete
 {
   required UserAuthToken auth    = 1;
@@ -382,6 +392,7 @@ service Service
 
   /* repo management */
   rpc repoCreate(RepoCreate) returns (RepoInfo);
+  rpc repoUpdate(RepoUpdate) returns (StatusMsg);
   rpc repoDelete(RepoDelete) returns (StatusMsg);
   rpc repoAddUser(RepoAddUser) returns (StatusMsg);
   rpc repoRemoveUser(RepoRemoveUser) returns (StatusMsg);

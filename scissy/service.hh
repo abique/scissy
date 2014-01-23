@@ -77,6 +77,9 @@ namespace scissy
     virtual bool repoCreate(pb::RepoCreate & request,
                             pb::RepoInfo & response) override;
 
+    virtual bool repoUpdate(pb::RepoUpdate & request,
+                            pb::StatusMsg & response) override;
+
     virtual bool repoDelete(pb::RepoDelete & request,
                             pb::StatusMsg & response) override;
 
