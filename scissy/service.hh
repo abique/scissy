@@ -114,6 +114,9 @@ namespace scissy
     virtual bool repoGetCommit(pb::CommitSelector & request,
                                pb::GitCommit & response) override;
 
+    virtual bool repoGetLog(pb::LogSelector & request,
+                            pb::GitLog & response) override;
+
     ///////////////
     // Ssh shell //
     ///////////////

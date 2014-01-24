@@ -3,11 +3,13 @@
 
 # include <git2.h>
 
+# include "../mimosa/mimosa/non-copyable.hh"
+
 # include "service.pb.h"
 
 namespace scissy
 {
-  class GitCommit
+  class GitCommit : public mimosa::NonCopyable
   {
   public:
     GitCommit(git_repository *repo, const git_oid *id);

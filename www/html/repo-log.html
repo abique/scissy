@@ -1,1 +1,7 @@
-TODO
+<table class="table table-striped table-condensed">
+  <tbody>
+    <tr ng-repeat="commit in commits">
+      <td>{{commit.author.name}}</td>
+      <td>{{commit.msg}}</td>
+  </tbody>
+</table>

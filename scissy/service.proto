@@ -309,6 +309,16 @@ message CommitSelector
   optional bytes         repo     = 4;
 }
 
+message LogSelector
+{
+  optional UserAuthToken auth     = 1;
+  optional bytes         revision = 2;
+  optional int64         repo_id  = 3;
+  optional bytes         repo     = 4;
+  optional uint32        limit    = 5;
+  optional uint32        offset   = 6;
+}
+
 message AccessUserRepo
 {
   required int64 repo_id   = 1;
@@ -362,6 +372,13 @@ message GitCommit
   optional bytes        tree_id     = 9;
 }
 
+message GitLog
+{
+  optional Status    status = 1;
+  optional bytes     msg    = 2;
+  repeated GitCommit commits = 3;
+}
+
 service Service
 {
   /* service */
@@ -404,8 +421,8 @@ service Service
   rpc repoGetInfo(RepoSelector) returns (RepoInfo);
   rpc repoListMembers(RepoSelector) returns (MemberList);
   rpc repoListBranches(RepoSelector) returns (GitBranches);
-  // rpc repoGetCommitLog() returns ();
   rpc repoGetCommit(CommitSelector) returns (GitCommit);
+  rpc repoGetLog(LogSelector) returns (GitLog);
   // rpc repoGetTree() returns ();
 
   /* ssh shell */

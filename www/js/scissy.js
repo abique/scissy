@@ -247,6 +247,14 @@ function repoLogCtrl($scope, $rootScope, $http, $location, $routeParams) {
                     $scope.repo = data;
             })
             .error(rpcGenericError);
+        $http.post('/api/repoGetLog', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.commits = data.commits;
+            })
+            .error(rpcGenericError);
     }
 
     $scope.refresh();
@@ -258,6 +266,8 @@ function repoCommitCtrl($scope, $rootScope, $http, $location, $routeParams) {
     $scope.repo = {"name":"", "desc":"", "is_public":true,
                    "id":parseInt($routeParams.repo_id)};
     $scope.revision = $routeParams.revision;
+    $scope.commit = {
+    };
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
@@ -266,6 +276,14 @@ function repoCommitCtrl($scope, $rootScope, $http, $location, $routeParams) {
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.repo = data;
+            })
+            .error(rpcGenericError);
+        $http.post('/api/repoGetCommit', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id,
+            "revision":$scope.revision})
+            .success(function (data, status, headers, config) {
+                $scope.commit = data;
             })
             .error(rpcGenericError);
     }

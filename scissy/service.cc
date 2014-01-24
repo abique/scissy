@@ -20,6 +20,7 @@
 #include "repository.hh"
 
 #include "git-commit.hh"
+#include "git-revwalk.hh"
 
 #define AUTHENTICATE_USER()                             \
   pb::Session session;                                  \
@@ -946,6 +947,62 @@ namespace scissy
     }
 
     commit.copyTo(&response);
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::repoGetLog(pb::LogSelector & request,
+                      pb::GitLog & response)
+  {
+    CHECK_PUBLIC_REPO(request);
+
+    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    if (!repo) {
+      response.set_status(pb::kInternalError);
+      response.set_msg("internal error");
+      return true;
+    }
+
+    GitRevwalk walk(repo);
+    git_oid    oid;
+
+    if (!walk) {
+      response.set_status(pb::kInternalError);
+      response.set_msg("failed to initialize revision walker");
+      return true;
+    }
+
+    if (request.has_revision()) {
+      if (git_oid_fromstrp(&oid, request.revision().c_str())) {
+        response.set_status(pb::kNotFound);
+        response.set_msg("commit not found");
+        return true;
+      }
+      git_revwalk_push(walk, &oid);
+    } else {
+      git_revwalk_push_head(walk);
+    }
+
+    git_revwalk_sorting(walk, GIT_SORT_TIME);
+
+    if (!request.has_limit() || request.limit() == 0)
+      request.set_limit(50);
+    else if (request.limit() > 200)
+      request.set_limit(200);
+
+    if (!request.has_offset())
+      request.set_offset(0);
+
+    for (uint32_t i = 0; i < request.limit() + request.offset(); ++i) {
+      if (git_revwalk_next(&oid, walk))
+        break;
+      if (i < request.offset())
+        continue;
+      GitCommit commit(repo, &oid);
+      commit.copyTo(response.add_commits());
+    }
+
     response.set_status(pb::kSucceed);
     return true;
   }
