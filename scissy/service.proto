@@ -205,10 +205,10 @@ message RepoUpdate
 {
   required UserAuthToken auth      = 1;
   optional int64         repo_id   = 2;
-  optional bytes         repo      = 3;
-  optional bytes         name      = 4;
-  optional bytes         desc      = 5;
-  optional bytes         is_public = 6;
+  required bytes         repo      = 3;
+  required bytes         name      = 4;
+  required bytes         desc      = 5;
+  required bool          is_public = 6;
 }
 
 message RepoDelete

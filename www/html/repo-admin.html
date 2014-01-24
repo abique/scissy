@@ -1,9 +1,42 @@
-<h2>Info</h2>
+<div class="row">
+  <div class="col-md-4">
+    <form novalidate role="form">
+      <h3>Settings</h3>
 
-rename
-is_public
+      <div class="alert alert-danger" ng-show="repo.errmsg">
+        {{repo.errmsg}}
+      </div>
 
-<h2>Users management</h2>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" type="text" class="form-control" placeholder="Name"
+               ng-model="repo.name"/>
+      </div>
+
+      <div class="form-group">
+        <label for="desc">Desc</label>
+        <input id="desc" type="text" class="form-control" placeholder="Description"
+               ng-model="repo.desc"/>
+      </div>
+
+      <div class="form-group checkbox">
+        <label for="desc">
+          <input type="checkbox" id="is_public" ng-model="repo.is_public" />Public
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button ng-click="update(repo)" class="btn btn-primary">Update</button>
+        <button ng-click="reset()" class="btn">Reset</button>
+        <button ng-click="destroy()" class="btn btn-danger">Destroy</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<hr/>
+
+<h3>Users management</h3>
 
 <div ng-show="is_admin">
   <div class="alert alert-danger" ng-show="new_user.errmsg">
@@ -45,7 +78,9 @@ is_public
   </tbody>
 </table>
 
-<h2>Groups management</h2>
+<hr/>
+
+<h3>Groups management</h3>
 
 <div ng-show="is_admin">
   <div class="alert alert-danger" ng-show="new_group.errmsg">

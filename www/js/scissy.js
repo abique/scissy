@@ -312,6 +312,35 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
             .error(rpcGenericError);
     }
 
+    $scope.update = function(repo) {
+        $http.post('/api/repoUpdate', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id,
+            "name":repo.name,
+            "desc":repo.desc,
+            "is_public":repo.is_public})
+            .success(function (data, status, headers, config) {
+                $scope.repo.errmsg = data.errmsg;
+                $scope.refresh();
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.destroy = function(repo) {
+        $http.post('/api/repoDelete', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed") {
+                    $location.path("/repos");
+                } else {
+                    $scope.repo.errmsg = data.errmsg;
+                    $scope.refresh();
+                }
+            })
+            .error(rpcGenericError);
+    }
+
     $scope.addUser = function(new_user) {
         $http.post('/api/repoAddUser',
                    { 'auth':$rootScope.session.auth,

@@ -683,14 +683,12 @@ namespace scissy
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
     auto stmt = Db::prepare("update repos set"
-                            " name = ifnull(?, name),"
-                            " desc = ifnull(?, desc),"
-                            " is_public = ifnull(?, is_public)"
+                            " name = ?,"
+                            " desc = ?,"
+                            " is_public = ?"
                             " where repo_id = ?");
-    return stmt.bind(request.has_name() ? request.name() : nullptr,
-                     request.has_desc() ? request.desc() : nullptr,
-                     request.has_is_public() ? request.is_public() : nullptr,
-                     request.repo_id()).step();
+    stmt.bind(request.name(), request.desc(), request.is_public(),
+              request.repo_id()).step();
 
     response.set_status(pb::kSucceed);
     return true;
