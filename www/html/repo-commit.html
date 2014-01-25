@@ -1,6 +1,6 @@
 id: {{commit.id}}<br/>
 tree_id: {{commit.tree_id}}<br/>
-author: {{commit.author.name}} {{commit.author.email}}<br/>
-commiter: {{commit.commiter.name}} {{commit.commiter.email}}<br/>
+author: {{commit.author.name}} &lt;{{commit.author.email}}&gt; {{commit.author.time | date:'yyyy-MM-dd HH:mm:ss'}}<br/>
+commiter: {{commit.commiter.name}} &lt;{{commit.commiter.email}}&gt; {{commit.commiter.time | date:'yyyy-MM-dd HH:mm:ss'}}<br/>
 msg: {{commit.msg}}<br/>
-time: {{commit.time}}, offset: {{commit.offset}}
+time: {{commit.time | date:'yyyy-MM-dd HH:mm:ss'}}

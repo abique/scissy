@@ -13,5 +13,5 @@
             "port" : 19043
         }
     ],
-    "git_log_limit":200
+    "git_log_limit":50
 }
