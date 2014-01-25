@@ -28,9 +28,39 @@
       <div class="form-actions">
         <button ng-click="update(repo)" class="btn btn-primary">Update</button>
         <button ng-click="reset()" class="btn">Reset</button>
-        <button ng-click="destroy()" class="btn btn-danger">Destroy</button>
+        <button class="btn btn-danger" data-toggle="modal" data-target="#DestroyModal">Destroy</button>
       </div>
     </form>
+
+    <div class="modal fade" id="DestroyModal" tabindex="-1" role="dialog"
+         aria-labelledby="DestroyModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              &times;
+            </button>
+            <h4 class="modal-title" id="DestroyModalLabel">Destroy {{repo.name}}?</h4>
+          </div>
+          <div class="modal-body">
+            <span>
+              Are you sure to destroy {{repo.name}}?<br/>
+              <strong>You will not be able to recover the repository.</strong>
+            </span>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              No, cancel
+            </button>
+            <button type="button" ng-click="destroy()" class="btn btn-danger"
+                    >
+              Yes, destroy {{repo.name}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
