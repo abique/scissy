@@ -1,7 +1,13 @@
 <table class="table table-striped table-condensed">
+  <thead>
+    <tr>
+      <td>Author</td>
+      <td>Message</td>
+    </tr>
+  </thead>
   <tbody>
     <tr ng-repeat="commit in commits">
-      <td>{{commit.author.name}}</td>
-      <td>{{commit.msg}}</td>
+      <td><small>{{commit.author.name}}</small></td>
+      <td><small>{{commit.msg}}</small></td>
   </tbody>
 </table>

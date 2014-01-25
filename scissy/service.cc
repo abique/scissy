@@ -986,10 +986,9 @@ namespace scissy
 
     git_revwalk_sorting(walk, GIT_SORT_TIME);
 
-    if (!request.has_limit() || request.limit() == 0)
-      request.set_limit(50);
-    else if (request.limit() > 200)
-      request.set_limit(200);
+    if (!request.has_limit() || request.limit() == 0 ||
+        request.limit() > Config::instance().gitLogLimit())
+      request.set_limit(Config::instance().gitLogLimit());
 
     if (!request.has_offset())
       request.set_offset(0);

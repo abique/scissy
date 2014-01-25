@@ -19,4 +19,5 @@ message Config
   optional bytes clone_host      = 7;
   repeated ListenAddr listen     = 8;
   optional bytes authorized_keys = 9;
+  optional int32 git_log_limit   = 10;
 }

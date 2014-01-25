@@ -14,5 +14,6 @@
             "ssl_key" : "/etc/scissy/server.key",
             "ssl_cert" : "/etc/scissy/server.crt"
         }
-    ]
+    ],
+    "git_log_limit":50
 }

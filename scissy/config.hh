@@ -35,6 +35,7 @@ namespace scissy
     inline const std::string & cloneUser() const { return clone_user_; }
     inline const std::string & cloneHost() const { return clone_host_; }
     inline const std::vector<Listen> & listens() const { return listens_; }
+    inline uint32_t gitLogLimit() const { return git_log_limit_; }
 
   private:
     std::string www_;
@@ -50,6 +51,7 @@ namespace scissy
     std::string clone_user_;
     std::string clone_host_;
     std::vector<Listen> listens_;
+    uint32_t git_log_limit_;
   };
 }
 
