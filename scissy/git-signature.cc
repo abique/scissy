@@ -7,7 +7,6 @@ namespace scissy
   {
     out->set_name(in->name);
     out->set_email(in->email);
-    out->set_time(in->when.time);
-    out->set_time_offset(in->when.offset);
+    out->set_time(static_cast<uint64_t>(in->when.time) * 1000 + in->when.offset);
   }
 }

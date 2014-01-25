@@ -23,10 +23,10 @@ message StatusMsg
 
 message ServiceInfo
 {
-  required bytes clone_user = 1;
-  required bytes clone_host = 2;
-  required bytes version    = 3;
-  required int32 uptime     = 4;
+  required bytes  clone_user = 1;
+  required bytes  clone_host = 2;
+  required bytes  version    = 3;
+  required uint64 uptime     = 4;
 }
 
 enum Role
@@ -355,8 +355,7 @@ message GitSignature
 {
   optional bytes  name        = 1;
   optional bytes  email       = 2;
-  optional uint32 time        = 3;
-  optional uint32 time_offset = 4;
+  optional uint64 time        = 3;
 }
 
 message GitCommit
@@ -365,11 +364,10 @@ message GitCommit
   optional bytes        id          = 2;
   repeated bytes        parents_id  = 3;
   optional bytes        msg         = 4;
-  optional uint32       time        = 5;
-  optional uint32       time_offset = 6;
-  optional GitSignature commiter    = 7;
-  optional GitSignature author      = 8;
-  optional bytes        tree_id     = 9;
+  optional uint64       time        = 5;
+  optional GitSignature commiter    = 6;
+  optional GitSignature author      = 7;
+  optional bytes        tree_id     = 8;
 }
 
 message GitLog

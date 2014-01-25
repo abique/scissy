@@ -36,8 +36,8 @@ namespace scissy
     commit->set_tree_id(oid_str);
 
     commit->set_msg(git_commit_message(commit_));
-    commit->set_time(git_commit_time(commit_));
-    commit->set_time_offset(git_commit_time_offset(commit_));
+    commit->set_time(static_cast<uint64_t>(git_commit_time(commit_)) * 1000 +
+                     git_commit_time_offset(commit_));
     copySignature(git_commit_committer(commit_), commit->mutable_commiter());
     copySignature(git_commit_author(commit_), commit->mutable_author());
   }
