@@ -13,7 +13,7 @@ scissy_module.config(function($routeProvider) {
         .when('/repos', {controller:reposCtrl, templateUrl:'html/repos.html'})
         .when('/repo-create', {controller:repoCreateCtrl, templateUrl:'html/repo-create.html'})
         .when('/repo/summary/:repo_id', {controller:repoSummaryCtrl, templateUrl:'html/repo.html'})
-        .when('/repo/tree/:repo_id', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/tree/:repo_id/:revision/:path', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
         .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo.html'})
         .when('/repo/admin/:repo_id', {controller:repoAdminCtrl, templateUrl:'html/repo.html'})
         .when('/repo/commit/:repo_id/:revision', {controller:repoCommitCtrl, templateUrl:'html/repo.html'})
@@ -225,6 +225,16 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.repo = data;
+            })
+            .error(rpcGenericError);
+        $http.post('/api/repoGetTree', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id,
+            "revision":$routeParams.revision,
+            "directory":$routeParams.directory})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.entries = data.entries;
             })
             .error(rpcGenericError);
     }

@@ -21,6 +21,7 @@
 
 #include "git-commit.hh"
 #include "git-revwalk.hh"
+#include "git-tree.hh"
 
 #define AUTHENTICATE_USER()                             \
   pb::Session session;                                  \
@@ -1000,6 +1001,47 @@ namespace scissy
         continue;
       GitCommit commit(repo, &oid);
       commit.copyTo(response.add_commits());
+    }
+
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::repoGetTree(pb::TreeSelector & request,
+                       pb::GitTree & response)
+  {
+    CHECK_PUBLIC_REPO(request);
+
+    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    if (!repo) {
+      response.set_status(pb::kInternalError);
+      response.set_msg("internal error");
+      return true;
+    }
+
+    git_oid oid;
+    if (git_oid_fromstrp(&oid, request.revision().c_str())) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("commit not found");
+      return true;
+    }
+
+    GitTree tree(repo, &oid, request.directory());
+    char oid_str[GIT_OID_HEXSZ + 1];
+    for (int i = 0; i < git_tree_entrycount(tree); ++i) {
+      const git_tree_entry *entry = git_tree_entry_byindex(tree, i);
+      if (!entry)
+        break;
+      auto e = response.add_entries();
+
+      e->set_name(git_tree_entry_name(entry));
+      e->set_type((pb::GitOtype)git_tree_entry_type(entry));
+      e->set_mode((pb::GitFileMode)git_tree_entry_filemode(entry));
+
+      auto entry_id = git_tree_entry_id(entry);
+      git_oid_tostr(oid_str, sizeof (oid_str), entry_id);
+      e->set_id(oid_str);
     }
 
     response.set_status(pb::kSucceed);

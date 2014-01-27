@@ -28,6 +28,7 @@ add_executable(scissyd
   repository.cc
   git-signature.cc
   git-revwalk.cc
+  git-tree.cc
 
   # web logic and common stuff
   config.cc

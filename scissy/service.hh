@@ -117,6 +117,9 @@ namespace scissy
     virtual bool repoGetLog(pb::LogSelector & request,
                             pb::GitLog & response) override;
 
+    virtual bool repoGetTree(pb::TreeSelector & request,
+                             pb::GitTree & response) override;
+
     ///////////////
     // Ssh shell //
     ///////////////

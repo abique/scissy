@@ -319,6 +319,15 @@ message LogSelector
   optional uint32        offset   = 6;
 }
 
+message TreeSelector
+{
+  optional UserAuthToken auth      = 1;
+  optional bytes         revision  = 2;
+  optional int64         repo_id   = 3;
+  optional bytes         repo      = 4;
+  optional bytes         directory = 5;
+}
+
 message AccessUserRepo
 {
   required int64 repo_id   = 1;
@@ -337,6 +346,28 @@ message ShellStatus
   optional bytes  repo_path = 2;
   required Role   role      = 3;
   required bool   is_public = 4;
+}
+
+enum GitFileMode
+{
+  kGitFilemodeNew            = 0000000;
+  kGitFilemodeTree           = 0040000;
+  kGitFilemodeBlob           = 0100644;
+  kGitFilemodeBlobExecutable = 0100755;
+  kGitFilemodeLink           = 0120000;
+  kGitFilemodeCommit         = 0160000;
+}
+
+enum GitOtype
+{
+  kGitObjAny      = -2;
+  kGitObjBad      = -1;
+  kGitObjCommit   = 1;
+  kGitObjTree     = 2;
+  kGitObjBlob     = 3;
+  kGitObjTag      = 4;
+  kGitObjOfsDelta = 6;
+  kGitObjRefDelta = 7;
 }
 
 message GitBranch
@@ -372,9 +403,24 @@ message GitCommit
 
 message GitLog
 {
-  optional Status    status = 1;
-  optional bytes     msg    = 2;
+  optional Status    status  = 1;
+  optional bytes     msg     = 2;
   repeated GitCommit commits = 3;
+}
+
+message GitTreeEntry
+{
+  required bytes       name = 1;
+  required bytes       id   = 2;
+  required GitOtype    type = 3;
+  required GitFileMode mode = 4;
+}
+
+message GitTree
+{
+  optional Status status        = 1;
+  optional bytes  msg           = 2;
+  repeated GitTreeEntry entries = 3;
 }
 
 service Service
@@ -421,6 +467,7 @@ service Service
   rpc repoListBranches(RepoSelector) returns (GitBranches);
   rpc repoGetCommit(CommitSelector) returns (GitCommit);
   rpc repoGetLog(LogSelector) returns (GitLog);
+  rpc repoGetTree(TreeSelector) returns (GitTree);
   // rpc repoGetTree() returns ();
 
   /* ssh shell */
