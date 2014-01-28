@@ -15,13 +15,11 @@ namespace scissy
     GitCommit(git_repository *repo, const git_oid *id);
     ~GitCommit();
 
-    inline int status() { return status_; }
     inline operator git_commit *() { return commit_; }
 
     void copyTo(pb::GitCommit * commit);
 
   private:
-    int status_;
     git_commit *commit_;
   };
 }

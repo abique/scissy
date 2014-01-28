@@ -941,7 +941,7 @@ namespace scissy
     }
 
     GitCommit commit(repo, &oid);
-    if (commit.status()) {
+    if (!commit) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
@@ -1000,6 +1000,8 @@ namespace scissy
       if (i < request.offset())
         continue;
       GitCommit commit(repo, &oid);
+      if (!commit)
+        continue;
       commit.copyTo(response.add_commits());
     }
 
@@ -1027,7 +1029,20 @@ namespace scissy
       return true;
     }
 
-    GitTree tree(repo, &oid, request.directory());
+    GitCommit commit(repo, &oid);
+    if (!commit) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("commit not found");
+      return true;
+    }
+
+    GitTree tree(repo, git_commit_tree_id(commit), request.directory());
+    if (!tree) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("tree not found");
+      return true;
+    }
+
     char oid_str[GIT_OID_HEXSZ + 1];
     for (int i = 0; i < git_tree_entrycount(tree); ++i) {
       const git_tree_entry *entry = git_tree_entry_byindex(tree, i);

@@ -15,6 +15,11 @@ namespace scissy
                    const std::string & directory)
     : tree_(nullptr)
   {
+    if (directory.empty()) {
+      git_tree_lookup(&tree_, repo, id);
+      return;
+    }
+
     GitTree root(repo, id);
     GitTreeEntry entry;
     if (git_tree_entry_bypath(entry.ref(), root, directory.c_str()))

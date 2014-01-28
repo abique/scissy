@@ -4,10 +4,9 @@
 namespace scissy
 {
   GitCommit::GitCommit(git_repository *repo, const git_oid *id)
-    : status_(0),
-      commit_(nullptr)
+    : commit_(nullptr)
   {
-    status_ = git_commit_lookup(&commit_, repo, id);
+    git_commit_lookup(&commit_, repo, id);
   }
 
   GitCommit::~GitCommit()

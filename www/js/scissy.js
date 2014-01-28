@@ -13,7 +13,8 @@ scissy_module.config(function($routeProvider) {
         .when('/repos', {controller:reposCtrl, templateUrl:'html/repos.html'})
         .when('/repo-create', {controller:repoCreateCtrl, templateUrl:'html/repo-create.html'})
         .when('/repo/summary/:repo_id', {controller:repoSummaryCtrl, templateUrl:'html/repo.html'})
-        .when('/repo/tree/:repo_id/:revision/:path', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/tree/:repo_id/:revision/', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/tree/:repo_id/:revision/:directory*', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
         .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo.html'})
         .when('/repo/admin/:repo_id', {controller:repoAdminCtrl, templateUrl:'html/repo.html'})
         .when('/repo/commit/:repo_id/:revision', {controller:repoCommitCtrl, templateUrl:'html/repo.html'})
@@ -217,6 +218,11 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
     $scope.content = "html/repo-tree.html";
     $scope.repo = {"name":"", "desc":"", "is_public":true,
                    "id":parseInt($routeParams.repo_id)};
+    $scope.revision = $routeParams.revision;
+    $scope.directory = $routeParams.directory;
+
+    if ($scope.directory && $scope.directory[$scope.directory.length - 1] == '/')
+        $scope.directory = $scope.directory.substr(0, $scope.directory.length - 1);
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
@@ -230,11 +236,17 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
         $http.post('/api/repoGetTree', {
             'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id,
-            "revision":$routeParams.revision,
-            "directory":$routeParams.directory})
+            "revision":$scope.revision,
+            "directory":$scope.directory})
             .success(function (data, status, headers, config) {
-                if (data.status == "kSucceed")
+                if (data.status == "kSucceed") {
                     $scope.entries = data.entries;
+                    for (var i in $scope.entries) {
+                        var entry = $scope.entries[i];
+                        entry.is_directory = (entry.mode == 'kGitFilemodeTree');
+                        entry.is_file = (entry.type == 'kGitObjBlob');
+                    }
+                }
             })
             .error(rpcGenericError);
     }
