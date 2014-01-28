@@ -1,3 +1,5 @@
+<h4>{{directory}}</h4><br/>
+
 <table class="table table-striped table-condensed">
   <thead>
     <tr>
@@ -21,7 +23,7 @@
       <td>
         <div ng-show="entry.is_file">
           <span class="glyphicon glyphicon-file"></span>
-          <a href="#/repo/file/{{repo.id}}/{{repo.revision}}/{{repo.directory}}/{{entry.name}}">
+          <a href="#/repo/file/{{repo.id}}/{{revision}}/{{directory}}/{{entry.name}}">
             {{entry.name}}
           </a>
         </div>
