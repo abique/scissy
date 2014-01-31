@@ -8,11 +8,11 @@
   </thead>
 
   <tbody>
-    <tr>
+    <tr ng-show="directory != ''">
       <td>
         <div>
           <span class="glyphicon glyphicon-folder-open"></span>
-          <a href="#/repo/tree/{{repo.id}}/{{revision}}/{{directory}}/..">
+          <a href="#/repo/tree/{{repo.id}}/{{revision}}/{{directory}}..">
             ..
           </a>
         </div>
@@ -23,14 +23,14 @@
       <td>
         <div ng-show="entry.is_file">
           <span class="glyphicon glyphicon-file"></span>
-          <a href="#/repo/file/{{repo.id}}/{{revision}}/{{directory}}/{{entry.name}}">
+          <a href="#/repo/file/{{repo.id}}/{{revision}}/{{directory}}{{entry.name}}">
             {{entry.name}}
           </a>
         </div>
         
         <div  ng-show="entry.is_directory">
           <span class="glyphicon glyphicon-folder-open"></span>
-          <a href="#/repo/tree/{{repo.id}}/{{revision}}/{{directory}}/{{entry.name}}">
+          <a href="#/repo/tree/{{repo.id}}/{{revision}}/{{directory}}{{entry.name}}">
             {{entry.name}}
           </a>
         </div>
@@ -38,4 +38,3 @@
     </tr>
   </tbody>
 </table>
-

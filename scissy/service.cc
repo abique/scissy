@@ -933,7 +933,8 @@ namespace scissy
     }
 
     git_oid oid;
-    if (git_oid_fromstrp(&oid, request.revision().c_str())) {
+    if (git_reference_name_to_id(&oid, repo, request.revision().c_str()) &&
+        git_oid_fromstrp(&oid, request.revision().c_str())) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
@@ -974,7 +975,8 @@ namespace scissy
     }
 
     if (request.has_revision()) {
-      if (git_oid_fromstrp(&oid, request.revision().c_str())) {
+      if (git_reference_name_to_id(&oid, repo, request.revision().c_str()) &&
+          git_oid_fromstrp(&oid, request.revision().c_str())) {
         response.set_status(pb::kNotFound);
         response.set_msg("commit not found");
         return true;
@@ -1022,7 +1024,8 @@ namespace scissy
     }
 
     git_oid oid;
-    if (git_oid_fromstrp(&oid, request.revision().c_str())) {
+    if (git_reference_name_to_id(&oid, repo, request.revision().c_str()) &&
+        git_oid_fromstrp(&oid, request.revision().c_str())) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;

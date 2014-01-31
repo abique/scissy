@@ -221,8 +221,8 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
     $scope.revision = $routeParams.revision;
     $scope.directory = $routeParams.directory;
 
-    if ($scope.directory && $scope.directory[$scope.directory.length - 1] == '/')
-        $scope.directory = $scope.directory.substr(0, $scope.directory.length - 1);
+    if ($scope.directory && $scope.directory[$scope.directory.length - 1] != '/')
+        $scope.directory += '/';
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
