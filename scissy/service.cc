@@ -891,16 +891,6 @@ namespace scissy
     return true;
   }
 
-  static int repoListBranchesCb(const char   *branch_name,
-                                git_branch_t  /*branch_type*/,
-                                void         *payload)
-  {
-    auto branches = reinterpret_cast<pb::GitBranches *>(payload);
-    auto branch = branches->add_branches();
-    branch->set_name(branch_name);
-    return 0;
-  }
-
   bool
   Service::repoListBranches(pb::RepoSelector & request,
                             pb::GitBranches & response)
@@ -914,7 +904,16 @@ namespace scissy
       return true;
     }
 
-    git_branch_foreach(repo, GIT_BRANCH_LOCAL | GIT_BRANCH_REMOTE, repoListBranchesCb, &response);
+    git_branch_iterator *it  = nullptr;
+    git_reference       *ref = nullptr;
+    git_branch_t        branch_type;
+    git_branch_iterator_new(&it, repo, GIT_BRANCH_LOCAL);
+    while (!git_branch_next(&ref, &branch_type, it)) {
+      auto branch = response.add_branches();
+      branch->set_name(git_reference_name(ref));
+      git_reference_free(ref);
+    }
+    git_branch_iterator_free(it);
 
     response.set_status(pb::kSucceed);
     return true;
