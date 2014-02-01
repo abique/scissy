@@ -15,6 +15,7 @@ scissy_module.config(function($routeProvider) {
         .when('/repo/summary/:repo_id', {controller:repoSummaryCtrl, templateUrl:'html/repo.html'})
         .when('/repo/tree/:repo_id/:revision/', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
         .when('/repo/tree/:repo_id/:revision/:directory*', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/blob/:repo_id/:revision/:path*', {controller:repoBlobCtrl, templateUrl:'html/repo.html'})
         .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo.html'})
         .when('/repo/admin/:repo_id', {controller:repoAdminCtrl, templateUrl:'html/repo.html'})
         .when('/repo/commit/:repo_id/:revision', {controller:repoCommitCtrl, templateUrl:'html/repo.html'})
@@ -246,6 +247,39 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
                         entry.is_directory = (entry.mode == 'kGitFilemodeTree');
                         entry.is_file = (entry.type == 'kGitObjBlob');
                     }
+                }
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.refresh();
+}
+
+function repoBlobCtrl($scope, $rootScope, $http, $location, $routeParams) {
+    $scope.blob_class = "active";
+    $scope.content = "html/repo-blob.html";
+    $scope.repo = {"name":"", "desc":"", "is_public":true,
+                   "id":parseInt($routeParams.repo_id)};
+    $scope.revision = $routeParams.revision;
+    $scope.path = $routeParams.path;
+
+    $scope.refresh = function() {
+        $http.post('/api/repoGetInfo', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.repo = data;
+            })
+            .error(rpcGenericError);
+        $http.post('/api/repoGetBlob', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id,
+            "revision":$scope.revision,
+            "path":$scope.path})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed") {
+                    $scope.blob = data;
                 }
             })
             .error(rpcGenericError);

@@ -1152,4 +1152,3 @@ namespace scissy
     return true;
   }
 }
-
