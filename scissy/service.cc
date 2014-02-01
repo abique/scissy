@@ -19,8 +19,10 @@
 #include "log.hh"
 #include "repository.hh"
 
+#include "git-blob.hh"
 #include "git-commit.hh"
 #include "git-revwalk.hh"
+#include "git-tree-entry.hh"
 #include "git-tree.hh"
 
 #define AUTHENTICATE_USER()                             \
@@ -1046,7 +1048,7 @@ namespace scissy
     }
 
     char oid_str[GIT_OID_HEXSZ + 1];
-    for (int i = 0; i < git_tree_entrycount(tree); ++i) {
+    for (size_t i = 0; i < git_tree_entrycount(tree); ++i) {
       const git_tree_entry *entry = git_tree_entry_byindex(tree, i);
       if (!entry)
         break;
@@ -1061,6 +1063,65 @@ namespace scissy
       e->set_id(oid_str);
     }
 
+    response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::repoGetBlob(pb::BlobSelector & request,
+                       pb::GitBlob & response)
+  {
+        CHECK_PUBLIC_REPO(request);
+
+    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    if (!repo) {
+      response.set_status(pb::kInternalError);
+      response.set_msg("internal error");
+      return true;
+    }
+
+    git_oid oid;
+    if (git_reference_name_to_id(&oid, repo, request.revision().c_str()) &&
+        git_oid_fromstrp(&oid, request.revision().c_str())) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("commit not found");
+      return true;
+    }
+
+    GitCommit commit(repo, &oid);
+    if (!commit) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("commit not found");
+      return true;
+    }
+
+    GitTree tree(repo, git_commit_tree_id(commit));
+    if (!tree) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("tree not found");
+      return true;
+    }
+
+    GitTreeEntry entry;
+    if (git_tree_entry_bypath(entry.ref(), tree, request.path().c_str())) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("tree entry not found");
+      return true;
+    }
+
+    GitBlob blob;
+    if (git_blob_lookup(blob.ref(), repo, git_tree_entry_id(entry))) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("blob not found");
+      return true;
+    }
+
+    if (git_blob_is_binary(blob)) {
+      response.set_is_binary(true);
+    } else {
+      response.set_is_binary(false);
+      response.set_data(git_blob_rawcontent(blob), git_blob_rawsize(blob));
+    }
     response.set_status(pb::kSucceed);
     return true;
   }

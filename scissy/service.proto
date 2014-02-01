@@ -328,6 +328,15 @@ message TreeSelector
   optional bytes         directory = 5;
 }
 
+message BlobSelector
+{
+  optional UserAuthToken auth      = 1;
+  optional bytes         revision  = 2;
+  optional int64         repo_id   = 3;
+  optional bytes         repo      = 4;
+  optional bytes         path      = 5;
+}
+
 message AccessUserRepo
 {
   required int64 repo_id   = 1;
@@ -423,6 +432,14 @@ message GitTree
   repeated GitTreeEntry entries = 3;
 }
 
+message GitBlob
+{
+  optional Status status    = 1;
+  optional bytes  msg       = 2;
+  required bool   is_binary = 3;
+  optional bytes  data      = 4;
+}
+
 service Service
 {
   /* service */
@@ -468,7 +485,7 @@ service Service
   rpc repoGetCommit(CommitSelector) returns (GitCommit);
   rpc repoGetLog(LogSelector) returns (GitLog);
   rpc repoGetTree(TreeSelector) returns (GitTree);
-  // rpc repoGetTree() returns ();
+  rpc repoGetBlob(BlobSelector) returns (GitBlob);
 
   /* ssh shell */
   rpc shellControl(ShellControl) returns (ShellStatus);

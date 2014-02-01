@@ -120,6 +120,9 @@ namespace scissy
     virtual bool repoGetTree(pb::TreeSelector & request,
                              pb::GitTree & response) override;
 
+    virtual bool repoGetBlob(pb::BlobSelector & request,
+                             pb::GitBlob & response) override;
+
     ///////////////
     // Ssh shell //
     ///////////////
