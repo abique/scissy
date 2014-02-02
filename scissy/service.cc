@@ -1150,7 +1150,7 @@ namespace scissy
 
     git_oid oid;
     if (git_reference_name_to_id(&oid, repo, request.revision_new().c_str()) &&
-        git_oid_fromstrp(&oid, request.revision_old().c_str())) {
+        git_oid_fromstrp(&oid, request.revision_new().c_str())) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
