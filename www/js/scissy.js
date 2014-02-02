@@ -16,6 +16,7 @@ scissy_module.config(function($routeProvider) {
         .when('/repo/tree/:repo_id/:revision/', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
         .when('/repo/tree/:repo_id/:revision/:directory*', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
         .when('/repo/blob/:repo_id/:revision/:path*', {controller:repoBlobCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/patch/:repo_id/:revision_new/:revision_old?', {controller:repoPatchCtrl, templateUrl:'html/repo.html'})
         .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo.html'})
         .when('/repo/admin/:repo_id', {controller:repoAdminCtrl, templateUrl:'html/repo.html'})
         .when('/repo/commit/:repo_id/:revision', {controller:repoCommitCtrl, templateUrl:'html/repo.html'})
@@ -286,6 +287,45 @@ function repoBlobCtrl($scope, $rootScope, $http, $location, $routeParams) {
                 if (data.status == "kSucceed") {
                     $scope.viewer_options.mode = data.content_type;
                     $scope.blob = data;
+                }
+            })
+            .error(rpcGenericError);
+    }
+
+    $scope.refresh();
+}
+
+function repoPatchCtrl($scope, $rootScope, $http, $location, $routeParams) {
+    $scope.patch_class = "active";
+    $scope.content = "html/repo-patch.html";
+    $scope.repo = {"name":"", "desc":"", "is_public":true, "id":parseInt($routeParams.repo_id)};
+    $scope.revision_new = $routeParams.revision_new;
+    $scope.revision_old = $routeParams.revision_old;
+    $scope.path = $routeParams.path;
+    $scope.viewer_options = {
+        readOnly: true,
+        lineNumbers: true,
+        tabSize: 8,
+        mode: "text/x-diff"
+    };
+
+    $scope.refresh = function() {
+        $http.post('/api/repoGetInfo', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.repo = data;
+            })
+            .error(rpcGenericError);
+        $http.post('/api/repoGetPatch', {
+            'auth':$rootScope.session.auth,
+            "repo_id":$scope.repo.id,
+            "revision_new":$scope.revision_new,
+            "revision_old":$scope.revision_old})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed") {
+                    $scope.patch = data;
                 }
             })
             .error(rpcGenericError);

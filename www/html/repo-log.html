@@ -13,7 +13,7 @@
       <td><small>{{commit.author.name}}</small></td>
       <td><small>{{commit.msg.split('\n')[0]}}</small></td>
       <td><small>{{commit.time | date:'yyyy-MM-dd HH:mm:ss'}}</small></td>
-      <td><small><a href="#/repo/tree/{{repo.id}}/{{commit.id}}/">tree</a> | diff</small></td>
+      <td><small><a href="#/repo/tree/{{repo.id}}/{{commit.id}}/">tree</a> | <a href="#/repo/patch/{{repo.id}}/{{commit.id}}/">patch</a></small></td>
       <td><small><kbd>{{commit.id}}</kbd></small></td>
   </tbody>
 </table>
