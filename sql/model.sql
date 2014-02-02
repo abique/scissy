@@ -57,8 +57,7 @@ create table if not exists repos
   repo_id integer not null primary key autoincrement,
   `name` text not null unique,
   `desc` text not null default '',
-  is_public boolean not null default true,
-  last_commit_ts integer default null
+  is_public boolean not null default true
 );
 
 create table if not exists repos_groups

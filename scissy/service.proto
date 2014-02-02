@@ -266,10 +266,11 @@ message RepoInfo
   required Status status = 1;
   optional string msg    = 2;
 
-  required int64 id        = 3;
-  required bytes name      = 4;
-  required bytes desc      = 5;
-  required bool  is_public = 6;
+  required int64  id               = 3;
+  required bytes  name             = 4;
+  required bytes  desc             = 5;
+  required bool   is_public        = 6;
+  optional uint64 last_commit_time = 7;
 }
 
 message RepoMembers
@@ -285,10 +286,9 @@ message RepoMembers
 
 message RepoList
 {
-  repeated RepoInfo repos  = 1;
-  optional Status   status = 2;
-  optional string   msg    = 3;
-  optional int32    idle   = 4; // seconds
+  repeated RepoInfo repos            = 1;
+  optional Status   status           = 2;
+  optional string   msg              = 3;
 }
 
 message RepoSelector
@@ -495,7 +495,7 @@ service Service
   rpc repoAddGroup(RepoAddGroup) returns (StatusMsg);
   rpc repoRemoveGroup(RepoRemoveGroup) returns (StatusMsg);
 
-  // /* repo view */
+  /* repo view */
   rpc reposList(RepoSelector) returns (RepoList);
   rpc repoGetInfo(RepoSelector) returns (RepoInfo);
   rpc repoListMembers(RepoSelector) returns (MemberList);

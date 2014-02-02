@@ -813,15 +813,19 @@ namespace scissy
     std::string desc;
     uint64_t    id;
     int         is_public;
-    auto stmt = Db::prepare("select name, desc, repo_id, is_public"
+    int64_t     last_commit_time;
+
+    auto stmt = Db::prepare("select name, desc, repo_id, is_public, last_commit_ts"
                             " from repos order by name");
 
-    while (stmt.fetch(&name, &desc, &id, &is_public)) {
+    while (stmt.fetch(&name, &desc, &id, &is_public, &last_commit_time)) {
       auto msg = response.add_repos();
       msg->set_name(name);
       msg->set_id(id);
       msg->set_desc(desc);
       msg->set_is_public(is_public);
+      if (last_commit_time > 0)
+        msg->set_last_commit_time(last_commit_time / mimosa::milliseconds);
     }
 
     response.set_status(pb::kSucceed);
