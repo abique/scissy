@@ -18,6 +18,8 @@ namespace scissy
       return repo_;
     }
 
+    int64_t lastCommitTime() const;
+
   private:
     git_repository *repo_;
   };

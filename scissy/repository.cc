@@ -1,4 +1,5 @@
 #include "repository.hh"
+#include "git-commit.hh"
 
 namespace scissy
 {
@@ -11,5 +12,17 @@ namespace scissy
   Repository::~Repository()
   {
     git_repository_free(repo_);
+  }
+
+  int64_t
+  Repository::lastCommitTime() const
+  {
+    git_oid   oid;
+    if (git_reference_name_to_id(&oid, repo_, "HEAD"))
+        return 0;
+
+    GitCommit commit(repo_, &oid);
+    return static_cast<int64_t>(git_commit_time(commit)) * 1000
+      + git_commit_time_offset(commit);
   }
 }

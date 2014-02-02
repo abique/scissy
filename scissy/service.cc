@@ -825,15 +825,9 @@ namespace scissy
       msg->set_desc(desc);
       msg->set_is_public(is_public);
 
-      git_oid    oid;
       Repository repo(Repositories::instance().getRepoPath(id));
-      if (git_reference_name_to_id(&oid, repo, "HEAD"))
-        continue;
-
-      GitCommit commit(repo, &oid);
-      msg->set_last_commit_time(
-        static_cast<uint64_t>(
-          git_commit_time(commit)) * 1000 + git_commit_time_offset(commit));
+      if (repo)
+        msg->set_last_commit_time(repo.lastCommitTime());
     }
 
     response.set_status(pb::kSucceed);
@@ -864,6 +858,9 @@ namespace scissy
     response.set_name(name);
     response.set_desc(desc);
     response.set_is_public(is_public);
+    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    if (repo)
+      response.set_last_commit_time(repo.lastCommitTime());
     response.set_status(pb::kSucceed);
     return true;
   }
