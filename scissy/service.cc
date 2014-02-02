@@ -824,8 +824,16 @@ namespace scissy
       msg->set_id(id);
       msg->set_desc(desc);
       msg->set_is_public(is_public);
-      if (last_commit_time > 0)
-        msg->set_last_commit_time(last_commit_time / mimosa::milliseconds);
+
+      git_oid    oid;
+      Repository repo(Repositories::instance().getRepoPath(id));
+      if (git_reference_name_to_id(&oid, repo, "HEAD"))
+        continue;
+
+      GitCommit commit(repo, &oid);
+      msg->set_last_commit_time(
+        static_cast<uint64_t>(
+          git_commit_time(commit)) * 1000 + git_commit_time_offset(commit));
     }
 
     response.set_status(pb::kSucceed);
