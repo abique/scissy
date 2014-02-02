@@ -813,12 +813,11 @@ namespace scissy
     std::string desc;
     uint64_t    id;
     int         is_public;
-    int64_t     last_commit_time;
 
-    auto stmt = Db::prepare("select name, desc, repo_id, is_public, last_commit_ts"
+    auto stmt = Db::prepare("select name, desc, repo_id, is_public"
                             " from repos order by name");
 
-    while (stmt.fetch(&name, &desc, &id, &is_public, &last_commit_time)) {
+    while (stmt.fetch(&name, &desc, &id, &is_public)) {
       auto msg = response.add_repos();
       msg->set_name(name);
       msg->set_id(id);
