@@ -451,7 +451,7 @@ message GitBlob
   optional bytes  content_type = 5;
 }
 
-message GitDiff
+message GitPatch
 {
   optional Status status = 1;
   optional bytes  msg    = 2;
@@ -504,7 +504,7 @@ service Service
   rpc repoGetLog(LogSelector) returns (GitLog);
   rpc repoGetTree(TreeSelector) returns (GitTree);
   rpc repoGetBlob(BlobSelector) returns (GitBlob);
-  rpc repoGetDiff(DiffSelector) returns (GitDiff);
+  rpc repoGetPatch(DiffSelector) returns (GitPatch);
 
   /* ssh shell */
   rpc shellControl(ShellControl) returns (ShellStatus);

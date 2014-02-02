@@ -123,8 +123,8 @@ namespace scissy
     virtual bool repoGetBlob(pb::BlobSelector & request,
                              pb::GitBlob & response) override;
 
-    virtual bool repoGetDiff(pb::DiffSelector & request,
-                             pb::GitDiff & response) override;
+    virtual bool repoGetPatch(pb::DiffSelector & request,
+                              pb::GitPatch & response) override;
 
     ///////////////
     // Ssh shell //

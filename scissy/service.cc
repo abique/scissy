@@ -1136,8 +1136,8 @@ namespace scissy
   }
 
   bool
-  Service::repoGetDiff(pb::DiffSelector & request,
-                       pb::GitDiff & response)
+  Service::repoGetPatch(pb::DiffSelector & request,
+                        pb::GitPatch & response)
   {
     CHECK_PUBLIC_REPO(request);
 
