@@ -35,6 +35,8 @@ namespace scissy
     clone_user_ = cfg.has_clone_user() ? cfg.clone_user() : pw->pw_name;
     clone_host_ = cfg.has_clone_host() ? cfg.clone_host() : "localhost";
     git_log_limit_ = cfg.has_git_log_limit() ? cfg.git_log_limit() : 200;
+    user_ = cfg.user();
+    group_ = cfg.group();
 
     if (cfg.has_authorized_keys())
       auth_keys_ = cfg.authorized_keys();

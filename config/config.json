@@ -5,7 +5,7 @@
     "www_root" : "/usr/share/scissy/www",
     "socket" : "/var/run/scissy/socket",
     "crack_passwords" : false,
-    "clone_user" : "git",
+    "clone_user" : "scissy",
     "clone_host" : "localhost",
     "listen" : [
         {
@@ -15,5 +15,7 @@
             "ssl_cert" : "/etc/scissy/server.crt"
         }
     ],
-    "git_log_limit":50
+    "git_log_limit":50,
+    "user":"scissy",
+    "group":"scissy"
 }

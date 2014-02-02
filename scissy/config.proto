@@ -20,4 +20,6 @@ message Config
   repeated ListenAddr listen     = 8;
   optional bytes authorized_keys = 9;
   optional int32 git_log_limit   = 10;
+  optional bytes user            = 11;
+  optional bytes group           = 12;
 }

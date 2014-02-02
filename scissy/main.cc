@@ -1,14 +1,19 @@
+#include <unistd.h>
+#include <sys/types.h>
+#include <grp.h>
+
 #include <cerrno>
 
-#include <mimosa/init.hh>
-#include <mimosa/thread.hh>
-#include <mimosa/log/log.hh>
-#include <mimosa/options/options.hh>
-#include <mimosa/http/server.hh>
 #include <mimosa/http/dispatch-handler.hh>
 #include <mimosa/http/fs-handler.hh>
 #include <mimosa/http/log-handler.hh>
+#include <mimosa/http/server.hh>
+#include <mimosa/init.hh>
+#include <mimosa/log/log.hh>
+#include <mimosa/options/options.hh>
+#include <mimosa/priviledge-drop.hh>
 #include <mimosa/rpc/server.hh>
+#include <mimosa/thread.hh>
 
 #include "config.hh"
 #include "db.hh"
@@ -79,8 +84,17 @@ int main(int argc, char ** argv)
           while (!stop)
             http_server->serveOne();
         }));
-    threads.back()->start();
   }
+
+  if (!scissy::Config::instance().user().empty() ||
+      !scissy::Config::instance().group().empty()) {
+    mimosa::priviledgeDrop("/",
+                           scissy::Config::instance().user(),
+                           scissy::Config::instance().group());
+  }
+
+  for (auto & thread : threads)
+    thread->start();
 
   while (!stop)
     rpc_server->serveOne();
