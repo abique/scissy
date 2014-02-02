@@ -4,11 +4,12 @@
 
 #include <crack.h>
 
-#include <mimosa/stream/hash.hh>
-#include <mimosa/stream/string-stream.hh>
+#include <mimosa/http/mime-db.hh>
+#include <mimosa/log/log.hh>
 #include <mimosa/stream/base16-decoder.hh>
 #include <mimosa/stream/base16-encoder.hh>
-#include <mimosa/log/log.hh>
+#include <mimosa/stream/hash.hh>
+#include <mimosa/stream/string-stream.hh>
 #include <mimosa/uptime.hh>
 
 #include "config.hh"
@@ -1122,6 +1123,10 @@ namespace scissy
       response.set_is_binary(false);
       response.set_data(git_blob_rawcontent(blob), git_blob_rawsize(blob));
     }
+
+    response.set_content_type(mimosa::http::MimeDb::instance().mimeType(
+                                request.path()));
+
     response.set_status(pb::kSucceed);
     return true;
   }

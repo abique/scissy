@@ -1,6 +1,6 @@
 'use strict';
 
-var scissy_module = angular.module('scissy', ['ngRoute']);
+var scissy_module = angular.module('scissy', ['ngRoute', 'ui.codemirror']);
 scissy_module.config(function($routeProvider) {
     $routeProvider
         .when('/', {controller:indexCtrl, templateUrl:'html/index.html'})
@@ -262,6 +262,11 @@ function repoBlobCtrl($scope, $rootScope, $http, $location, $routeParams) {
                    "id":parseInt($routeParams.repo_id)};
     $scope.revision = $routeParams.revision;
     $scope.path = $routeParams.path;
+    $scope.viewer_options = {
+        readOnly: true,
+        lineNumbers: true,
+        tabSize: 8,
+    };
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
@@ -279,6 +284,7 @@ function repoBlobCtrl($scope, $rootScope, $http, $location, $routeParams) {
             "path":$scope.path})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed") {
+                    $scope.viewer_options.mode = data.content_type;
                     $scope.blob = data;
                 }
             })

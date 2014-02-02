@@ -434,10 +434,11 @@ message GitTree
 
 message GitBlob
 {
-  optional Status status    = 1;
-  optional bytes  msg       = 2;
-  required bool   is_binary = 3;
-  optional bytes  data      = 4;
+  optional Status status       = 1;
+  optional bytes  msg          = 2;
+  required bool   is_binary    = 3;
+  optional bytes  data         = 4;
+  optional bytes  content_type = 5;
 }
 
 service Service
