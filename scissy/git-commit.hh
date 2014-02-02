@@ -12,9 +12,11 @@ namespace scissy
   class GitCommit : public mimosa::NonCopyable
   {
   public:
+    inline GitCommit() : commit_(nullptr) {}
     GitCommit(git_repository *repo, const git_oid *id);
     ~GitCommit();
 
+    inline git_commit** ref() { return &commit_; }
     inline operator git_commit *() { return commit_; }
 
     void copyTo(pb::GitCommit * commit);

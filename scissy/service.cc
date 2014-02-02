@@ -1,4 +1,5 @@
 #include <ctime>
+#include <sstream>
 
 #include <re2/re2.h>
 
@@ -22,6 +23,8 @@
 
 #include "git-blob.hh"
 #include "git-commit.hh"
+#include "git-diff.hh"
+#include "git-patch.hh"
 #include "git-revwalk.hh"
 #include "git-tree-entry.hh"
 #include "git-tree.hh"
@@ -1073,7 +1076,7 @@ namespace scissy
   Service::repoGetBlob(pb::BlobSelector & request,
                        pb::GitBlob & response)
   {
-        CHECK_PUBLIC_REPO(request);
+    CHECK_PUBLIC_REPO(request);
 
     Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
     if (!repo) {
@@ -1129,6 +1132,91 @@ namespace scissy
                                 request.path()));
 
     response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::repoGetDiff(pb::DiffSelector & request,
+                       pb::GitDiff & response)
+  {
+    CHECK_PUBLIC_REPO(request);
+
+    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    if (!repo) {
+      response.set_status(pb::kInternalError);
+      response.set_msg("internal error");
+      return true;
+    }
+
+    git_oid oid;
+    if (git_reference_name_to_id(&oid, repo, request.revision_new().c_str()) &&
+        git_oid_fromstrp(&oid, request.revision_old().c_str())) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("commit not found");
+      return true;
+    }
+
+    GitCommit commit_new(repo, &oid);
+    if (!commit_new) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("commit not found");
+      return true;
+    }
+
+    GitTree tree_new(repo, git_commit_tree_id(commit_new));
+    if (!tree_new) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("tree not found");
+      return true;
+    }
+
+    GitCommit commit_old;
+
+    if (request.has_revision_old()) {
+      if ((git_reference_name_to_id(&oid, repo, request.revision_old().c_str()) &&
+           git_oid_fromstrp(&oid, request.revision_old().c_str())) ||
+          git_commit_lookup(commit_old.ref(), repo, &oid)) {
+        response.set_status(pb::kNotFound);
+        response.set_msg("commit not found");
+        return true;
+      }
+    } else {
+      // set the old revision to the first parent?
+      if (git_commit_parentcount(commit_new) > 0 &&
+          git_commit_parent(commit_old.ref(), commit_new, 0)) {
+        response.set_status(pb::kNotFound);
+        response.set_msg("commit not found");
+      }
+    }
+
+    GitTree tree_old(repo, git_commit_tree_id(commit_old));
+
+    if (!tree_old) {
+      response.set_status(pb::kNotFound);
+      response.set_msg("tree not found");
+      return true;
+    }
+
+    GitDiff diff;
+    if (git_diff_tree_to_tree(diff.ref(), repo, tree_old, tree_new, NULL)) {
+      response.set_status(pb::kInternalError);
+      response.set_msg("diff error");
+      return true;
+    }
+
+    std::ostringstream patch_ss;
+    for (size_t i = 0; i < git_diff_num_deltas(diff); ++i) {
+      GitPatch patch;
+      if (git_patch_from_diff(patch.ref(), diff, i))
+        continue;
+      char *str = nullptr;
+      if (git_patch_to_str(&str, patch) || !str)
+        continue;
+      patch_ss << str;
+    }
+
+    response.set_status(pb::kSucceed);
+    response.set_data(patch_ss.str());
     return true;
   }
 

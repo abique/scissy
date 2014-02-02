@@ -1,6 +1,8 @@
 #ifndef SCISSY_GIT_BLOB_HH
 # define SCISSY_GIT_BLOB_HH
 
+# include <git2/blob.h>
+
 namespace scissy
 {
   class GitBlob

@@ -337,6 +337,16 @@ message BlobSelector
   optional bytes         path      = 5;
 }
 
+message DiffSelector
+{
+  optional UserAuthToken auth         = 1;
+  optional int64         repo_id      = 2;
+  optional bytes         repo         = 3;
+  optional bytes         revision_old = 4;
+  optional bytes         revision_new = 5;
+  optional bytes         path         = 6;
+}
+
 message AccessUserRepo
 {
   required int64 repo_id   = 1;
@@ -441,6 +451,13 @@ message GitBlob
   optional bytes  content_type = 5;
 }
 
+message GitDiff
+{
+  optional Status status = 1;
+  optional bytes  msg    = 2;
+  optional bytes  data   = 3;
+}
+
 service Service
 {
   /* service */
@@ -487,6 +504,7 @@ service Service
   rpc repoGetLog(LogSelector) returns (GitLog);
   rpc repoGetTree(TreeSelector) returns (GitTree);
   rpc repoGetBlob(BlobSelector) returns (GitBlob);
+  rpc repoGetDiff(DiffSelector) returns (GitDiff);
 
   /* ssh shell */
   rpc shellControl(ShellControl) returns (ShellStatus);
