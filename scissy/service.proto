@@ -26,7 +26,7 @@ message ServiceInfo
   required bytes  clone_user = 1;
   required bytes  clone_host = 2;
   required bytes  version    = 3;
-  required uint64 uptime     = 4;
+  required uint64 start_time = 4;
 }
 
 enum Role

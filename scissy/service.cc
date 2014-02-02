@@ -141,7 +141,8 @@ namespace scissy
     response.set_clone_user(Config::instance().cloneUser());
     response.set_clone_host(Config::instance().cloneHost());
     response.set_version(SCISSY_VERSION);
-    response.set_uptime(mimosa::uptime());
+    response.set_start_time(
+      (mimosa::realTimeCoarse() - (mimosa::uptime())) / mimosa::millisecond);
     return true;
   }
 
