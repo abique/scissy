@@ -24,6 +24,8 @@
 #include "root-handler.hh"
 #include "service.hh"
 
+#define USER_VERSION 1
+
 int main(int argc, char ** argv)
 {
   bool stop = false;
@@ -33,7 +35,15 @@ int main(int argc, char ** argv)
   scissy::Config::instance();
   scissy::Db::instance();
 
+  int user_version = 0;
   scissy::Db::prepare("PRAGMA foreign_keys = ON").exec();
+  scissy::Db::prepare("PRAGMA user_version").fetch(&user_version);
+  if (user_version != USER_VERSION) {
+    mimosa::log::fatal("bad sqlite user_version: %d, requires: %d;"
+                       " please upgrade either scissy or your database",
+                       user_version, USER_VERSION);
+    return 1;
+  }
 
   scissy::genAuthorizedKeys();
 

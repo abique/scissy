@@ -1,0 +1,15 @@
+#! /bin/bash -e
+
+LAST_VERSION=1
+
+cd
+user_version=$(sqlite3 -noheader -batch db.sqlite "pragma user_version;")
+
+backup=db.sqlite.$(date +%s)
+cp db.sqlite $backup
+echo "db backed up to $backup"
+while [[ "$user_version" -lt $LAST_VERSION ]] ; do
+    user_version_next=$((user_versoin + 1))
+    sqlite3 -noheader -batch </usr/share/scissy/migration-$user_version-$user_version_next.sql db.sqlite
+    user_version=$user_version_next
+done
