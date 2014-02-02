@@ -4,3 +4,6 @@
 [submodule "mimosa"]
 	path = mimosa
 	url = git://github.com/abique/mimosa.git
+[submodule "www/codemirror"]
+	path = www/codemirror
+	url = git://github.com/marijnh/CodeMirror

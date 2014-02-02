@@ -1,0 +1,15 @@
+<span ng-show="blob.is_binary">BINARY</span>
+<div ng-show="!blob.is_binary">
+  <textarea id="data-view" class="CodeMirror-matchinbracket">{{blob.data}}</textarea>
+</div>
+
+<script language="javascript">
+  var myCodeMirror = CodeMirror.fromTextArea(
+   document.getElementById('data-view'), {
+    mode: '{{content-type}}',
+    readOnly: true,
+    lineNumbers: true,
+    tabSize: 8,
+   });
+</script>
+

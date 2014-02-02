@@ -52,6 +52,9 @@ int main(int argc, char ** argv)
   dispatch->registerHandler(
     "/html/*", new mimosa::http::FsHandler(
       scissy::Config::instance().html(), 1, true));
+  dispatch->registerHandler(
+    "/cm/*", new mimosa::http::FsHandler(
+      scissy::Config::instance().cm(), 1, true));
   dispatch->registerHandler("/", new scissy::RootHandler);
   dispatch->registerHandler("/api/*", new scissy::pb::ServiceHttpHandler(
                               service, "/api/"));

@@ -26,6 +26,7 @@ namespace scissy
     js_    = www_ + "/js";
     fonts_ = www_ + "/fonts";
     html_  = www_ + "/html";
+    cm_  = www_ + "/codemirror";
 
     repos_ = cfg.has_repos_root() ? cfg.repos_root() : "/var/lib/scissy";
     db_ = cfg.has_db() ? cfg.db() : "/var/lib/scissy/db.sqlite";
