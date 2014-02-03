@@ -2,5 +2,5 @@
 
 cd
 mkdir -m 0700 .ssh
-sqlite3 </usr/share/scissy/model.sql db.sqlite
+sqlite3 </usr/share/scissy/sql/model.sql db.sqlite
 chmod 0700 db.sqlite
