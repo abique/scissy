@@ -7110,3 +7110,13 @@ td.visible-print {
     display: none !important;
   }
 }
+
+.CodeMirror {
+  border: none;
+  height: auto !important;
+  min-height: 400px;
+}
+
+.CodeMirror-scroll {
+  overflow: auto;
+}
