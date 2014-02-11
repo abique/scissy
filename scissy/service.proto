@@ -49,21 +49,14 @@ message UserAuth
   required bytes password = 2;
 }
 
-message UserAuthToken
-{
-  required bytes user  = 1;
-  required bytes token = 2;
-}
-
 message Session
 {
   required bytes  user    = 1;
-  required bytes  token   = 2;
+  optional int64  user_id = 2;
   optional bytes  email   = 3;
   optional Status status  = 4;
   optional string msg     = 5;
   optional Role   role    = 6;
-  optional int64  user_id = 7;
 }
 
 message UserCreate
@@ -89,12 +82,10 @@ message SshKey
 message UserSshKey
 {
   required SshKey        key  = 1;
-  required UserAuthToken auth = 2;
 }
 
 message UserSshKeySelector
 {
-  required UserAuthToken auth = 2; // if you're admin, you can view others keys
   required bytes         user = 3; // target
 }
 
@@ -107,21 +98,18 @@ message UserSshKeys
 
 message GroupCreate
 {
-  required UserAuthToken auth = 1;
   optional bytes grp          = 2;
   required bytes desc         = 3;
 }
 
 message GroupDelete
 {
-  required UserAuthToken auth   = 1;
   optional int64         grp_id = 2;
   optional bytes         grp    = 3;
 }
 
 message GroupAddUser
 {
-  required UserAuthToken auth = 1;
   optional bytes grp          = 2;
   optional int64 grp_id       = 3;
   optional bytes user         = 4;
@@ -131,7 +119,6 @@ message GroupAddUser
 
 message GroupRemoveUser
 {
-  required UserAuthToken auth = 1;
   optional bytes grp          = 2;
   optional int64 grp_id       = 3;
   optional bytes user         = 4;
@@ -195,7 +182,6 @@ message MemberList
 
 message RepoCreate
 {
-  required UserAuthToken auth      = 1;
   required bytes         name      = 2;
   required bytes         desc      = 3;
   required bool          is_public = 4;
@@ -203,7 +189,6 @@ message RepoCreate
 
 message RepoUpdate
 {
-  required UserAuthToken auth      = 1;
   optional int64         repo_id   = 2;
   required bytes         repo      = 3;
   required bytes         name      = 4;
@@ -213,14 +198,12 @@ message RepoUpdate
 
 message RepoDelete
 {
-  required UserAuthToken auth    = 1;
   optional int64         repo_id = 2;
   optional bytes         repo    = 3;
 }
 
 message RepoAddUser
 {
-  required UserAuthToken auth    = 1;
   optional int64         repo_id = 2;
   optional bytes         repo    = 3;
   optional int64         user_id = 4;
@@ -230,7 +213,6 @@ message RepoAddUser
 
 message RepoRemoveUser
 {
-  required UserAuthToken auth    = 1;
   optional int64         repo_id = 2;
   optional bytes         repo    = 3;
   optional int64         user_id = 4;
@@ -239,7 +221,6 @@ message RepoRemoveUser
 
 message RepoAddGroup
 {
-  required UserAuthToken auth    = 1;
   optional int64         repo_id = 2;
   optional bytes         repo    = 3;
   optional int64         grp_id  = 4;
@@ -249,7 +230,6 @@ message RepoAddGroup
 
 message RepoRemoveGroup
 {
-  required UserAuthToken auth    = 1;
   optional int64         repo_id = 2;
   optional bytes         repo    = 3;
   optional int64         grp_id  = 4;
@@ -297,13 +277,11 @@ message RepoSelector
   optional uint32        offset    = 2;
   optional int64         repo_id   = 3;
   optional bytes         repo      = 4;
-  optional UserAuthToken auth      = 5;
   optional bytes         commit_id = 6;
 }
 
 message CommitSelector
 {
-  optional UserAuthToken auth     = 1;
   required bytes         revision = 2;
   optional int64         repo_id  = 3;
   optional bytes         repo     = 4;
@@ -311,7 +289,6 @@ message CommitSelector
 
 message LogSelector
 {
-  optional UserAuthToken auth     = 1;
   optional bytes         revision = 2;
   optional int64         repo_id  = 3;
   optional bytes         repo     = 4;
@@ -321,7 +298,6 @@ message LogSelector
 
 message TreeSelector
 {
-  optional UserAuthToken auth      = 1;
   optional bytes         revision  = 2;
   optional int64         repo_id   = 3;
   optional bytes         repo      = 4;
@@ -330,7 +306,6 @@ message TreeSelector
 
 message BlobSelector
 {
-  optional UserAuthToken auth      = 1;
   optional bytes         revision  = 2;
   optional int64         repo_id   = 3;
   optional bytes         repo      = 4;
@@ -339,7 +314,6 @@ message BlobSelector
 
 message DiffSelector
 {
-  optional UserAuthToken auth         = 1;
   optional int64         repo_id      = 2;
   optional bytes         repo         = 3;
   optional bytes         revision_old = 4;
@@ -465,8 +439,7 @@ service Service
 
   /* session */
   rpc userAuth(UserAuth) returns (Session);
-  rpc userCheckAuthToken(UserAuthToken) returns (Session);
-  rpc userRevokeAuthToken(UserAuthToken) returns (StatusMsg);
+  rpc userGetSession(Void) returns (Session);
 
   /* user management */
   rpc userCreate(UserCreate) returns (StatusMsg);

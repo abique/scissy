@@ -26,11 +26,8 @@ namespace scissy
     virtual bool userAuth(pb::UserAuth & request,
                           pb::Session & response) override;
 
-    virtual bool userCheckAuthToken(pb::UserAuthToken & request,
-                                    pb::Session & response) override;
-
-    virtual bool userRevokeAuthToken(pb::UserAuthToken & request,
-                                     pb::StatusMsg & response) override;
+    virtual bool userGetSession(pb::Void & request,
+                                pb::Session & response) override;
 
     virtual bool userAddSshKey(pb::UserSshKey & request,
                                pb::StatusMsg & response) override;

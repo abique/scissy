@@ -21,7 +21,9 @@
 #include "gen-authorized-keys.hh"
 
 // handlers
+#include "logout-handler.hh"
 #include "root-handler.hh"
+#include "session-handler.hh"
 #include "service.hh"
 
 #define USER_VERSION 1
@@ -71,8 +73,10 @@ int main(int argc, char ** argv)
     "/cm/*", new mimosa::http::FsHandler(
       scissy::Config::instance().cm(), 1, true));
   dispatch->registerHandler("/", new scissy::RootHandler);
-  dispatch->registerHandler("/api/*", new scissy::pb::ServiceHttpHandler(
-                              service, "/api/"));
+  dispatch->registerHandler("/logout", new scissy::LogoutHandler);
+  dispatch->registerHandler(
+    "/api/*", new scissy::SessionHandler(
+      new scissy::pb::ServiceHttpHandler(service, "/api/")));
 
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);

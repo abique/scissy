@@ -39,7 +39,10 @@ add_executable(scissyd
   gen-authorized-keys.cc
 
   # handlers
+  logout-handler.cc
   root-handler.cc
+  session.cc
+  session-handler.cc
 
   # rpc
   service.cc

@@ -26,15 +26,10 @@ scissy_module.config(function($routeProvider) {
 
 function resetSession($rootScope) {
     $rootScope.session = {
-        auth: {
-            user: null,
-            token: null
-        },
+        user: null,
         email: null,
         role: null
     };
-    localStorage.auth_user  = null;
-    localStorage.auth_token = null;
 }
 
 function getServerInfo($rootScope, $http) {
@@ -47,20 +42,16 @@ function getServerInfo($rootScope, $http) {
             });
 }
 
-function userCheckAuthToken($rootScope, $http) {
+function userGetSession($rootScope, $http) {
     if (localStorage.auth_user && localStorage.auth_token) {
         // check the session
-        $http.post('/api/userCheckAuthToken',
-                   { 'user':localStorage.auth_user,
-                     'token':localStorage.auth_token })
+        $http.post('/api/userGetSession', {})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed") {
-                    $rootScope.session.auth.user  = data.user;
-                    $rootScope.session.auth.token = data.token;
-                    $rootScope.session.email      = data.email;
-                    $rootScope.session.role       = data.role;
-                    localStorage.auth_user        = data.user;
-                    localStorage.auth_token       = data.token;
+                    $rootScope.session.user    = data.user;
+                    $rootScope.session.user_id = data.user_id;
+                    $rootScope.session.email   = data.email;
+                    $rootScope.session.role    = data.role;
                     return;
                 } else
                     resetSession($rootScope);
@@ -75,10 +66,6 @@ function userCheckAuthToken($rootScope, $http) {
 
 scissy_module.run(function($rootScope, $http) {
     $rootScope.session = {
-        "auth": {
-            "user": localStorage.auth_user,
-            "token": localStorage.auth_token,
-        },
         "email": null,
         "role": null
     };
@@ -89,7 +76,7 @@ scissy_module.run(function($rootScope, $http) {
         "uptime" : 0
     };
 
-    userCheckAuthToken($rootScope, $http);
+    userGetSession($rootScope, $http);
     getServerInfo($rootScope, $http);
 });
 
@@ -113,12 +100,10 @@ function loginCtrl($scope, $rootScope, $http, $location) {
             .success(function (data, status, headers, config) {
                 user.errmsg = null;
                 if (data.status == "kSucceed") {
-                    $rootScope.session.auth.user  = data.user;
-                    $rootScope.session.auth.token = data.token;
-                    $rootScope.session.email      = data.email;
-                    $rootScope.session.role       = data.role;
-                    localStorage.auth_user        = data.user;
-                    localStorage.auth_token       = data.token;
+                    $rootScope.session.user    = data.user;
+                    $rootScope.session.user_id = data.user_id;
+                    $rootScope.session.email   = data.email;
+                    $rootScope.session.role    = data.role;
                     $location.path("/");
                     return;
                 }
@@ -173,8 +158,7 @@ function repoCreateCtrl($scope, $rootScope, $http, $location) {
 
     $scope.create = function(repo) {
         $http.post('/api/repoCreate',
-                   { 'auth':$rootScope.session.auth,
-                     'name':repo.name,
+                   { 'name':repo.name,
                      'desc':repo.desc,
                      'is_public':repo.is_public})
             .success(function (data, status, headers, config) {
@@ -196,15 +180,13 @@ function repoSummaryCtrl($scope, $rootScope, $http, $location, $routeParams) {
                    "id":parseInt($routeParams.repo_id)};
 
     $scope.refresh = function() {
-        $http.post('/api/repoGetInfo', {'auth':$rootScope.session.auth,
-                                        "repo_id":$scope.repo.id})
+        $http.post('/api/repoGetInfo', {"repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.repo = data;
             })
             .error(rpcGenericError);
-        $http.post('/api/repoListBranches', {'auth':$rootScope.session.auth,
-                                             "repo_id":$scope.repo.id})
+        $http.post('/api/repoListBranches', {"repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.branches = data.branches;
@@ -228,7 +210,6 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
@@ -236,7 +217,6 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
             })
             .error(rpcGenericError);
         $http.post('/api/repoGetTree', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id,
             "revision":$scope.revision,
             "directory":$scope.directory})
@@ -271,7 +251,6 @@ function repoBlobCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
@@ -279,7 +258,6 @@ function repoBlobCtrl($scope, $rootScope, $http, $location, $routeParams) {
             })
             .error(rpcGenericError);
         $http.post('/api/repoGetBlob', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id,
             "revision":$scope.revision,
             "path":$scope.path})
@@ -311,7 +289,6 @@ function repoPatchCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
@@ -319,7 +296,6 @@ function repoPatchCtrl($scope, $rootScope, $http, $location, $routeParams) {
             })
             .error(rpcGenericError);
         $http.post('/api/repoGetPatch', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id,
             "revision_new":$scope.revision_new,
             "revision_old":$scope.revision_old})
@@ -342,7 +318,6 @@ function repoLogCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
@@ -350,7 +325,6 @@ function repoLogCtrl($scope, $rootScope, $http, $location, $routeParams) {
             })
             .error(rpcGenericError);
         $http.post('/api/repoGetLog', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
@@ -373,7 +347,6 @@ function repoCommitCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
@@ -381,7 +354,6 @@ function repoCommitCtrl($scope, $rootScope, $http, $location, $routeParams) {
             })
             .error(rpcGenericError);
         $http.post('/api/repoGetCommit', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id,
             "revision":$scope.revision})
             .success(function (data, status, headers, config) {
@@ -407,7 +379,6 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.refresh = function() {
         $http.post('/api/repoGetInfo', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
@@ -416,7 +387,6 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
             .error(rpcGenericError);
 
         $http.post('/api/repoListMembers', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed") {
@@ -424,7 +394,7 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
                     $scope.groups = data.groups;
                     var i;
                     for (i in data.users) {
-                        if (data.users[i].user == $rootScope.session.auth.user)
+                        if (data.users[i].user == $rootScope.session.user)
                             $scope.is_admin = (data.users[i].role == "kOwner");
                     }
                 }
@@ -434,7 +404,6 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.update = function(repo) {
         $http.post('/api/repoUpdate', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id,
             "name":repo.name,
             "desc":repo.desc,
@@ -448,7 +417,6 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.destroy = function(repo) {
         $http.post('/api/repoDelete', {
-            'auth':$rootScope.session.auth,
             "repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed") {
@@ -463,8 +431,7 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.addUser = function(new_user) {
         $http.post('/api/repoAddUser',
-                   { 'auth':$rootScope.session.auth,
-                     'repo_id':$scope.repo.id,
+                   { 'repo_id':$scope.repo.id,
                      'user':new_user.user,
                      'role':new_user.role })
             .success(function (data, status, headers, config) {
@@ -480,8 +447,7 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.addGroup = function(new_group) {
         $http.post('/api/repoAddGroup',
-                   { 'auth':$rootScope.session.auth,
-                     'repo_id':$scope.repo.id,
+                   { 'repo_id':$scope.repo.id,
                      'grp':new_group.group,
                      'role':new_group.role })
             .success(function (data, status, headers, config) {
@@ -500,8 +466,7 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
 
     $scope.removeUser = function(user) {
         $http.post('/api/repoRemoveUser',
-                   { 'auth':$rootScope.session.auth,
-                     'repo_id':$scope.repo.id,
+                   { 'repo_id':$scope.repo.id,
                      'user':user.user })
             .success(function (data, status, headers, config) {
                 $scope.new_user.errmsg = null;
@@ -530,9 +495,7 @@ function settingsKeysCtrl($scope, $rootScope, $http) {
 
     $scope.getKeys = function() {
         $http.post('/api/userGetSshKeys',
-                   { 'auth': $rootScope.session.auth,
-                     'user': $rootScope.session.auth.user
-                   })
+                   { 'user': $rootScope.session.user })
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.keys = data.keys;
@@ -555,12 +518,11 @@ function settingsKeysCtrl($scope, $rootScope, $http) {
         }
 
         $http.post('/api/userAddSshKey',
-                   { 'auth': $rootScope.session.auth,
-                     'key': {
-                         'type': type,
-                         'key': matches[2],
-                         'desc': matches[3],
-                     }
+                   { 'key': {
+                       'type': type,
+                       'key': matches[2],
+                       'desc': matches[3],
+                   }
                    })
             .success(function (data, status, headers, config) {
                 $scope.getKeys();
@@ -570,10 +532,7 @@ function settingsKeysCtrl($scope, $rootScope, $http) {
     }
 
     $scope.removeKey = function(key) {
-        $http.post('/api/userRemoveSshKey',
-                   { 'auth': $rootScope.session.auth,
-                     'key': key
-                   })
+        $http.post('/api/userRemoveSshKey', { 'key': key })
             .success(function (data, status, headers, config) {
                 $scope.getKeys();
                 $scope.errmsg = data.msg;
@@ -584,7 +543,7 @@ function settingsKeysCtrl($scope, $rootScope, $http) {
 
 function headerCtrl($scope, $rootScope, $http) {
     $scope.logout = function() {
-        $http.post('/api/userRevokeAuthToken', $rootScope.session.auth);
+        $http.post('/logout', {});
         resetSession($rootScope);
     };
 }
@@ -597,8 +556,7 @@ function groupCreateCtrl($scope, $rootScope, $http, $location) {
 
     $scope.create = function(grp) {
         $http.post('/api/groupCreate',
-                   { 'auth':$rootScope.session.auth,
-                     'grp':grp.name,
+                   { 'grp':grp.name,
                      'desc':grp.desc })
             .success(function (data, status, headers, config) {
                 grp.errmsg = null;
@@ -643,7 +601,7 @@ function groupCtrl($scope, $rootScope, $http, $routeParams) {
                     $scope.users = data.users;
                     var i;
                     for (i in data.users) {
-                        if (data.users[i].user == $rootScope.session.auth.user)
+                        if (data.users[i].user == $rootScope.session.user)
                             $scope.is_admin = (data.users[i].role == "kOwner");
                     }
                 }
@@ -653,8 +611,7 @@ function groupCtrl($scope, $rootScope, $http, $routeParams) {
 
     $scope.addUser = function(new_user) {
         $http.post('/api/groupAddUser',
-                   { 'auth':$rootScope.session.auth,
-                     'grp':$scope.group.grp,
+                   { 'grp':$scope.group.grp,
                      'user':new_user.user,
                      'role':new_user.role })
             .success(function (data, status, headers, config) {
@@ -673,8 +630,7 @@ function groupCtrl($scope, $rootScope, $http, $routeParams) {
 
     $scope.removeUser = function(user) {
         $http.post('/api/groupRemoveUser',
-                   { 'auth':$rootScope.session.auth,
-                     'grp':$scope.group.grp,
+                   { 'grp':$scope.group.grp,
                      'user':user.user })
             .success(function (data, status, headers, config) {
                 $scope.new_user.errmsg = null;

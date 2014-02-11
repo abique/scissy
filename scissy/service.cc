@@ -6,6 +6,7 @@
 #include <crack.h>
 
 #include <mimosa/http/mime-db.hh>
+#include <mimosa/http/server-channel.hh>
 #include <mimosa/log/log.hh>
 #include <mimosa/stream/base16-decoder.hh>
 #include <mimosa/stream/base16-encoder.hh>
@@ -20,6 +21,7 @@
 #include "gen-authorized-keys.hh"
 #include "log.hh"
 #include "repository.hh"
+#include "session-handler.hh"
 
 #include "git-blob.hh"
 #include "git-commit.hh"
@@ -32,7 +34,7 @@
 #define AUTHENTICATE_USER()                             \
   pb::Session session;                                  \
                                                         \
-  if (!userGetSession(request.auth(), session)) {       \
+  if (!scissy::userGetSession(session)) {               \
     response.set_status(pb::kInvalidSession);           \
     response.set_msg("invalid session");                \
     return true;                                        \
@@ -104,10 +106,12 @@
       }                                                 \
                                                         \
       if (role < RoleId) {                              \
+        log->warning("insufficient rights: repo_id: %d, user_id: %d, "  \
+                     "role: %d, expected: %d", RepoId, UserId, role, RoleId); \
         response.set_msg("insufficient rights");        \
         response.set_status(pb::kInsufficientRight);    \
         return true;                                    \
-        }                                               \
+      }                                                 \
     } while (0)
 
 #define CHECK_PUBLIC_REPO(Msg)                                          \
@@ -133,6 +137,20 @@
 
 namespace scissy
 {
+
+  /////////////
+  // Helpers //
+  /////////////
+
+  static void
+  throwStatusMsg(const std::string & msg, pb::Status status)
+  {
+    pb::StatusMsg err;
+    err.set_msg(msg);
+    err.set_status(status);
+    throw err;
+  }
+
   /////////////
   // Service //
   /////////////
@@ -273,15 +291,12 @@ namespace scissy
     std::string auth16 = mimosa::stream::filter<mimosa::stream::Base16Encoder>(
       auth, sizeof (auth));
 
-    mimosa::stream::Sha512 sha512;
-    sha512.write(request.password().data(), request.password().size());
-
     {
       // save the token in the db
       auto stmt = Db::prepare(
         "insert or fail into users_auths (user_id, token, ts_start)"
         " values (?, ?, ?)");
-      stmt.bind((int)user_id, (const void*)auth, sizeof (auth), ::time(0));
+      stmt.bind((int)user_id, auth16, ::time(0));
       if (stmt.step() != SQLITE_DONE) {
         response.set_status(pb::kFailed);
         response.set_msg("3 internal error, please contact your administrator");
@@ -289,77 +304,53 @@ namespace scissy
       }
     }
 
+    {
+      auto & session = SessionHandler::threadSession();
+      bool secure = session.httpResponse().channel().isSsl();
+
+      // set cookies
+      auto cookie = new mimosa::http::Cookie;
+      cookie->setKey("user");
+      cookie->setValue(request.user());
+      cookie->setHttpOnly(true);
+      cookie->setSecure(secure);
+      cookie->setPath("/");
+      session.httpResponse().cookies_.push(cookie);
+
+      cookie = new mimosa::http::Cookie;
+      cookie->setKey("token");
+      cookie->setValue(auth16);
+      cookie->setHttpOnly(true);
+      cookie->setSecure(secure);
+      cookie->setPath("/");
+      session.httpResponse().cookies_.push(cookie);
+    }
+
     response.set_user(request.user());
-    response.set_token(auth16);
     response.set_status(pb::kSucceed);
     return true;
   }
 
   static bool
-  userGetSession(const pb::UserAuthToken & request,
-                 pb::Session & response)
+  userGetSession(pb::Session & response)
   {
-    int         role_id;
-    uint64_t    user_id;
-    std::string token = mimosa::stream::filter<mimosa::stream::Base16Decoder>(request.token());
-    auto stmt = Db::prepare(
-      "select role_id, user_id"
-      "  from users natural join users_auths"
-      "  where login = ?");
-    stmt.bind(request.user(), (const void *)token.data(), token.size());
-    if (!stmt.fetch(&role_id, &user_id))
-      return true;
-
-    response.set_user(request.user());
-    response.set_role((pb::Role)role_id);
-    response.set_user_id(user_id);
+    auto & session = SessionHandler::threadSession();
+    response.set_user(session.user());
+    response.set_role(session.role());
+    response.set_user_id(session.userId());
     return true;
   }
 
   bool
-  Service::userCheckAuthToken(pb::UserAuthToken & request,
-                              pb::Session & response)
+  Service::userGetSession(pb::Void & request,
+                          pb::Session & response)
   {
-    std::string email;
-    int         role_id;
-    uint64_t    user_id;
-    std::string token = mimosa::stream::filter<mimosa::stream::Base16Decoder>(request.token());
-    auto stmt = Db::prepare(
-      "select email, role_id, user_id"
-      "  from users natural join users_auths"
-      "  where login = ?");
-    stmt.bind(request.user(), (const void *)token.data(), token.size());
-    if (!stmt.fetch(&email, &role_id, &user_id)) {
-      response.set_status(pb::kFailed);
-      response.set_msg("session not found");
-      return true;
-    }
+    AUTHENTICATE_USER();
 
-    response.set_user(request.user());
-    response.set_token(request.token());
-    response.set_email(email);
-    response.set_role((pb::Role)role_id);
-    response.set_user_id(user_id);
-    response.set_status(pb::kSucceed);
-    return true;
-  }
-
-  bool
-  Service::userRevokeAuthToken(pb::UserAuthToken & request,
-                               pb::StatusMsg & response)
-  {
-    int64_t user_id;
-
-    if (!Db::userGetId(request.user(), &user_id)) {
-      response.set_status(pb::kSucceed);
-      response.set_msg("user not found");
-      return true;
-    }
-
-    auto token = mimosa::stream::filter<mimosa::stream::Base16Decoder>(request.token());
-    auto stmt = Db::prepare("delete from users_auths where user_id = ? and token = ?");
-    stmt.bind(user_id, (const void *)token.data(), token.size()).step();
-
+    response.set_user(session.user());
+    response.set_email(session.email());
+    response.set_role(session.role());
+    response.set_user_id(session.user_id());
     response.set_status(pb::kSucceed);
     return true;
   }
@@ -368,14 +359,7 @@ namespace scissy
   Service::userAddSshKey(pb::UserSshKey & request,
                          pb::StatusMsg & response)
   {
-    pb::Session session;
-
-    if (!userCheckAuthToken(*request.mutable_auth(), session) ||
-        session.status() != pb::kSucceed) {
-      response.set_status(pb::kInvalidSession);
-      response.set_msg("invalid session");
-      return false;
-    }
+    AUTHENTICATE_USER();
 
     auto stmt = Db::prepare("insert into users_ssh_keys"
                             " (user_id, `key_type`, `key`, `desc`, ts_created)"
@@ -396,14 +380,7 @@ namespace scissy
   Service::userRemoveSshKey(pb::UserSshKey & request,
                             pb::StatusMsg & response)
   {
-    pb::Session session;
-
-    if (!userCheckAuthToken(*request.mutable_auth(), session) ||
-        session.status() != pb::kSucceed) {
-      response.set_status(pb::kInvalidSession);
-      response.set_msg("invalid session");
-      return false;
-    }
+    AUTHENTICATE_USER();
 
     auto stmt = Db::prepare("delete from users_ssh_keys"
                             " where user_id = ? and ssh_key_id = ?");
@@ -421,18 +398,12 @@ namespace scissy
   Service::userGetSshKeys(pb::UserSshKeySelector & request,
                           pb::UserSshKeys & response)
   {
-    pb::Session    session;
     uint64_t       key_id;
     pb::SshKeyType type;
     std::string    key;
     std::string    desc;
 
-    if (!userCheckAuthToken(*request.mutable_auth(), session) ||
-        session.status() != pb::kSucceed) {
-      response.set_status(pb::kInvalidSession);
-      response.set_msg("invalid session");
-      return false;
-    }
+    AUTHENTICATE_USER();
 
     auto stmt = Db::prepare("select ssh_key_id, `key_type`, `key`, `desc`"
                             " from users_ssh_keys"
@@ -1206,11 +1177,8 @@ namespace scissy
     }
 
     GitDiff diff;
-    if (git_diff_tree_to_tree(diff.ref(), repo, tree_old, tree_new, NULL)) {
-      response.set_status(pb::kInternalError);
-      response.set_msg("diff error");
-      return true;
-    }
+    if (git_diff_tree_to_tree(diff.ref(), repo, tree_old, tree_new, NULL))
+      throwStatusMsg("diff error", pb::kInternalError);
 
     std::ostringstream patch_ss;
     for (size_t i = 0; i < git_diff_num_deltas(diff); ++i) {
