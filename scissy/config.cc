@@ -37,6 +37,7 @@ namespace scissy
     git_log_limit_ = cfg.has_git_log_limit() ? cfg.git_log_limit() : 200;
     user_ = cfg.user();
     group_ = cfg.group();
+    cookie_duration_ = cfg.has_cookie_duration() ? cfg.cookie_duration() : 7 * 24;
 
     if (cfg.has_authorized_keys())
       auth_keys_ = cfg.authorized_keys();

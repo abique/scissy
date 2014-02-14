@@ -39,6 +39,8 @@ namespace scissy
     inline uint32_t gitLogLimit() const { return git_log_limit_; }
     inline const std::string & user() const { return user_; }
     inline const std::string & group() const { return group_; }
+    // duration in hours
+    inline uint32_t cookieDuration() const { return cookie_duration_; }
 
   private:
     std::string www_;
@@ -58,6 +60,7 @@ namespace scissy
     uint32_t git_log_limit_;
     std::string user_;
     std::string group_;
+    uint32_t cookie_duration_;
   };
 }
 

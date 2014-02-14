@@ -7,6 +7,7 @@
 
 #include <mimosa/http/mime-db.hh>
 #include <mimosa/http/server-channel.hh>
+#include <mimosa/http/time.hh>
 #include <mimosa/log/log.hh>
 #include <mimosa/stream/base16-decoder.hh>
 #include <mimosa/stream/base16-encoder.hh>
@@ -308,6 +309,9 @@ namespace scissy
       auto & session = SessionHandler::threadSession();
       bool secure = session.httpResponse().channel().isSsl();
 
+      std::string expire = mimosa::http::time(
+        ::time(nullptr) + 60 * 60 * Config::instance().cookieDuration());
+
       // set cookies
       auto cookie = new mimosa::http::Cookie;
       cookie->setKey("user");
@@ -315,6 +319,7 @@ namespace scissy
       cookie->setHttpOnly(true);
       cookie->setSecure(secure);
       cookie->setPath("/");
+      cookie->setExpires(expire);
       session.httpResponse().cookies_.push(cookie);
 
       cookie = new mimosa::http::Cookie;
@@ -323,6 +328,7 @@ namespace scissy
       cookie->setHttpOnly(true);
       cookie->setSecure(secure);
       cookie->setPath("/");
+      cookie->setExpires(expire);
       session.httpResponse().cookies_.push(cookie);
     }
 

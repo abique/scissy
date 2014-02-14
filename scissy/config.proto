@@ -22,4 +22,5 @@ message Config
   optional int32 git_log_limit   = 10;
   optional bytes user            = 11;
   optional bytes group           = 12;
+  optional uint32 cookie_duration = 13;
 }

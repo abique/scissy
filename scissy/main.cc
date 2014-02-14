@@ -54,7 +54,6 @@ int main(int argc, char ** argv)
   service_map->add(service);
   mimosa::rpc::Server::Ptr rpc_server = new mimosa::rpc::Server;
   rpc_server->setServiceMap(service_map.get());
-  rpc_server->listenUnix(scissy::Config::instance().socket());
 
   auto dispatch = new mimosa::http::DispatchHandler;
   dispatch->registerHandler(
@@ -110,6 +109,7 @@ int main(int argc, char ** argv)
   for (auto & thread : threads)
     thread->start();
 
+  rpc_server->listenUnix(scissy::Config::instance().socket());
   while (!stop)
     rpc_server->serveOne();
 
