@@ -9,6 +9,7 @@
 #include <mimosa/git/commit.hh>
 #include <mimosa/git/diff.hh>
 #include <mimosa/git/patch.hh>
+#include <mimosa/git/reference.hh>
 #include <mimosa/git/repository.hh>
 #include <mimosa/git/revwalk.hh>
 #include <mimosa/git/tree-entry.hh>
@@ -917,8 +918,7 @@ namespace scissy
     }
 
     git_oid oid;
-    if (git_reference_name_to_id(&oid, repo, request.revision().c_str()) &&
-        git_oid_fromstrp(&oid, request.revision().c_str())) {
+    if (!mimosa::git::referenceToOid(repo, request.revision(), &oid)) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
@@ -959,8 +959,7 @@ namespace scissy
     }
 
     if (request.has_revision()) {
-      if (git_reference_name_to_id(&oid, repo, request.revision().c_str()) &&
-          git_oid_fromstrp(&oid, request.revision().c_str())) {
+      if (!mimosa::git::referenceToOid(repo, request.revision(), &oid)) {
         response.set_status(pb::kNotFound);
         response.set_msg("commit not found");
         return true;
@@ -1008,8 +1007,7 @@ namespace scissy
     }
 
     git_oid oid;
-    if (git_reference_name_to_id(&oid, repo, request.revision().c_str()) &&
-        git_oid_fromstrp(&oid, request.revision().c_str())) {
+    if (!mimosa::git::refenreceToOid(repo, request.revision(), &oid)) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
@@ -1063,8 +1061,7 @@ namespace scissy
     }
 
     git_oid oid;
-    if (git_reference_name_to_id(&oid, repo, request.revision().c_str()) &&
-        git_oid_fromstrp(&oid, request.revision().c_str())) {
+    if (!mimosa::git::referenceToOid(repo, request.revision(), &oid)) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
@@ -1126,8 +1123,7 @@ namespace scissy
     }
 
     git_oid oid;
-    if (git_reference_name_to_id(&oid, repo, request.revision_new().c_str()) &&
-        git_oid_fromstrp(&oid, request.revision_new().c_str())) {
+    if (!mimosa::git::referenceToOid(repo, request.revision_new(), &oid)) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
@@ -1150,8 +1146,7 @@ namespace scissy
     mimosa::git::Commit commit_old;
 
     if (request.has_revision_old()) {
-      if ((git_reference_name_to_id(&oid, repo, request.revision_old().c_str()) &&
-           git_oid_fromstrp(&oid, request.revision_old().c_str())) ||
+      if (!mimosa::git::referenceToOid(repo, request.revision_old, &oid) ||
           git_commit_lookup(commit_old.ref(), repo, &oid)) {
         response.set_status(pb::kNotFound);
         response.set_msg("commit not found");

@@ -5,6 +5,7 @@
 #include <mimosa/git/commit.hh>
 #include <mimosa/git/tree.hh>
 #include <mimosa/git/archive.hh>
+#include <mimosa/git/reference.hh>
 #include <mimosa/git/repository.hh>
 
 #include "access.hh"
@@ -47,8 +48,7 @@ namespace scissy
         request, response, mimosa::http::kStatusNotFound);
 
     git_oid oid;
-    if (git_reference_name_to_id(&oid, repo, revision.c_str()) &&
-        git_oid_fromstrp(&oid, revision.c_str()))
+    if (!mimosa::git::referenceToOid(repo, revision, &oid))
       return mimosa::http::ErrorHandler::basicResponse(
         request, response, mimosa::http::kStatusNotFound);
 
