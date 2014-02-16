@@ -192,6 +192,12 @@ function repoSummaryCtrl($scope, $rootScope, $http, $location, $routeParams) {
                     $scope.branches = data.branches;
             })
             .error(rpcGenericError);
+        $http.post('/api/repoGetTags', {"repo_id":$scope.repo.id})
+            .success(function (data, status, headers, config) {
+                if (data.status == "kSucceed")
+                    $scope.tags = data.tags;
+            })
+            .error(rpcGenericError);
     }
 
     $scope.refresh();

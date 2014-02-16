@@ -348,7 +348,7 @@ namespace scissy
   }
 
   bool
-  Service::userGetSession(pb::Void & request,
+  Service::userGetSession(pb::Void & /*request*/,
                           pb::Session & response)
   {
     AUTHENTICATE_USER();
@@ -402,7 +402,7 @@ namespace scissy
   }
 
   bool
-  Service::userGetSshKeys(pb::UserSshKeySelector & request,
+  Service::userGetSshKeys(pb::UserSshKeySelector & /*request*/,
                           pb::UserSshKeys & response)
   {
     uint64_t       key_id;
@@ -1200,6 +1200,35 @@ namespace scissy
 
     response.set_status(pb::kSucceed);
     response.set_data(patch_ss.str());
+    return true;
+  }
+
+  static int
+  getTagsCb(const char *name, git_oid *oid, void *payload)
+  {
+    char oid_str[GIT_OID_HEXSZ + 1];
+    pb::GitTags * response = reinterpret_cast<pb::GitTags *>(payload);
+    auto tag = response->add_tags();
+    tag->set_name(name);
+    git_oid_tostr(oid_str, sizeof (oid_str), oid);
+    tag->set_revision(oid_str);
+    return 0;
+  }
+
+  bool
+  Service::repoGetTags(pb::RepoSelector & request,
+                       pb::GitTags & response)
+  {
+    CHECK_PUBLIC_REPO(request);
+
+    GitRepository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    if (!repo) {
+      response.set_status(pb::kInternalError);
+      response.set_msg("internal error");
+      return true;
+    }
+    git_tag_foreach(repo, getTagsCb, &response);
+    response.set_status(pb::kSucceed);
     return true;
   }
 

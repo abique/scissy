@@ -420,7 +420,7 @@ message GitBlob
 {
   optional Status status       = 1;
   optional bytes  msg          = 2;
-  required bool   is_binary    = 3;
+  optional bool   is_binary    = 3;
   optional bytes  data         = 4;
   optional bytes  content_type = 5;
 }
@@ -430,6 +430,19 @@ message GitPatch
   optional Status status = 1;
   optional bytes  msg    = 2;
   optional bytes  data   = 3;
+}
+
+message GitTag
+{
+  required bytes  name     = 1;
+  required bytes  revision = 2;
+}
+
+message GitTags
+{
+  optional Status status = 1;
+  optional bytes  msg    = 2;
+  repeated GitTag tags   = 3;
 }
 
 service Service
@@ -478,6 +491,7 @@ service Service
   rpc repoGetTree(TreeSelector) returns (GitTree);
   rpc repoGetBlob(BlobSelector) returns (GitBlob);
   rpc repoGetPatch(DiffSelector) returns (GitPatch);
+  rpc repoGetTags(RepoSelector) returns (GitTags);
 
   /* ssh shell */
   rpc shellControl(ShellControl) returns (ShellStatus);
