@@ -41,6 +41,13 @@ namespace scissy
     /**************/
 
     static bool repoGetId(const std::string & repo, int64_t * repo_id);
+    static bool repoAddUser(int64_t repo_id, int64_t user_id, pb::Role role);
+    static bool repoRemoveUser(int64_t repo_id, int64_t user_id);
+    static bool repoAddGroup(int64_t repo_id, int64_t group_id, pb::Role role);
+    static bool repoRemoveGroup(int64_t repo_id, int64_t group_id);
+    static bool repoGetUserRole(int64_t repo_id, int64_t user_id, pb::Role * role);
+    static bool repoIsPublic(int64_t repo_id, bool * is_public);
+
 
   private:
     mimosa::sqlite::Db db_;

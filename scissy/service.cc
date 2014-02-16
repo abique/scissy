@@ -100,7 +100,7 @@
     do {                                                \
       pb::Role role;                                    \
                                                         \
-      if (!Repositories::instance().getUserRole(        \
+      if (!Db::repoGetUserRole(                         \
             RepoId, UserId, &role)) {                   \
         response.set_msg("database error");             \
         response.set_status(pb::kFailed);               \
@@ -122,8 +122,7 @@
                                                                         \
       SET_REPO_ID(request);                                             \
                                                                         \
-      if (!Repositories::instance().isPublic(                           \
-            request.repo_id(), &is_public)) {                           \
+      if (!Db::repoIsPublic(request.repo_id(), &is_public)) {           \
         response.set_status(pb::kNotFound);                             \
         response.set_msg("repository not found");                       \
         return true;                                                    \
@@ -709,7 +708,7 @@ namespace scissy
     SET_USER_ID(request);
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
-    if (!Repositories::instance().addUser(
+    if (!Db::repoAddUser(
           request.repo_id(), request.user_id(), request.role())) {
       response.set_msg("");
       response.set_status(pb::kFailed);
@@ -729,7 +728,7 @@ namespace scissy
     SET_USER_ID(request);
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
-    if (!Repositories::instance().removeUser(
+    if (!Db::repoRemoveUser(
           request.repo_id(), request.user_id())) {
       response.set_msg("");
       response.set_status(pb::kFailed);
@@ -749,7 +748,7 @@ namespace scissy
     SET_GRP_ID(request);
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
-    if (!Repositories::instance().addGroup(
+    if (!Db::repoAddGroup(
           request.repo_id(), request.grp_id(), request.role())) {
       response.set_msg("");
       response.set_status(pb::kFailed);
@@ -769,7 +768,7 @@ namespace scissy
     SET_GRP_ID(request);
     CHECK_REPO_ROLE(request.repo_id(), session.user_id(), pb::kOwner);
 
-    if (!Repositories::instance().removeGroup(
+    if (!Db::repoRemoveGroup(
           request.repo_id(), request.grp_id())) {
       response.set_msg("");
       response.set_status(pb::kFailed);
@@ -1245,9 +1244,9 @@ namespace scissy
     pb::Role role;
     bool     is_public;
 
-    if (!Repositories::instance().getId(request.repo_name(), &repo_id) ||
-        !Repositories::instance().getUserRole(repo_id, request.user_id(), &role) ||
-        !Repositories::instance().isPublic(repo_id, &is_public)) {
+    if (!Db::repoGetId(request.repo_name(), &repo_id) ||
+        !Db::repoGetUserRole(repo_id, request.user_id(), &role) ||
+        !Db::repoIsPublic(repo_id, &is_public)) {
       response.set_status(pb::kNotFound);
       return true;
     }

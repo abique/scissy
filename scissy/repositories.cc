@@ -19,72 +19,6 @@ namespace scissy
   {
   }
 
-  bool
-  Repositories::addUser(int64_t repo_id, int64_t user_id, pb::Role role)
-  {
-    auto stmt = Db::prepare(
-      "insert into repos_users (repo_id, user_id, role_id) values (?, ?, ?)");
-    return stmt.bind(repo_id, user_id, role).step() == SQLITE_DONE;
-  }
-
-  bool
-  Repositories::removeUser(int64_t repo_id, int64_t user_id)
-  {
-    auto stmt = Db::prepare(
-      "delete from repos_users where repo_id = ? and user_id = ?");
-    return stmt.bind(repo_id, user_id).step() == SQLITE_DONE;
-  }
-
-  bool
-  Repositories::addGroup(int64_t repo_id, int64_t group_id, pb::Role role)
-  {
-    auto stmt = Db::prepare(
-      "insert into repos_groups (repo_id, group_id, role_id) values (?, ?, ?)");
-    return stmt.bind(repo_id, group_id, role).step() == SQLITE_DONE;
-  }
-
-  bool
-  Repositories::removeGroup(int64_t repo_id, int64_t group_id)
-  {
-    auto stmt = Db::prepare(
-      "delete from repos_groups where repo_id = ? and group_id = ?");
-    return stmt.bind(repo_id, group_id).step() == SQLITE_DONE;
-  }
-
-  bool
-  Repositories::getId(const std::string & name,
-                      int64_t *           id)
-  {
-    auto stmt = Db::prepare("select repo_id from repos where name = ?");
-    return stmt.bind(name).fetch(id);
-  }
-
-  bool
-  Repositories::getUserRole(int64_t repo_id, int64_t user_id, pb::Role * role)
-  {
-    int role1;
-    *role = pb::kNone;
-
-    // check users
-    auto stmt = Db::prepare(" select role_id from repos_users"
-                            "  where repo_id = ? and user_id = ? "
-                            "union "
-                            " select min(repos_groups.role_id, groups_users.role_id)"
-                            " from repos_groups natural join groups_users"
-                            " where repo_id = ? and user_id = ?");
-    while (stmt.bind(repo_id, user_id, repo_id, user_id).fetch(&role1)) {
-      if (!pb::Role_IsValid(role1)) {
-        log->critical("getUserRole(%d, %d): invalid role %d", repo_id, user_id, role1);
-        return false;
-      }
-
-      if (role1 > *role)
-        *role = static_cast<pb::Role> (role1);
-    }
-
-    return true;
-  }
-
   std::string
   Repositories::getRepoPath(int64_t repo_id)
   {
@@ -135,7 +69,7 @@ namespace scissy
       git_repository_free(repo);
     }
 
-    if (!addUser(*repo_id, user_id, pb::kOwner)) {
+    if (!Db::repoAddUser(*repo_id, user_id, pb::kOwner)) {
       *error = "failed to set owner";
       auto stmt = Db::prepare("delete from repos where name = ?");
       stmt.bind(name).exec();
@@ -151,19 +85,6 @@ namespace scissy
     auto stmt = Db::prepare("delete from repos where repo_id = ?");
     stmt.bind(repo_id).exec();
     mimosa::fs::rm(getRepoPath(repo_id), true, true);
-    return true;
-  }
-
-  bool
-  Repositories::isPublic(int64_t repo_id, bool * is_public)
-  {
-    int tmp;
-    auto stmt = Db::prepare("select is_public from repos where repo_id = ?");
-    stmt.bind(repo_id);
-
-    if (!stmt.fetch(&tmp))
-      return false;
-    *is_public = !!tmp;
     return true;
   }
 }

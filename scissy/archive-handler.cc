@@ -8,6 +8,7 @@
 #include <mimosa/git/repository.hh>
 
 #include "archive-handler.hh"
+#include "db.hh"
 #include "repositories.hh"
 #include "session.hh"
 
@@ -34,7 +35,7 @@ namespace scissy
         request, response, mimosa::http::kStatusBadRequest);
 
     bool is_public;
-    if (!Repositories::instance().isPublic(repo_id, &is_public))
+    if (!Db::repoIsPublic(repo_id, &is_public))
       return mimosa::http::ErrorHandler::basicResponse(
         request, response, mimosa::http::kStatusNotFound);
 
@@ -47,7 +48,7 @@ namespace scissy
           request, response, mimosa::http::kStatusForbidden);
 
       pb::Role role;
-      if (!Repositories::instance().getUserRole(repo_id, session.userId(), &role))
+      if (!Db::repoGetUserRole(repo_id, session.userId(), &role))
         return mimosa::http::ErrorHandler::basicResponse(
           request, response, mimosa::http::kStatusForbidden);
 
