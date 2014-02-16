@@ -23,6 +23,7 @@ add_executable(scissyd
   main.cc
   config.pb.cc
   helpers.cc
+  access.cc
 
   # web logic and common stuff
   config.cc

@@ -33,31 +33,22 @@
 #include "helpers.hh"
 
 
-#define AUTHENTICATE_USER()                             \
-  pb::Session session;                                  \
-                                                        \
-  if (!scissy::userGetSession(session)) {               \
-    response.set_status(pb::kInvalidSession);           \
-    response.set_msg("invalid session");                \
-    return true;                                        \
-  }
+#define AUTHENTICATE_USER()                                     \
+  pb::Session session;                                          \
+                                                                \
+  if (!scissy::userGetSession(session))                         \
+    throwStatusMsg(pb::kInvalidSession, "invalid session");
 
-#define SET_GRP_ID(Msg)                                         \
-  do {                                                          \
-    if ((Msg).has_grp_id())                                     \
-      break;                                                    \
-    if (!(Msg).has_grp()) {                                     \
-      response.set_status(pb::kFailed);                         \
-      response.set_msg("need to specify grp or grp_id");        \
-      return true;                                              \
-    }                                                           \
-    int64_t grp_id__;                                           \
-    if (!Db::groupGetId((Msg).grp(), &grp_id__)) {              \
-      response.set_status(pb::kNotFound);                       \
-      response.set_msg("group not found");                      \
-      return true;                                              \
-    }                                                           \
-    (Msg).set_grp_id(grp_id__);                                 \
+#define SET_GRP_ID(Msg)                                                 \
+  do {                                                                  \
+    if ((Msg).has_grp_id())                                             \
+      break;                                                            \
+    if (!(Msg).has_grp())                                               \
+      throwStatusMsg(pb::kFailed, "need to specify grp or grp_id");     \
+    int64_t grp_id__;                                                   \
+    if (!Db::groupGetId((Msg).grp(), &grp_id__))                        \
+      throwStatusMsg(pb::kNotFound, "group not found");                 \
+    (Msg).set_grp_id(grp_id__);                                         \
   } while (0)
 
 #define SET_USER_ID(Msg)                                        \
@@ -144,7 +135,7 @@ namespace scissy
   /////////////
 
   static void
-  throwStatusMsg(const std::string & msg, pb::Status status)
+  throwStatusMsg(pb::Status status, const std::string & msg)
   {
     pb::StatusMsg err;
     err.set_msg(msg);
@@ -1185,7 +1176,7 @@ namespace scissy
 
     mimosa::git::Diff diff;
     if (git_diff_tree_to_tree(diff.ref(), repo, tree_old, tree_new, NULL))
-      throwStatusMsg("diff error", pb::kInternalError);
+      throwStatusMsg(pb::kInternalError, "diff error");
 
     std::ostringstream patch_ss;
     for (size_t i = 0; i < git_diff_num_deltas(diff); ++i) {
