@@ -2,12 +2,12 @@
 
 #include <mimosa/archive/writer.hh>
 #include <mimosa/http/error-handler.hh>
+#include <mimosa/git/commit.hh>
+#include <mimosa/git/tree.hh>
+#include <mimosa/git/archive.hh>
+#include <mimosa/git/repository.hh>
 
 #include "archive-handler.hh"
-#include "git-commit.hh"
-#include "git-tree.hh"
-#include "git-archive.hh"
-#include "repository.hh"
 #include "repositories.hh"
 #include "session.hh"
 
@@ -56,7 +56,7 @@ namespace scissy
           request, response, mimosa::http::kStatusForbidden);
     }
 
-    GitRepository repo(Repositories::instance().getRepoPath(repo_id));
+    mimosa::git::Repository repo(Repositories::instance().getRepoPath(repo_id));
     if (!repo)
       return mimosa::http::ErrorHandler::basicResponse(
         request, response, mimosa::http::kStatusNotFound);
@@ -67,12 +67,12 @@ namespace scissy
       return mimosa::http::ErrorHandler::basicResponse(
         request, response, mimosa::http::kStatusNotFound);
 
-    GitCommit commit(repo, &oid);
+    mimosa::git::Commit commit(repo, &oid);
     if (!commit)
       return mimosa::http::ErrorHandler::basicResponse(
         request, response, mimosa::http::kStatusNotFound);
 
-    GitTree tree(repo, git_commit_tree_id(commit));
+    mimosa::git::Tree tree(repo, git_commit_tree_id(commit));
     if (!tree)
       return mimosa::http::ErrorHandler::basicResponse(
         request, response, mimosa::http::kStatusNotFound);

@@ -22,14 +22,7 @@ target_link_libraries(scissy-shell
 add_executable(scissyd
   main.cc
   config.pb.cc
-
-  # git
-  git-archive.cc
-  git-commit.cc
-  repository.cc
-  git-signature.cc
-  git-revwalk.cc
-  git-tree.cc
+  helpers.cc
 
   # web logic and common stuff
   config.cc
@@ -58,6 +51,7 @@ target_link_libraries(scissyd
   mimosa-http
   mimosa-fs
   mimosa-sqlite
+  mimosa-git
   mimosa-archive
   mimosa
   gnutls

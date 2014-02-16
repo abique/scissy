@@ -5,6 +5,14 @@
 
 #include <crack.h>
 
+#include <mimosa/git/blob.hh>
+#include <mimosa/git/commit.hh>
+#include <mimosa/git/diff.hh>
+#include <mimosa/git/patch.hh>
+#include <mimosa/git/repository.hh>
+#include <mimosa/git/revwalk.hh>
+#include <mimosa/git/tree-entry.hh>
+#include <mimosa/git/tree.hh>
 #include <mimosa/http/mime-db.hh>
 #include <mimosa/http/server-channel.hh>
 #include <mimosa/http/time.hh>
@@ -21,16 +29,9 @@
 #include "repositories.hh"
 #include "gen-authorized-keys.hh"
 #include "log.hh"
-#include "repository.hh"
 #include "session-handler.hh"
+#include "helpers.hh"
 
-#include "git-blob.hh"
-#include "git-commit.hh"
-#include "git-diff.hh"
-#include "git-patch.hh"
-#include "git-revwalk.hh"
-#include "git-tree-entry.hh"
-#include "git-tree.hh"
 
 #define AUTHENTICATE_USER()                             \
   pb::Session session;                                  \
@@ -802,7 +803,7 @@ namespace scissy
       msg->set_desc(desc);
       msg->set_is_public(is_public);
 
-      Repository repo(Repositories::instance().getRepoPath(id));
+      mimosa::git::Repository repo(Repositories::instance().getRepoPath(id));
       if (repo)
         msg->set_last_commit_time(repo.lastCommitTime());
     }
@@ -835,7 +836,7 @@ namespace scissy
     response.set_name(name);
     response.set_desc(desc);
     response.set_is_public(is_public);
-    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    mimosa::git::Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
     if (repo)
       response.set_last_commit_time(repo.lastCommitTime());
     response.set_status(pb::kSucceed);
@@ -890,7 +891,7 @@ namespace scissy
   {
     CHECK_PUBLIC_REPO(request);
 
-    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    mimosa::git::Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
     if (!repo) {
       response.set_status(pb::kInternalError);
       response.set_msg("internal error");
@@ -918,7 +919,7 @@ namespace scissy
   {
     CHECK_PUBLIC_REPO(request);
 
-    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    mimosa::git::Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
     if (!repo) {
       response.set_status(pb::kInternalError);
       response.set_msg("internal error");
@@ -933,14 +934,14 @@ namespace scissy
       return true;
     }
 
-    GitCommit commit(repo, &oid);
+    mimosa::git::Commit commit(repo, &oid);
     if (!commit) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
     }
 
-    commit.copyTo(&response);
+    copyCommit(commit, &response);
     response.set_status(pb::kSucceed);
     return true;
   }
@@ -951,14 +952,14 @@ namespace scissy
   {
     CHECK_PUBLIC_REPO(request);
 
-    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    mimosa::git::Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
     if (!repo) {
       response.set_status(pb::kInternalError);
       response.set_msg("internal error");
       return true;
     }
 
-    GitRevwalk walk(repo);
+    mimosa::git::Revwalk walk(repo);
     git_oid    oid;
 
     if (!walk) {
@@ -993,10 +994,10 @@ namespace scissy
         break;
       if (i < request.offset())
         continue;
-      GitCommit commit(repo, &oid);
+      mimosa::git::Commit commit(repo, &oid);
       if (!commit)
         continue;
-      commit.copyTo(response.add_commits());
+      copyCommit(commit, response.add_commits());
     }
 
     response.set_status(pb::kSucceed);
@@ -1009,7 +1010,7 @@ namespace scissy
   {
     CHECK_PUBLIC_REPO(request);
 
-    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    mimosa::git::Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
     if (!repo) {
       response.set_status(pb::kInternalError);
       response.set_msg("internal error");
@@ -1024,14 +1025,14 @@ namespace scissy
       return true;
     }
 
-    GitCommit commit(repo, &oid);
+    mimosa::git::Commit commit(repo, &oid);
     if (!commit) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
     }
 
-    GitTree tree(repo, git_commit_tree_id(commit), request.directory());
+    mimosa::git::Tree tree(repo, git_commit_tree_id(commit), request.directory());
     if (!tree) {
       response.set_status(pb::kNotFound);
       response.set_msg("tree not found");
@@ -1064,7 +1065,7 @@ namespace scissy
   {
     CHECK_PUBLIC_REPO(request);
 
-    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    mimosa::git::Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
     if (!repo) {
       response.set_status(pb::kInternalError);
       response.set_msg("internal error");
@@ -1079,28 +1080,28 @@ namespace scissy
       return true;
     }
 
-    GitCommit commit(repo, &oid);
+    mimosa::git::Commit commit(repo, &oid);
     if (!commit) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
     }
 
-    GitTree tree(repo, git_commit_tree_id(commit));
+    mimosa::git::Tree tree(repo, git_commit_tree_id(commit));
     if (!tree) {
       response.set_status(pb::kNotFound);
       response.set_msg("tree not found");
       return true;
     }
 
-    GitTreeEntry entry;
+    mimosa::git::TreeEntry entry;
     if (git_tree_entry_bypath(entry.ref(), tree, request.path().c_str())) {
       response.set_status(pb::kNotFound);
       response.set_msg("tree entry not found");
       return true;
     }
 
-    GitBlob blob;
+    mimosa::git::Blob blob;
     if (git_blob_lookup(blob.ref(), repo, git_tree_entry_id(entry))) {
       response.set_status(pb::kNotFound);
       response.set_msg("blob not found");
@@ -1127,7 +1128,7 @@ namespace scissy
   {
     CHECK_PUBLIC_REPO(request);
 
-    Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    mimosa::git::Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
     if (!repo) {
       response.set_status(pb::kInternalError);
       response.set_msg("internal error");
@@ -1142,21 +1143,21 @@ namespace scissy
       return true;
     }
 
-    GitCommit commit_new(repo, &oid);
+    mimosa::git::Commit commit_new(repo, &oid);
     if (!commit_new) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
     }
 
-    GitTree tree_new(repo, git_commit_tree_id(commit_new));
+    mimosa::git::Tree tree_new(repo, git_commit_tree_id(commit_new));
     if (!tree_new) {
       response.set_status(pb::kNotFound);
       response.set_msg("tree not found");
       return true;
     }
 
-    GitCommit commit_old;
+    mimosa::git::Commit commit_old;
 
     if (request.has_revision_old()) {
       if ((git_reference_name_to_id(&oid, repo, request.revision_old().c_str()) &&
@@ -1175,7 +1176,7 @@ namespace scissy
       }
     }
 
-    GitTree tree_old(repo, git_commit_tree_id(commit_old));
+    mimosa::git::Tree tree_old(repo, git_commit_tree_id(commit_old));
 
     if (!tree_old) {
       response.set_status(pb::kNotFound);
@@ -1183,13 +1184,13 @@ namespace scissy
       return true;
     }
 
-    GitDiff diff;
+    mimosa::git::Diff diff;
     if (git_diff_tree_to_tree(diff.ref(), repo, tree_old, tree_new, NULL))
       throwStatusMsg("diff error", pb::kInternalError);
 
     std::ostringstream patch_ss;
     for (size_t i = 0; i < git_diff_num_deltas(diff); ++i) {
-      GitPatch patch;
+      mimosa::git::Patch patch;
       if (git_patch_from_diff(patch.ref(), diff, i))
         continue;
       char *str = nullptr;
@@ -1221,7 +1222,7 @@ namespace scissy
   {
     CHECK_PUBLIC_REPO(request);
 
-    GitRepository repo(Repositories::instance().getRepoPath(request.repo_id()));
+    mimosa::git::Repository repo(Repositories::instance().getRepoPath(request.repo_id()));
     if (!repo) {
       response.set_status(pb::kInternalError);
       response.set_msg("internal error");
