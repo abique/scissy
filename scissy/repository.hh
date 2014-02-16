@@ -1,5 +1,5 @@
-#ifndef SCISSY_REPOSITORY_HH
-# define SCISSY_REPOSITORY_HH
+#ifndef SCISSY_GIT_REPOSITORY_HH
+# define SCISSY_GIT_REPOSITORY_HH
 
 # include <cstdint>
 # include <string>
@@ -8,11 +8,11 @@
 
 namespace scissy
 {
-  class Repository
+  class GitRepository
   {
   public:
-    Repository(const std::string & repo_path);
-    ~Repository();
+    GitRepository(const std::string & repo_path);
+    ~GitRepository();
 
     inline operator git_repository * () {
       return repo_;
@@ -23,6 +23,8 @@ namespace scissy
   private:
     git_repository *repo_;
   };
+
+  typedef GitRepository Repository; // XXX remove this
 }
 
-#endif /* !SCISSY_REPOSITORY_HH */
+#endif /* !SCISSY_GIT_REPOSITORY_HH */

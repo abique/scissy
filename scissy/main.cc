@@ -21,6 +21,7 @@
 #include "gen-authorized-keys.hh"
 
 // handlers
+#include "archive-handler.hh"
 #include "logout-handler.hh"
 #include "root-handler.hh"
 #include "session-handler.hh"
@@ -76,6 +77,7 @@ int main(int argc, char ** argv)
   dispatch->registerHandler(
     "/api/*", new scissy::SessionHandler(
       new scissy::pb::ServiceHttpHandler(service, "/api/")));
+  dispatch->registerHandler("/repo/archive/*", new scissy::ArchiveHandler);
 
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);

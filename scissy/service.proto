@@ -337,8 +337,8 @@ message ShellStatus
 {
   required Status status    = 1;
   optional bytes  repo_path = 2;
-  required Role   role      = 3;
-  required bool   is_public = 4;
+  optional Role   role      = 3;
+  optional bool   is_public = 4;
 }
 
 enum GitFileMode

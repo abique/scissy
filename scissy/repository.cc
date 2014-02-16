@@ -3,19 +3,19 @@
 
 namespace scissy
 {
-  Repository::Repository(const std::string & repo_path)
+  GitRepository::GitRepository(const std::string & repo_path)
     : repo_(nullptr)
   {
     git_repository_open(&repo_, repo_path.c_str());
   }
 
-  Repository::~Repository()
+  GitRepository::~GitRepository()
   {
     git_repository_free(repo_);
   }
 
   int64_t
-  Repository::lastCommitTime() const
+  GitRepository::lastCommitTime() const
   {
     git_oid   oid;
     if (git_reference_name_to_id(&oid, repo_, "HEAD"))

@@ -24,6 +24,7 @@ add_executable(scissyd
   config.pb.cc
 
   # git
+  git-archive.cc
   git-commit.cc
   repository.cc
   git-signature.cc
@@ -39,6 +40,7 @@ add_executable(scissyd
   gen-authorized-keys.cc
 
   # handlers
+  archive-handler.cc
   logout-handler.cc
   root-handler.cc
   session.cc
@@ -56,6 +58,7 @@ target_link_libraries(scissyd
   mimosa-http
   mimosa-fs
   mimosa-sqlite
+  mimosa-archive
   mimosa
   gnutls
   protobuf
