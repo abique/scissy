@@ -1,3 +1,7 @@
+begin transaction;
+
+pragma user_version = 1;
+
 create table if not exists roles
 (
   role_id integer not null primary key,
@@ -75,3 +79,5 @@ create table if not exists repos_users
   role_id integer not null references roles (role_id) on delete cascade on update cascade,
   primary key (repo_id, user_id)
 );
+
+commit transaction;

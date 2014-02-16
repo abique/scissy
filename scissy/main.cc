@@ -103,9 +103,11 @@ int main(int argc, char ** argv)
 
   if (!scissy::Config::instance().user().empty() ||
       !scissy::Config::instance().group().empty()) {
-    mimosa::priviledgeDrop("/",
-                           scissy::Config::instance().user(),
-                           scissy::Config::instance().group());
+    if (!mimosa::priviledgeDrop("/", scissy::Config::instance().user(),
+                                scissy::Config::instance().group())) {
+      mimosa::log::fatal("failed to drop priviledges");
+      return 1;
+    }
   }
 
   for (auto & thread : threads)

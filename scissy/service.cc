@@ -396,6 +396,7 @@ namespace scissy
       return true;
     }
 
+    genAuthorizedKeys();
     response.set_status(pb::kSucceed);
     return true;
   }

@@ -1,5 +1,14 @@
 #! /bin/bash
 
+function usage() {
+    echo "Don't start this script as root, run it like: sudo -u git - scissy-init"
+    exit 2
+}
+
+if [[ "$USER" = "root" ]] || [[ "$1" = "--help" ]]  || [[ "$1" = "-h" ]] ; then
+    usage
+if
+
 cd
 mkdir -m 0700 .ssh
 sqlite3 </usr/share/scissy/sql/model.sql db.sqlite
