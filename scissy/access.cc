@@ -17,7 +17,7 @@ namespace scissy
     if (session.userId() < 1)
       return false;
 
-    pb::Role user_role;
+    pb::Role user_role = pb::kNone;
     if (!Db::repoGetUserRole(repo_id, session.userId(), &role))
       return false;
 

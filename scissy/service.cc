@@ -32,8 +32,7 @@
 #include "log.hh"
 #include "session-handler.hh"
 #include "helpers.hh"
-
-
+#
 #define AUTHENTICATE_USER()                                     \
   pb::Session session;                                          \
                                                                 \
@@ -312,7 +311,7 @@ namespace scissy
       cookie->setSecure(secure);
       cookie->setPath("/");
       cookie->setExpires(expire);
-      session.httpResponse().cookies_.push(cookie);
+      session.httpResponse().addCookie(cookie);
 
       cookie = new mimosa::http::Cookie;
       cookie->setKey("token");
@@ -321,7 +320,7 @@ namespace scissy
       cookie->setSecure(secure);
       cookie->setPath("/");
       cookie->setExpires(expire);
-      session.httpResponse().cookies_.push(cookie);
+      session.httpResponse().addCookie(cookie);
     }
 
     response.set_user(request.user());
@@ -1007,7 +1006,7 @@ namespace scissy
     }
 
     git_oid oid;
-    if (!mimosa::git::refenreceToOid(repo, request.revision(), &oid)) {
+    if (!mimosa::git::referenceToOid(repo, request.revision(), &oid)) {
       response.set_status(pb::kNotFound);
       response.set_msg("commit not found");
       return true;
@@ -1146,7 +1145,7 @@ namespace scissy
     mimosa::git::Commit commit_old;
 
     if (request.has_revision_old()) {
-      if (!mimosa::git::referenceToOid(repo, request.revision_old, &oid) ||
+      if (!mimosa::git::referenceToOid(repo, request.revision_old(), &oid) ||
           git_commit_lookup(commit_old.ref(), repo, &oid)) {
         response.set_status(pb::kNotFound);
         response.set_msg("commit not found");

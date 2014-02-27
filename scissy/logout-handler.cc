@@ -26,7 +26,7 @@ namespace scissy
     cookie->setHttpOnly(true);
     cookie->setSecure(secure);
     cookie->setExpires("Tue Feb 11 21:42:42 CET 2000");
-    response.cookies_.push(cookie);
+    response.addCookie(cookie);
 
     cookie = new mimosa::http::Cookie;
     cookie->setKey("token");
@@ -34,7 +34,7 @@ namespace scissy
     cookie->setHttpOnly(true);
     cookie->setSecure(secure);
     cookie->setExpires("Tue Feb 11 21:42:42 CET 2000");
-    response.cookies_.push(cookie);
+    response.addCookie(cookie);
 
     return true;
   }
