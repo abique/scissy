@@ -43,25 +43,21 @@ function getServerInfo($rootScope, $http) {
 }
 
 function userGetSession($rootScope, $http) {
-    if (localStorage.auth_user && localStorage.auth_token) {
-        // check the session
-        $http.post('/api/userGetSession', {})
-            .success(function (data, status, headers, config) {
-                if (data.status == "kSucceed") {
-                    $rootScope.session.user    = data.user;
-                    $rootScope.session.user_id = data.user_id;
-                    $rootScope.session.email   = data.email;
-                    $rootScope.session.role    = data.role;
-                    return;
-                } else
-                    resetSession($rootScope);
-            })
-            .error(function (data, status, headers, config) {
+    $http.post('/api/userGetSession', {})
+        .success(function (data, status, headers, config) {
+            if (data.status == "kSucceed") {
+                $rootScope.session.user    = data.user;
+                $rootScope.session.user_id = data.user_id;
+                $rootScope.session.email   = data.email;
+                $rootScope.session.role    = data.role;
+                return;
+            } else
                 resetSession($rootScope);
-                rpcGenericError(data, status, headers, config);
-            });
-    } else
-        resetSession($rootScope);
+        })
+        .error(function (data, status, headers, config) {
+            resetSession($rootScope);
+            rpcGenericError(data, status, headers, config);
+        });
 }
 
 scissy_module.run(function($rootScope, $http) {
