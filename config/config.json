@@ -15,7 +15,8 @@
             "ssl_cert" : "/etc/scissy/server.crt"
         }
     ],
-    "git_log_limit":50,
-    "user":"scissy",
-    "group":"scissy"
+    "git_log_limit" : 50,
+    "user" : "scissy",
+    "group" : "scissy",
+    "cookie_duration" : "7"
 }

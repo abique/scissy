@@ -301,7 +301,7 @@ namespace scissy
       bool secure = session.httpResponse().channel().isSsl();
 
       std::string expire = mimosa::http::time(
-        ::time(nullptr) + 60 * 60 * Config::instance().cookieDuration());
+        ::time(nullptr) + 7 * 60 * 60 * Config::instance().cookieDuration());
 
       // set cookies
       auto cookie = new mimosa::http::Cookie;
@@ -1229,12 +1229,13 @@ namespace scissy
     pb::Role role;
     bool     is_public;
 
-    if (!Db::repoGetId(request.repo_name(), &repo_id) ||
-        !Db::repoGetUserRole(repo_id, request.user_id(), &role) ||
-        !Db::repoIsPublic(repo_id, &is_public)) {
+    if (!Db::repoGetId(request.repo_name(), &repo_id)) {
       response.set_status(pb::kNotFound);
       return true;
     }
+
+    Db::repoGetUserRole(repo_id, request.user_id(), &role);
+    Db::repoIsPublic(repo_id, &is_public);
 
     response.set_repo_path(Repositories::instance().getRepoPath(repo_id));
     response.set_role(role);
