@@ -21,12 +21,11 @@ namespace scissy
     if (in)
       mimosa::rpc::jsonDecode(in, &cfg);
 
-    www_ = cfg.has_www_root() ? cfg.www_root() : INSTALL_PREFIX "/share/scissy/www";
-    css_   = www_ + "/css";
-    js_    = www_ + "/js";
-    fonts_ = www_ + "/fonts";
-    html_  = www_ + "/html";
-    cm_  = www_ + "/codemirror";
+    www_    = cfg.has_www_root() ? cfg.www_root() : INSTALL_PREFIX "/share/scissy/www";
+    css_    = www_ + "/css";
+    js_     = www_ + "/js";
+    vendor_ = www_ + "/vendor";
+    html_   = www_ + "/html";
 
     repos_ = cfg.has_repos_root() ? cfg.repos_root() : "/var/lib/scissy";
     db_ = cfg.has_db() ? cfg.db() : "/var/lib/scissy/db.sqlite";

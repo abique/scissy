@@ -25,9 +25,8 @@ namespace scissy
     inline const std::string & www() const { return www_; }
     inline const std::string & css() const { return css_; }
     inline const std::string & js() const { return js_; }
-    inline const std::string & fonts() const { return fonts_; }
+    inline const std::string & vendor() const { return vendor_; }
     inline const std::string & html() const { return html_; }
-    inline const std::string & cm() const { return cm_; }
     inline const std::string & repos() const { return repos_; }
     inline const std::string & db() const { return db_; }
     inline const std::string & authKeys() const { return auth_keys_; }
@@ -46,7 +45,7 @@ namespace scissy
     std::string www_;
     std::string css_;
     std::string js_;
-    std::string fonts_;
+    std::string vendor_;
     std::string html_;
     std::string cm_;
     std::string repos_;

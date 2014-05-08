@@ -59,19 +59,16 @@ int main(int argc, char ** argv)
   auto dispatch = new mimosa::http::DispatchHandler;
   dispatch->registerHandler(
     "/css/*.css", new mimosa::http::FsHandler(
-      scissy::Config::instance().css(), 1, true));
+      scissy::Config::instance().css(), 1));
   dispatch->registerHandler(
     "/js/*", new mimosa::http::FsHandler(
-      scissy::Config::instance().js(), 1, true));
+      scissy::Config::instance().js(), 1));
   dispatch->registerHandler(
-    "/fonts/*", new mimosa::http::FsHandler(
-      scissy::Config::instance().fonts(), 1, true));
+    "/vendor/*", new mimosa::http::FsHandler(
+      scissy::Config::instance().vendor(), 1));
   dispatch->registerHandler(
     "/html/*", new mimosa::http::FsHandler(
-      scissy::Config::instance().html(), 1, true));
-  dispatch->registerHandler(
-    "/cm/*", new mimosa::http::FsHandler(
-      scissy::Config::instance().cm(), 1, true));
+      scissy::Config::instance().html(), 1));
   dispatch->registerHandler("/", new scissy::RootHandler);
   dispatch->registerHandler("/logout", new scissy::LogoutHandler);
   dispatch->registerHandler(
