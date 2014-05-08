@@ -1,22 +1,32 @@
-#! /bin/bash
+#! /bin/bash -e
 
-LESSC=$HOME/.npm/bin/recess
-UGLIFYJS=$HOME/.npm/bin/uglifyjs
-ANGULARJS_VERSION=1.2.13
-JQUERY_VERSION=1.11.0
+ANGULARJS_VERSION=1.2.16
+JQUERY_VERSION=2.1.1
+BOOTSTRAP_VERSION=3.1.1
+CODEMIRROR_VERSION=4.1
 
-cp scissy.less bootstrap/less/ &&
-cd bootstrap/less &&
-$LESSC --compile scissy.less >../../css/scissy.css &&
-cd ../.. &&
-cp bootstrap/fonts/* fonts/ &&
-cat bootstrap/js/{transition,alert,button,carousel,collapse,dropdown,modal,tooltip,popover,scrollspy,tab,affix}.js >js/bootstrap.js &&
-$UGLIFYJS js/bootstrap.js >js/bootstrap.min.js &&
-wget http://code.jquery.com/jquery-${JQUERY_VERSION}.min.js -O js/jquery.min.js &&
-wget http://code.jquery.com/jquery-${JQUERY_VERSION}.js -O js/jquery.js &&
-wget http://code.angularjs.org/${ANGULARJS_VERSION}/angular.min.js -O js/angular.min.js &&
-wget http://code.angularjs.org/${ANGULARJS_VERSION}/angular.js -O js/angular.js &&
-wget http://code.angularjs.org/${ANGULARJS_VERSION}/angular-route.min.js -O js/angular-route.min.js &&
-wget http://code.angularjs.org/${ANGULARJS_VERSION}/angular-route.js -O js/angular-route.js &&
-wget http://code.angularjs.org/${ANGULARJS_VERSION}/angular-cookies.min.js -O js/angular-cookies.min.js &&
-wget http://code.angularjs.org/${ANGULARJS_VERSION}/angular-cookies.js -O js/angular-cookies.js
+# # install jquery
+# mkdir -p vendor/jquery
+# wget https://code.jquery.com/jquery-${JQUERY_VERSION}.min.js -O vendor/jquery/jquery.min.js
+# wget https://code.jquery.com/jquery-${JQUERY_VERSION}.js -O vendor/jquery/jquery.js
+
+# # install angularjs
+# wget https://code.angularjs.org/${ANGULARJS_VERSION}/angular-${ANGULARJS_VERSION}.zip
+# rm -rf vendor/angular
+# unzip angular-${ANGULARJS_VERSION}.zip
+# mv angular-${ANGULARJS_VERSION} vendor/angular
+# rm angular-${ANGULARJS_VERSION}.zip
+
+# # install bootstrap
+# wget https://github.com/twbs/bootstrap/releases/download/v${BOOTSTRAP_VERSION}/bootstrap-${BOOTSTRAP_VERSION}-dist.zip
+# rm -rf vendor/bootstrap
+# unzip bootstrap-${BOOTSTRAP_VERSION}-dist.zip
+# mv bootstrap-${BOOTSTRAP_VERSION}-dist vendor/bootstrap
+# rm bootstrap-${BOOTSTRAP_VERSION}-dist.zip
+
+# install codemirror
+wget http://codemirror.net/codemirror-${CODEMIRROR_VERSION}.zip
+rm -rf vendor/codemirror
+unzip codemirror-${CODEMIRROR_VERSION}.zip
+mv codemirror-${CODEMIRROR_VERSION} vendor/codemirror
+rm codemirror-${CODEMIRROR_VERSION}.zip

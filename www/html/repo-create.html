@@ -3,26 +3,14 @@
     <form novalidate role="form">
       <h3>New repository</h3>
 
-      <div class="alert alert-danger" ng-show="repo.errmsg">
+      <div class="alert alert-danger" ng-show="user.errmsg">
         {{repo.errmsg}}
       </div>
 
       <div class="form-group">
-        <label for="name">Name</label>
-        <input id="name" type="text" class="form-control" placeholder="Name"
-               ng-model="repo.name"/>
-      </div>
-
-      <div class="form-group">
-        <label for="desc">Desc</label>
-        <input id="desc" type="text" class="form-control" placeholder="Description"
-               ng-model="repo.desc"/>
-      </div>
-
-      <div class="form-group checkbox">
-        <label for="desc">
-          <input type="checkbox" id="is_public" ng-model="repo.is_public" />Public
-        </label>
+        <label for="name">Email</label>
+        <input id="email" type="text" class="form-control" placeholder="Email"
+               ng-model="repo.email"/>
       </div>
 
       <div class="form-actions">
