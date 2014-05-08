@@ -1227,7 +1227,7 @@ namespace scissy
   {
     int64_t  repo_id;
     pb::Role role;
-    bool     is_public;
+    bool     is_public = false;
     bool     is_admin = false;
 
     if (!Db::repoGetId(request.repo_name(), &repo_id)) {

@@ -46,7 +46,7 @@ namespace scissy
   bool
   Db::userIsAdmin(int64_t user_id, bool * is_admin)
   {
-    auto stmt = prepare("select is_admin from users where user_id = ?");
+    auto stmt = prepare("select role_id = 3 from users where user_id = ?");
     return stmt.bind(user_id).fetch(is_admin);
   }
 
@@ -194,13 +194,7 @@ namespace scissy
   bool
   Db::repoIsPublic(int64_t repo_id, bool * is_public)
   {
-    int tmp;
     auto stmt = Db::prepare("select is_public from repos where repo_id = ?");
-    stmt.bind(repo_id);
-
-    if (!stmt.fetch(&tmp))
-      return false;
-    *is_public = !!tmp;
-    return true;
+    return stmt.bind(repo_id).fetch(is_public);
   }
 }

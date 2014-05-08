@@ -111,7 +111,7 @@ bool checkAcl(int64_t             user_id,
     return true;
 
   // check read operation
-  if (action == kGitReceivePack &&
+  if ((action == kGitUploadPack || action == kGitUploadArchive) &&
       (call->response().is_public() ||
        call->response().role() == scissy::pb::kReader))
     return true;
