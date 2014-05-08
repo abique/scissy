@@ -1228,18 +1228,24 @@ namespace scissy
     int64_t  repo_id;
     pb::Role role;
     bool     is_public;
+    bool     is_admin = false;
 
     if (!Db::repoGetId(request.repo_name(), &repo_id)) {
       response.set_status(pb::kNotFound);
       return true;
     }
 
-    Db::repoGetUserRole(repo_id, request.user_id(), &role);
-    Db::repoIsPublic(repo_id, &is_public);
+    if (!Db::userIsAdmin(request.user_id(), &is_admin))
+      is_admin = false;
+    if (!Db::repoGetUserRole(repo_id, request.user_id(), &role))
+      role = pb::kNone;
+    if (!Db::repoIsPublic(repo_id, &is_public))
+      is_public = false;
 
     response.set_repo_path(Repositories::instance().getRepoPath(repo_id));
     response.set_role(role);
     response.set_is_public(is_public);
+    response.set_is_admin(is_admin);
     response.set_status(pb::kSucceed);
     return true;
   }

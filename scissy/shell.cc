@@ -99,34 +99,26 @@ bool checkAcl(int64_t             user_id,
   auto call = service.shellControl(request);
   call->wait();
 
-  // check response
+  // check response status
   if (call->isCanceled() ||
-      call->response().status() == scissy::pb::kFailed)
+      call->response().status() != scissy::pb::kSucceed)
     return false;
 
   *repo_path = call->response().repo_path();
-  if (call->response().is_public() && action == kGitReceivePack)
+
+  // admin can do everything
+  if (call->response().is_admin())
     return true;
 
-  switch (call->response().role())
-  {
-  case scissy::pb::kNone:
-    return false;
-
-  case scissy::pb::kWriter:
-  case scissy::pb::kOwner:
+  // check read operation
+  if (action == kGitReceivePack &&
+      (call->response().is_public() ||
+       call->response().role() == scissy::pb::kReader))
     return true;
 
-  case scissy::pb::kReader:
-    if (action == kGitReceivePack)
-      return false;
-
-    assert(action == kGitUploadPack || action == kGitUploadArchive);
-    return true;
-
-  default:
-    return false;
-  }
+  // otherwise write permission required
+  return call->response().role() == scissy::pb::kWriter ||
+    call->response().role() == scissy::pb::kOwner;
 }
 
 bool runAction(Action action, const std::string & repo_path)

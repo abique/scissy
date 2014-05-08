@@ -22,6 +22,7 @@ namespace scissy
     /**************/
 
     static bool userGetId(const std::string & user, int64_t * user_id);
+    static bool userIsAdmin(int64_t user_id, bool * is_admin);
 
     /***************/
     /* group stuff */

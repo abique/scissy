@@ -43,6 +43,13 @@ namespace scissy
     return stmt.bind(user).fetch(user_id);
   }
 
+  bool
+  Db::userIsAdmin(int64_t user_id, bool * is_admin)
+  {
+    auto stmt = prepare("select is_admin from users where user_id = ?");
+    return stmt.bind(user_id).fetch(is_admin);
+  }
+
   /***************/
   /* group stuff */
   /***************/
