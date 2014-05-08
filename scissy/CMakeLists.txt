@@ -24,6 +24,7 @@ add_executable(scissyd
   config.pb.cc
   helpers.cc
   access.cc
+  db-authenticator.cc
 
   # web logic and common stuff
   config.cc
