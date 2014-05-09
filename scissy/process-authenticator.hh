@@ -10,6 +10,9 @@ namespace scissy
   public:
     virtual bool auth(pb::UserAuth & request,
                       pb::Session & response) const;
+
+  private:
+    std::string program_;
   };
 }
 

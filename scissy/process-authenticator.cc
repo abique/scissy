@@ -9,6 +9,12 @@ namespace scissy
                         pb::Session & response) const
   {
     mimosa::Process process;
-    return true;
+
+    process.setExecutable(program_);
+    process.setEnv("USERNAME", request.user());
+    process.setEnv("PASSWORD", request.password());
+    if (!process.start())
+      return false;
+    return process.wait() == 0;
   }
 }
