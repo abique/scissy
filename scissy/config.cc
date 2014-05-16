@@ -16,7 +16,7 @@ namespace scissy
   Config::Config()
   {
     struct passwd *pw = getpwent();
-    pb::Config cfg;
+    pb::config::Config cfg;
     mimosa::stream::Stream::Ptr in = mimosa::stream::FdStream::openFile(CONFIG.c_str());
     if (in)
       mimosa::rpc::jsonDecode(in, &cfg);

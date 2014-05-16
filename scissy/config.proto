@@ -1,4 +1,4 @@
-package scissy.pb;
+package scissy.pb.config;
 
 message ListenAddr
 {
@@ -8,19 +8,45 @@ message ListenAddr
   optional bytes ssl_cert   = 5;
 }
 
+enum AuthMethod
+{
+  kAuthSqlite  = 0;
+  kAuthProcess = 1;
+}
+
+message AuthEnv
+{
+  required bytes key = 1;
+  required bytes value = 2;
+}
+
+message AuthProcess
+{
+  required bytes   exec = 1;
+  repeated AuthEnv env  = 2;
+  repeated bytes   args = 3;
+}
+
+message Auth
+{
+  required AuthMethod  method  = 1;
+  optional AuthProcess process = 2;
+}
+
 message Config
 {
-  optional bytes repos_root      = 1;
-  optional bytes www_root        = 2;
-  optional bytes db              = 3;
-  optional bytes socket          = 4;
-  optional bool  crack_passwords = 5;
-  optional bytes clone_user      = 6;
-  optional bytes clone_host      = 7;
-  repeated ListenAddr listen     = 8;
-  optional bytes authorized_keys = 9;
-  optional int32 git_log_limit   = 10;
-  optional bytes user            = 11;
-  optional bytes group           = 12;
+  optional bytes repos_root       = 1;
+  optional bytes www_root         = 2;
+  optional bytes db               = 3;
+  optional bytes socket           = 4;
+  optional bool  crack_passwords  = 5;
+  optional bytes clone_user       = 6;
+  optional bytes clone_host       = 7;
+  repeated ListenAddr listen      = 8;
+  optional bytes authorized_keys  = 9;
+  optional int32 git_log_limit    = 10;
+  optional bytes user             = 11;
+  optional bytes group            = 12;
   optional uint32 cookie_duration = 13;
+  optional Auth  auth             = 14;
 }
