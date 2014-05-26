@@ -32,7 +32,7 @@
 #include "log.hh"
 #include "session-handler.hh"
 #include "helpers.hh"
-#
+
 #define AUTHENTICATE_USER()                                     \
   pb::Session session;                                          \
                                                                 \
@@ -156,6 +156,7 @@ namespace scissy
     response.set_version(SCISSY_VERSION);
     response.set_start_time(
       (mimosa::realTimeCoarse() - (mimosa::uptime())) / mimosa::millisecond);
+    response.set_is_register_enabled(Config::instance().isRegisterEnabled());
     return true;
   }
 
@@ -169,6 +170,12 @@ namespace scissy
   {
     static const RE2 login_match("^[[:alnum:]]+$");
     static const RE2 email_match("^[-._a-zA-Z0-9]+@[-._a-zA-Z0-9]+$");
+
+    if (!Config::instance().isRegisterEnabled()) {
+      response.set_status(pb::kForbidden);
+      response.set_msg("registration disabled");
+      return true;
+    }
 
     if (request.user().size() > 64) {
       response.set_status(pb::kFailed);
@@ -239,44 +246,28 @@ namespace scissy
   bool
   Service::userAuth(pb::UserAuth & request, pb::Session & response)
   {
-    uint64_t    user_id   = 0;
+    int64_t    user_id   = 0;
 
-    // load the password from the db
-    {
-      const void *blob      = nullptr;
-      int         blob_size = 0;
-      auto stmt             = Db::prepare(
-        "select password, user_id from users where login = ?");
-      if (!stmt.bind(request.user()).fetch(&blob, &blob_size, &user_id)) {
-        response.set_status(pb::kFailed);
-        response.set_msg("user not found");
-        return true;
-      }
+    // Check if auth works
+    if (!Config::instance().authenticator().auth(request, response))
+      return true;
 
-      // compute the hash
-      mimosa::stream::Sha512 sha512;
-      sha512.write(request.password().data(), request.password().size());
-
-      // chech if hashes equals
-      if ((size_t)blob_size != sha512.digestLen() ||
-          ::memcmp(sha512.digest(), blob, blob_size)) {
-        mimosa::log::error("invalid password hash for user %s, (%d, %d), ",
-                           request.user(), blob_size, sha512.digestLen());
-        response.set_status(pb::kFailed);
-        response.set_msg("invalid password");
-        return true;
-      }
+    // Ensure the user has an account
+    if (!Db::userGetOrCreateId(request.user(), &user_id)) {
+      response.set_status(pb::kFailed);
+      response.set_msg("2 internal error, please contact your administrator");
+      return true;
     }
 
     //////////////////////////////////
     // auth succeed, generate token //
     //////////////////////////////////
 
-    // generate a random value
+    // generate a random value as token
     char auth[32];
     if (::gnutls_rnd(GNUTLS_RND_NONCE, auth, sizeof (auth)) < 0) {
       response.set_status(pb::kFailed);
-      response.set_msg("2 internal error, please contact your administrator");
+      response.set_msg("internal error, please contact your administrator");
       return true;
     }
 

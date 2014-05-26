@@ -12,7 +12,7 @@
         <li ng-show="session.user"><a href="#/" ng-click="logout()">logout ({{session.user}})</a></li>
 
         <li ng-hide="session.user"><a href="#/login">login</a></li>
-        <li ng-hide="session.user"><a href="#/register">register</a></li>
+        <li ng-hide="session.user || !service_info.is_register_enabled"><a href="#/register">register</a></li>
       </ul>
     </div>
   </div>

@@ -4,9 +4,12 @@
 #include <mimosa/options/options.hh>
 #include <mimosa/stream/fd-stream.hh>
 #include <mimosa/rpc/json.hh>
+#include "log.hh"
 
 #include "config.hh"
 #include "config.pb.h"
+#include "builtin-authenticator.hh"
+#include "process-authenticator.hh"
 
 std::string & CONFIG = *mimosa::options::addOption<std::string>(
   "", "config", "path to the config file", "/etc/scissy/config.json");
@@ -37,6 +40,7 @@ namespace scissy
     user_ = cfg.user();
     group_ = cfg.group();
     cookie_duration_ = cfg.has_cookie_duration() ? cfg.cookie_duration() : 7;
+    is_register_enabled_ = cfg.has_enable_register() ? cfg.enable_register() : false;
 
     if (cfg.has_authorized_keys())
       auth_keys_ = cfg.authorized_keys();
@@ -53,6 +57,35 @@ namespace scissy
       listen.ssl_key_  = l.ssl_key();
       listen.ssl_cert_ = l.ssl_cert();
       listens_.push_back(listen);
+    }
+
+    parseAuth(cfg);
+  }
+
+  void
+  Config::parseAuth(const pb::config::Config & cfg)
+  {
+    if (!cfg.has_auth() || !cfg.auth().has_method() ||
+        cfg.auth().method() == pb::config::kAuthBuiltin) {
+      authenticator_.reset(new BuiltinAuthenticator);
+    } else if (cfg.auth().method() == pb::config::kAuthProcess) {
+      mimosa::ProcessConfig pcfg;
+      pcfg.setExecutable(cfg.auth().process().program());
+      pcfg.setWorkingDirectory(cfg.auth().process().working_directory());
+      for (int i = 0; i < cfg.auth().process().env_size(); ++i) {
+        auto & env = cfg.auth().process().env(i);
+        if (env.key().empty()) {
+          log->warning("empty key in auth process env");
+          continue;
+        }
+        pcfg.setEnv(env.key(), env.value());
+      }
+      pcfg.addArg(cfg.auth().process().program());
+      for (int i = 0; i < cfg.auth().process().args_size(); ++i)
+        pcfg.addArg(cfg.auth().process().args(i));
+      auto auth = new ProcessAuthenticator;
+      auth->setConfig(pcfg);
+      authenticator_.reset(auth);
     }
   }
 }

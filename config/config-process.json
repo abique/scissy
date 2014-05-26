@@ -13,6 +13,18 @@
             "port" : 19043
         }
     ],
-    "git_log_limit":50,
-    "enable_register": true
+    "git_log_limit": 100,
+    "auth": {
+        "method": "kAuthProcess",
+        "process": {
+            "program": "/home/abique/develop/scissy/config/auth-debug.sh",
+            "args": ["argv1", "argv2"],
+            "env": [
+                { "key": "ENV1", "value": "VALUE1" },
+                { "key": "ENV2", "value": "VALUE2" }
+            ],
+            "working_directory": "/tmp/"
+        }
+    },
+    "enable_regiser": false
 }

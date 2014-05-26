@@ -13,6 +13,7 @@ enum Status
   kInsufficientRight = 4;
   kNotFound          = 5;
   kInternalError     = 6;
+  kForbidden         = 7;
 }
 
 message StatusMsg
@@ -23,10 +24,11 @@ message StatusMsg
 
 message ServiceInfo
 {
-  required bytes  clone_user = 1;
-  required bytes  clone_host = 2;
-  required bytes  version    = 3;
-  required uint64 start_time = 4;
+  required bytes  clone_user          = 1;
+  required bytes  clone_host          = 2;
+  required bytes  version             = 3;
+  required uint64 start_time          = 4;
+  required bool   is_register_enabled = 5;
 }
 
 enum Role

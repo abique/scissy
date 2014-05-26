@@ -3,8 +3,13 @@
 
 # include <string>
 # include <vector>
+# include <memory>
 
 # include <mimosa/singleton.hh>
+# include <mimosa/process.hh>
+
+# include "authenticator.hh"
+# include "config.pb.h"
 
 namespace scissy
 {
@@ -40,8 +45,12 @@ namespace scissy
     inline const std::string & group() const { return group_; }
     // duration in hours
     inline uint32_t cookieDuration() const { return cookie_duration_; }
+    inline const Authenticator & authenticator() const { return *authenticator_; }
+    inline bool isRegisterEnabled() const { return is_register_enabled_; }
 
   private:
+    void parseAuth(const pb::config::Config & cfg);
+
     std::string www_;
     std::string css_;
     std::string js_;
@@ -60,6 +69,8 @@ namespace scissy
     std::string user_;
     std::string group_;
     uint32_t cookie_duration_;
+    std::unique_ptr<Authenticator> authenticator_;
+    bool is_register_enabled_;
   };
 }
 

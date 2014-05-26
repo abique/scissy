@@ -1,13 +1,13 @@
 #include <mimosa/stream/hash.hh>
 
 #include "db.hh"
-#include "db-authenticator.hh"
+#include "builtin-authenticator.hh"
 #include "log.hh"
 
 namespace scissy
 {
   bool
-  DbAuthenticator::auth(pb::UserAuth & request,
+  BuiltinAuthenticator::auth(pb::UserAuth & request,
                         pb::Session & response) const
   {
     // load the password from the db
