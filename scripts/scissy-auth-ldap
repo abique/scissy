@@ -1,0 +1,4 @@
+#! /bin/bash
+
+search=$(printf "${LDAP_QUERY}" "$USERNAME")
+ldapwhoami -h "${LDAP_HOST}" -D "$search" -w "$PASSWORD"
