@@ -18,6 +18,6 @@
     "git_log_limit" : 50,
     "user" : "scissy",
     "group" : "scissy",
-    "cookie_duration" : "7",
+    "cookie_duration" : 672,
     "enable_register": true
 }

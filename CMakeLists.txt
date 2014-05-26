@@ -42,9 +42,10 @@ install(
 
 install(FILES
   scripts/scissy-init
-  /usr/bin/scissy-upgrade
+  scripts/scissy-upgrade
   scripts/scissy-set-admin
-  DESTINATION bin
+  scripts/scissy-auth-ldap
+  DESTINATION lib/scissy/
   PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE
               GROUP_READ GROUP_EXECUTE
               WORLD_READ WORLD_EXECUTE)
