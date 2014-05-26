@@ -1,4 +1,19 @@
 #! /bin/bash
 
+# usage:
+# "process": {
+#   "program": "/home/abique/develop/scissy/config/auth-debug.sh",
+#   "env": [
+#     { "LDAP_HOST": "ldap.myserver.org" },
+#     { "LDAP_PORT": 389 },
+#     { "LDAP_QUERY": "uid=%s,ou=People,dc=myserver,dc=org" }
+#   ]
+# }
+
+# check the port
+if [[ "$LDAP_PORT" = "" ]] ; then
+  LDAP_PORT=389
+fi
+
 search=$(printf "${LDAP_QUERY}" "$USERNAME")
-ldapwhoami -h "${LDAP_HOST}" -D "$search" -w "$PASSWORD"
+ldapwhoami -h "${LDAP_HOST}" -D "$search" -w "$PASSWORD" -p "$LDAP_PORT"
