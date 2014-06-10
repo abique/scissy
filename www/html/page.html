@@ -120,12 +120,21 @@
     <script src="vendor/codemirror/mode/z80/z80.js"></script>
 
     <!-- codemirror integration into angular -->
-    <script src="/js/ui-codemirror.js"></script>
+    <script src="vendor/ui-codemirror/ui-codemirror.js"></script>
 
     <!-- scissy -->
     <style>
       body { padding-top: 50px; }
       #container-view { margin-top: 20px; }
+
+      .CodeMirror {
+        border: 1px solid #eee;
+        height: auto;
+      }
+      .CodeMirror-scroll {
+        overflow-y: hidden;
+        overflow-x: auto;
+      }
     </style>
 
     <script src="/js/scissy.js"></script>

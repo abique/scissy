@@ -1,5 +1,8 @@
 'use strict';
 
+// initialize CodeMirror
+CodeMirror.modeURL = "vendor/codemirror/mode/%N/%N.js";
+
 var scissy_module = angular.module('scissy', ['ngRoute', 'ui.codemirror']);
 scissy_module.config(function($routeProvider) {
     $routeProvider
@@ -246,9 +249,11 @@ function repoBlobCtrl($scope, $rootScope, $http, $location, $routeParams) {
     $scope.revision = $routeParams.revision;
     $scope.path = $routeParams.path;
     $scope.viewer_options = {
-        readOnly: true,
+        readOnly: 'nocursor',
         lineNumbers: true,
         tabSize: 8,
+        theme: "twilight",
+        onLoad: function(_cm) { $scope.cm = _cm; }
     };
 
     $scope.refresh = function() {
@@ -267,6 +272,7 @@ function repoBlobCtrl($scope, $rootScope, $http, $location, $routeParams) {
                 if (data.status == "kSucceed") {
                     $scope.viewer_options.mode = data.content_type;
                     $scope.blob = data;
+                    $scope.cm.setOption("mode", data.content_type);
                 }
             })
             .error(rpcGenericError);
