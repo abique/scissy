@@ -1,8 +1,5 @@
 'use strict';
 
-// initialize CodeMirror
-CodeMirror.modeURL = "vendor/codemirror/mode/%N/%N.js";
-
 var scissy_module = angular.module('scissy', ['ngRoute', 'ui.codemirror']);
 scissy_module.config(function($routeProvider) {
     $routeProvider
