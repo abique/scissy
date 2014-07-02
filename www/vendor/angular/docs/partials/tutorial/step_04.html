@@ -135,7 +135,7 @@ shared by all tests in the parent <code>describe</code> block.</p>
         &quot;MOTOROLA XOOM\u2122&quot;
       ]);
 
-      element(by.model(&#39;orderProp&#39;)).findElement(by.css(&#39;option[value=&quot;name&quot;]&#39;)).click();
+      element(by.model(&#39;orderProp&#39;)).element(by.css(&#39;option[value=&quot;name&quot;]&#39;)).click();
 
       expect(getNames()).toEqual([
         &quot;MOTOROLA XOOM\u2122&quot;,

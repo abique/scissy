@@ -72,8 +72,11 @@ download much smaller and faster.
 <p>You can download a Node.js installer for your operating system from <a href="http://nodejs.org/download/">http://nodejs.org/download/</a>.</p>
 <p>Check the version of Node.js that you have installed by running the following command:</p>
 <pre><code>node --version</code></pre>
-<p>Or in Debian based distributions:</p>
-<pre><code>nodejs --version</code></pre>
+<p>In Debian based distributions, there is a name clash with another utility called <code>node</code>. The
+suggested solution is to also install the <code>nodejs-legacy</code> apt package, which renames <code>node</code> to
+<code>nodejs</code>.</p>
+<pre><code>apt-get install nodejs-legacy
+nodejs --version</code></pre>
 <div class="alert alert-info">If you need to run a different versions of node.js
   in your local environment, consider installing
   <a href="https://github.com/creationix/nvm" title="Node Version Manager Github Repo link">

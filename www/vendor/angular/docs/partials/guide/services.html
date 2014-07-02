@@ -119,7 +119,7 @@ injection of <code>$window</code>, <code>$scope</code>, and our <code>notify</co
 
 </p>
 <div class="alert alert-danger">
-<strong>Careful:</strong> If you plan to <a href="http://en.wikipedia.org/wiki/Minification_(programming">minify</a>) your
+<strong>Careful:</strong> If you plan to <a href="http://en.wikipedia.org/wiki/Minification_(programming&#41;">minify</a> your
 code, your variable names will get renamed unless you use one of the annotation techniques above.
 </div>
 
@@ -199,7 +199,7 @@ service and our custom <code>batchLog</code> service.</li>
 names in the factory function.</li>
 </ul>
 <h3 id="registering-a-service-with-provide-">Registering a Service with <code>$provide</code></h3>
-<p>You can also register services via the <a href="api/auto/object/$provide"><code>$provide</code></a> service inside of a
+<p>You can also register services via the <a href="api/auto/service/$provide"><code>$provide</code></a> service inside of a
 module&#39;s <code>config</code> function:</p>
 <pre><code class="lang-javascript">angular.module(&#39;myModule&#39;, []).config(function($provide) {
   $provide.factory(&#39;serviceId&#39;, function() {
@@ -258,7 +258,7 @@ it(&#39;should clear messages after alert&#39;, function() {
 </ul>
 <h2 id="related-api">Related API</h2>
 <ul>
-<li><a href="./ng">Angular Service API</a></li>
+<li><a href="./api/ng/service">Angular Service API</a></li>
 <li><a href="api/ng/function/angular.injector">Injector API</a></li>
 </ul>
 

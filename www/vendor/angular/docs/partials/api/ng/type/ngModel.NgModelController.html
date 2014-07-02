@@ -2,7 +2,7 @@
 
 
 
-<a href='http://github.com/angular/angular.js/tree/master/src/ng/directive/input.js#L883' class='view-source pull-right btn btn-primary'>
+<a href='http://github.com/angular/angular.js/tree/master/src/ng/directive/input.js#L901' class='view-source pull-right btn btn-primary'>
   <i class="glyphicon glyphicon-zoom-in">&nbsp;</i>View Source
 </a>
 
@@ -208,7 +208,7 @@ does not notify form if given validator is already marked as invalid).</p>
       </td>
       <td>
         <p>Name of the validator. the <code>validationErrorKey</code> will assign
-       to <code>$error[validationErrorKey]=isValid</code> so that it is available for data-binding.
+       to <code>$error[validationErrorKey]=!isValid</code> so that it is available for data-binding.
        The <code>validationErrorKey</code> should be in camelCase and will get converted into dash-case
        for class name. Example: <code>myError</code> will result in <code>ng-valid-my-error</code> and <code>ng-invalid-my-error</code>
        class and can be bound to as  <code>{{someForm.someControl.$error.myError}}</code> .</p>

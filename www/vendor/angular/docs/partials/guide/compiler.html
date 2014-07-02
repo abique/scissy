@@ -170,14 +170,14 @@ moved to the compile function for performance reasons.
 
 <h4 id="an-example-of-compile-versus-link-">An Example of &quot;Compile&quot; Versus &quot;Link&quot;</h4>
 <p>To understand, let&#39;s look at a real-world example with <code>ngRepeat</code>:</p>
-<pre><code class="lang-html">Hello {{user}}, you have these actions:
+<pre><code class="lang-html">Hello {{user.name}}, you have these actions:
 &lt;ul&gt;
   &lt;li ng-repeat=&quot;action in user.actions&quot;&gt;
     {{action.description}}
   &lt;/li&gt;
 &lt;/ul&gt;</code></pre>
 <p>When the above example is compiled, the compiler visits every node and looks for directives.</p>
-<p><code>{{user}}</code> matches the <a href="api/ng/service/$interpolate">interpolation directive</a>
+<p><code>{{user.name}}</code> matches the <a href="api/ng/service/$interpolate">interpolation directive</a>
 and <code>ng-repeat</code> matches the <a href="api/ng/directive/ngRepeat"><code>ngRepeat</code> directive</a>.</p>
 <p>But <a href="api/ng/directive/ngRepeat">ngRepeat</a> has a dilemma.</p>
 <p>It needs to be able to clone new <code>&lt;li&gt;</code> elements for every <code>action</code> in <code>user.actions</code>.

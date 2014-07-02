@@ -39,7 +39,7 @@ the registry? Most likely by looking it up in a well known place. See #2.)</li>
 <p>Out of the four options in the list above, only the last one is testable. Let&#39;s look at why:</p>
 <h3 id="using-the-new-operator">Using the <code>new</code> operator</h3>
 <p>While there is nothing wrong with the <code>new</code> operator fundamentally, a problem arises when calling <code>new</code>
-on a constructor. This permanently binds the call site to the type. For example, lets say that we try to
+on a constructor. This permanently binds the call site to the type. For example, let&#39;s say that we try to
 instantiate an <code>XHR</code> that will retrieve data from the server.</p>
 <pre><code class="lang-js">function MyClass() {
   this.doWork = function() {

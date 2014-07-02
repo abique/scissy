@@ -70,6 +70,9 @@ our filter tests execute. This call loads our <code>phonecatFilters</code> modul
 for this test run.</p>
 <p>Note that we call the helper function, <code>inject(function(checkmarkFilter) { ... })</code>, to get
 access to the filter that we want to test.  See <a href="api/ngMock/function/angular.mock.inject">angular.mock.inject()</a>.</p>
+<p>Notice that the suffix &#39;Filter&#39; is appended to your filter name when injected.
+See the <a href="guide/filter#using-filters-in-controllers-services-and-directives">Filter Guide</a>
+section where this is outlined.</p>
 <p>You should now see the following output in the Karma tab:</p>
 <pre>Chrome 22.0: Executed 4 of 4 SUCCESS (0.034 secs / 0.012 secs)</pre>
 
