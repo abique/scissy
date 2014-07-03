@@ -1148,16 +1148,12 @@ namespace scissy
           git_commit_parent(commit_old.ref(), commit_new, 0)) {
         response.set_status(pb::kNotFound);
         response.set_msg("commit not found");
+        return true;
       }
     }
 
-    mimosa::git::Tree tree_old(repo, git_commit_tree_id(commit_old));
-
-    if (!tree_old) {
-      response.set_status(pb::kNotFound);
-      response.set_msg("tree not found");
-      return true;
-    }
+    mimosa::git::Tree tree_old(
+      repo, commit_old ? git_commit_tree_id(commit_old) : nullptr);
 
     mimosa::git::Diff diff;
     if (git_diff_tree_to_tree(diff.ref(), repo, tree_old, tree_new, NULL))
