@@ -17,7 +17,7 @@ scissy_module.config(function($routeProvider) {
         .when('/repo/tree/:repo_id/:revision/:directory*', {controller:repoTreeCtrl, templateUrl:'html/repo.html'})
         .when('/repo/blob/:repo_id/:revision/:path*', {controller:repoBlobCtrl, templateUrl:'html/repo.html'})
         .when('/repo/patch/:repo_id/:revision_new/:revision_old?', {controller:repoPatchCtrl, templateUrl:'html/repo.html'})
-        .when('/repo/log/:repo_id', {controller:repoLogCtrl, templateUrl:'html/repo.html'})
+        .when('/repo/log/:repo_id/:revision?', {controller:repoLogCtrl, templateUrl:'html/repo.html'})
         .when('/repo/admin/:repo_id', {controller:repoAdminCtrl, templateUrl:'html/repo.html'})
         .when('/repo/commit/:repo_id/:revision', {controller:repoCommitCtrl, templateUrl:'html/repo.html'})
         .when('/settings/account', {controller:settingsAccountCtrl, templateUrl:'html/settings.html'})
@@ -184,14 +184,20 @@ function repoSummaryCtrl($scope, $rootScope, $http, $location, $routeParams) {
             .error(rpcGenericError);
         $http.post('/api/repoListBranches', {"repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
-                if (data.status == "kSucceed")
-                    $scope.branches = data.branches;
+                if (data.status == "kSucceed") {
+                  $scope.branches = data.branches;
+                  for (var i = 0; i < $scope.branches.length; ++i)
+                    $scope.branches[i].name = $scope.branches[i].name.replace(/^refs\/heads\/(.*)/, "$1");
+                }
             })
             .error(rpcGenericError);
         $http.post('/api/repoGetTags', {"repo_id":$scope.repo.id})
             .success(function (data, status, headers, config) {
-                if (data.status == "kSucceed")
-                    $scope.tags = data.tags;
+                if (data.status == "kSucceed") {
+                  $scope.tags = data.tags;
+                  for (var i = 0; i < $scope.tags.length; ++i)
+                    $scope.tags[i].name = $scope.tags[i].name.replace(/^refs\/tags\/(.*)/, "$1");
+                }
             })
             .error(rpcGenericError);
     }
@@ -229,6 +235,7 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
                         var entry = $scope.entries[i];
                         entry.is_directory = (entry.mode == 'kGitFilemodeTree');
                         entry.is_file = (entry.type == 'kGitObjBlob');
+                        entry.is_submodule = (entry.type == 'kGitObjCommit');
                     }
                 }
             })
@@ -330,7 +337,9 @@ function repoLogCtrl($scope, $rootScope, $http, $location, $routeParams) {
             })
             .error(rpcGenericError);
         $http.post('/api/repoGetLog', {
-            "repo_id":$scope.repo.id})
+            "repo_id":$scope.repo.id,
+            "revision": $routeParams.revision
+            })
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed")
                     $scope.commits = data.commits;

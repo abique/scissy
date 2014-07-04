@@ -7,8 +7,10 @@
       <ul class="nav navbar-nav">
         <li><a href="#/repos">repositories</a></li>
         <li><a href="#/groups">groups</a></li>
-
         <li ng-show="session.user"><a href="#/settings/account">settings</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
         <li ng-show="session.user"><a href="#/" ng-click="logout()">logout ({{session.user}})</a></li>
 
         <li ng-hide="session.user"><a href="#/login">login</a></li>

@@ -1,28 +1,28 @@
 <div class="row">
-  <div class="col-md-12">
-      <h2>{{repo.name}} repository</h2>
-      <h4>{{repo.desc}}</h4>
+  <h2 class="text-center">{{repo.name}} repository</h2>
+  <h5 class="text-center">{{repo.desc}}</h5>
+</div>
 
-    <ul class="nav nav-tabs">
-      <li ng-class="summary_class"><a href="#/repo/summary/{{repo.id}}">summary</a></li>
-      <li ng-class="tree_class"><a href="#/repo/tree/{{repo.id}}/HEAD/">tree</a></li>
-      <li ng-class="log_class"><a href="#/repo/log/{{repo.id}}">log</a></li>
-      <li ng-class="admin_class"><a href="#/repo/admin/{{repo.id}}">admin</a></li>
-    </ul>
-
-    {{isActive(section, 'summary')}}
-    {{isActive(section, 'tree')}}
-    {{isActive(section, 'log')}}
-    {{isActive(section, 'admin')}}
-    {{isActive(section, 'blob')}}
-    {{isActive(section, 'patch')}}
-    {{section}}
-
-    <div class="tab-content">
-      <div class="tab-pane active">
-        <div ng-include src="content"></div>
-      </div>
+<div class="row">
+  <div class="col-md-2">
+    <div class="list-group">
+      <a class="list-group-item" href="#/repo/summary/{{repo.id}}">summary</a>
+      <a class="list-group-item" href="#/repo/tree/{{repo.id}}/HEAD/">tree</a>
+      <a class="list-group-item" href="#/repo/log/{{repo.id}}">log</a>
+      <a class="list-group-item" href="#/repo/admin/{{repo.id}}">admin</a>
     </div>
 
+    <!-- {{isActive(section, 'summary')}} -->
+    <!-- {{isActive(section, 'tree')}} -->
+    <!-- {{isActive(section, 'log')}} -->
+    <!-- {{isActive(section, 'admin')}} -->
+    <!-- {{isActive(section, 'blob')}} -->
+    <!-- {{isActive(section, 'patch')}} -->
+    <!-- {{section}} -->
   </div>
+
+  <div class="col-md-10">
+    <div ng-include src="content"></div>
+  </div>
+
 </div>

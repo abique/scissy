@@ -27,12 +27,17 @@
             {{entry.name}}
           </a>
         </div>
-        
-        <div  ng-show="entry.is_directory">
+
+        <div ng-show="entry.is_directory">
           <span class="glyphicon glyphicon-folder-open"></span>
           <a href="#/repo/tree/{{repo.id}}/{{revision}}/{{directory}}{{entry.name}}">
             {{entry.name}}
           </a>
+        </div>
+
+        <div ng-show="entry.is_submodule">
+          <span class="glyphicon glyphicon-new-window"></span>
+          {{entry.name}}
         </div>
       </td>
     </tr>
