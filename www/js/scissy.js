@@ -307,6 +307,7 @@ function repoPatchCtrl($scope, $rootScope, $http, $location, $routeParams) {
         readOnly: true,
         lineNumbers: true,
         tabSize: 8,
+        theme: "twilight",
         mode: "text/x-diff"
     };
 
