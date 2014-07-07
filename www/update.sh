@@ -30,6 +30,15 @@ unzip bootstrap-${BOOTSTRAP_VERSION}-dist.zip
 mv bootstrap-${BOOTSTRAP_VERSION}-dist vendor/bootstrap
 rm bootstrap-${BOOTSTRAP_VERSION}-dist.zip
 
+# install bootstrap themes
+for theme in amelia cerulean cosmo cyborg darkly flatly journal \
+             lumen readable simplex slate spacelab superhero united \
+             yeti
+do
+  wget http://bootswatch.com/$theme/bootstrap.min.css -O vendor/bootstrap/css/bootstrap-$theme.min.css
+done
+ln -s bootstrap.min.css vendor/bootstrap/css/bootstrap-default.min.css
+
 # install codemirror
 wget http://codemirror.net/codemirror-${CODEMIRROR_VERSION}.zip
 rm -rf vendor/codemirror
