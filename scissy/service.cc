@@ -1164,10 +1164,12 @@ namespace scissy
       mimosa::git::Patch patch;
       if (git_patch_from_diff(patch.ref(), diff, i))
         continue;
-      char *str = nullptr;
-      if (git_patch_to_str(&str, patch) || !str)
+
+      git_buf buf = { 0, 0, 0};
+      if (git_patch_to_buf(&buf, patch) || !buf.ptr)
         continue;
-      patch_ss << str;
+      patch_ss << buf.ptr;
+      git_buf_free(&buf);
     }
 
     response.set_status(pb::kSucceed);
