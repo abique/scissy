@@ -237,6 +237,17 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
                         entry.is_file = (entry.type == 'kGitObjBlob');
                         entry.is_submodule = (entry.type == 'kGitObjCommit');
                     }
+                    $scope.entries = $scope.entries.sort(function(a, b) {
+                      if ((a.is_directory || a.is_submodule) && b.is_file)
+                        return -1;
+                      if ((b.is_directory || b.is_submodule) && a.is_file)
+                        return 1;
+                      if (a.name < b.name)
+                        return -1;
+                      if (a.name > b.name)
+                        return 1;
+                      return 0;
+                    });
                 }
             })
             .error(rpcGenericError);
