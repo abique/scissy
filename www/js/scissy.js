@@ -203,6 +203,7 @@ function repoSummaryCtrl($scope, $rootScope, $http, $location, $routeParams) {
     }
 
     $scope.refresh();
+    $("#repo-menu-summary").addClass("active");
 }
 
 function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
@@ -258,6 +259,7 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
     }
 
     $scope.refresh();
+    $("#repo-menu-tree").addClass("active");
 }
 
 function repoBlobCtrl($scope, $rootScope, $http, $location, $routeParams) {
@@ -364,6 +366,7 @@ function repoLogCtrl($scope, $rootScope, $http, $location, $routeParams) {
     }
 
     $scope.refresh();
+    $("#repo-menu-log").addClass("active");
 }
 
 function repoCommitCtrl($scope, $rootScope, $http, $location, $routeParams) {
@@ -510,6 +513,7 @@ function repoAdminCtrl($scope, $rootScope, $http, $location, $routeParams) {
     }
 
     $scope.refresh();
+    $("#repo-menu-admin").addClass("active");
 }
 
 function settingsAccountCtrl($scope, $rootScope) {
