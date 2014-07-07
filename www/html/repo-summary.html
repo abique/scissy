@@ -20,7 +20,12 @@
 
       <tbody>
         <tr ng-repeat="branch in branches">
-          <td>{{branch.name}}</td>
+          <td>
+            {{branch.name}} |
+            <a href="#/repo/log/{{repo.id}}/{{branch.name}}">log</a> |
+            <a href="#/repo/tree/{{repo.id}}/{{branch.name}}/">tree</a> |
+            <a href="/repo/archive/{{repo.id}}/{{branch.name}}/{{repo.name}}-{{branch.name}}.tar.xz">tarball</a>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -39,7 +44,8 @@
           <td>
             {{tag.name}} |
             <a href="#/repo/log/{{repo.id}}/{{tag.name}}">log</a> |
-            <a href="#/repo/tree/{{repo.id}}/{{tag.name}}/">tree</a>
+            <a href="#/repo/tree/{{repo.id}}/{{tag.name}}/">tree</a> |
+            <a href="/repo/archive/{{repo.id}}/{{tag.name}}/{{repo.name}}-{{tag.name}}.tar.xz">tarball</a>
           </td>
         </tr>
       </tbody>
