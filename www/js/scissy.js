@@ -213,7 +213,11 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
     $scope.revision = $routeParams.revision;
     $scope.directory = $routeParams.directory;
 
-    if ($scope.directory && $scope.directory[$scope.directory.length - 1] != '/')
+    if (!$scope.directory || $scope.directory.length == 0)
+        $scope.directory = '/';
+    if ($scope.directory[0] != '/')
+        $scope.directory = '/' + $scope.directory;
+    if ($scope.directory[$scope.directory.length - 1] != '/')
         $scope.directory += '/';
 
     $scope.refresh = function() {
@@ -225,9 +229,9 @@ function repoTreeCtrl($scope, $rootScope, $http, $location, $routeParams) {
             })
             .error(rpcGenericError);
         $http.post('/api/repoGetTree', {
-            "repo_id":$scope.repo.id,
-            "revision":$scope.revision,
-            "directory":$scope.directory})
+            "repo_id": $scope.repo.id,
+            "revision": $scope.revision,
+            "directory": $scope.directory.substr(1)})
             .success(function (data, status, headers, config) {
                 if (data.status == "kSucceed") {
                     $scope.entries = data.entries;
