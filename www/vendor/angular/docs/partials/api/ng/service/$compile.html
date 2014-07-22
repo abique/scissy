@@ -140,7 +140,7 @@ If no <code>attr</code> name is specified then the attribute name is assumed to 
 local name. Given <code>&lt;widget my-attr=&quot;count = count + value&quot;&gt;</code> and widget definition of
 <code>scope: { localFn:&#39;&amp;myAttr&#39; }</code>, then isolate scope property <code>localFn</code> will point to
 a function wrapper for the <code>count = count + value</code> expression. Often it&#39;s desirable to
-pass data from the isolated scope via an expression and to the parent scope, this can be
+pass data from the isolated scope via an expression to the parent scope, this can be
 done by passing a map of local variable names and values into the expression wrapper fn.
 For example, if the expression is <code>increment(amount)</code> then we can specify the amount value
 by calling the <code>localFn</code> as <code>localFn({amount: 22})</code>.</p>
@@ -342,14 +342,14 @@ to illustrate how <code>$compile</code> works.
     Edit in Plunker</a>
   <div class="runnable-example"
       path="examples/example-example4"
-      module="compile">
+      module="compileExample">
 
    
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
       type="html">
-      <pre><code>&lt;script&gt;&#10;  angular.module(&#39;compile&#39;, [], function($compileProvider) {&#10;    // configure new &#39;compile&#39; directive by passing a directive&#10;    // factory function. The factory function injects the &#39;$compile&#39;&#10;    $compileProvider.directive(&#39;compile&#39;, function($compile) {&#10;      // directive factory creates a link function&#10;      return function(scope, element, attrs) {&#10;        scope.$watch(&#10;          function(scope) {&#10;             // watch the &#39;compile&#39; expression for changes&#10;            return scope.$eval(attrs.compile);&#10;          },&#10;          function(value) {&#10;            // when the &#39;compile&#39; expression changes&#10;            // assign it into the current DOM&#10;            element.html(value);&#10;&#10;            // compile the new DOM and link it to the current&#10;            // scope.&#10;            // NOTE: we only compile .childNodes so that&#10;            // we don&#39;t get into infinite loop compiling ourselves&#10;            $compile(element.contents())(scope);&#10;          }&#10;        );&#10;      };&#10;    })&#10;  });&#10;&#10;  function Ctrl($scope) {&#10;    $scope.name = &#39;Angular&#39;;&#10;    $scope.html = &#39;Hello {{name}}&#39;;&#10;  }&#10;&lt;/script&gt;&#10;&lt;div ng-controller=&quot;Ctrl&quot;&gt;&#10;  &lt;input ng-model=&quot;name&quot;&gt; &lt;br&gt;&#10;  &lt;textarea ng-model=&quot;html&quot;&gt;&lt;/textarea&gt; &lt;br&gt;&#10;  &lt;div compile=&quot;html&quot;&gt;&lt;/div&gt;&#10;&lt;/div&gt;</code></pre>
+      <pre><code>&lt;script&gt;&#10;  angular.module(&#39;compileExample&#39;, [], function($compileProvider) {&#10;    // configure new &#39;compile&#39; directive by passing a directive&#10;    // factory function. The factory function injects the &#39;$compile&#39;&#10;    $compileProvider.directive(&#39;compile&#39;, function($compile) {&#10;      // directive factory creates a link function&#10;      return function(scope, element, attrs) {&#10;        scope.$watch(&#10;          function(scope) {&#10;             // watch the &#39;compile&#39; expression for changes&#10;            return scope.$eval(attrs.compile);&#10;          },&#10;          function(value) {&#10;            // when the &#39;compile&#39; expression changes&#10;            // assign it into the current DOM&#10;            element.html(value);&#10;&#10;            // compile the new DOM and link it to the current&#10;            // scope.&#10;            // NOTE: we only compile .childNodes so that&#10;            // we don&#39;t get into infinite loop compiling ourselves&#10;            $compile(element.contents())(scope);&#10;          }&#10;        );&#10;      };&#10;    });&#10;  })&#10;  .controller(&#39;GreeterController&#39;, [&#39;$scope&#39;, function($scope) {&#10;    $scope.name = &#39;Angular&#39;;&#10;    $scope.html = &#39;Hello {{name}}&#39;;&#10;  }]);&#10;&lt;/script&gt;&#10;&lt;div ng-controller=&quot;GreeterController&quot;&gt;&#10;  &lt;input ng-model=&quot;name&quot;&gt; &lt;br&gt;&#10;  &lt;textarea ng-model=&quot;html&quot;&gt;&lt;/textarea&gt; &lt;br&gt;&#10;  &lt;div compile=&quot;html&quot;&gt;&lt;/div&gt;&#10;&lt;/div&gt;</code></pre>
     </div>
   
     <div class="runnable-example-file" 

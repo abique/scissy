@@ -69,28 +69,29 @@ the method from your view. If you want to <code>eval()</code> an Angular express
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
   <div class="runnable-example"
-      path="examples/example-example91">
+      path="examples/example-example91"
+      module="expressionExample">
 
    
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
       type="html">
-      <pre><code>&lt;div ng-controller=&quot;Cntl2&quot; class=&quot;expressions&quot;&gt;&#10;  Expression:&#10;  &lt;input type=&#39;text&#39; ng-model=&quot;expr&quot; size=&quot;80&quot;/&gt;&#10;  &lt;button ng-click=&quot;addExp(expr)&quot;&gt;Evaluate&lt;/button&gt;&#10;  &lt;ul&gt;&#10;   &lt;li ng-repeat=&quot;expr in exprs track by $index&quot;&gt;&#10;     [ &lt;a href=&quot;&quot; ng-click=&quot;removeExp($index)&quot;&gt;X&lt;/a&gt; ]&#10;     &lt;tt&gt;{{expr}}&lt;/tt&gt; =&gt; &lt;span ng-bind=&quot;$parent.$eval(expr)&quot;&gt;&lt;/span&gt;&#10;    &lt;/li&gt;&#10;  &lt;/ul&gt;&#10;&lt;/div&gt;</code></pre>
+      <pre><code>&lt;div ng-controller=&quot;ExampleController&quot; class=&quot;expressions&quot;&gt;&#10;  Expression:&#10;  &lt;input type=&#39;text&#39; ng-model=&quot;expr&quot; size=&quot;80&quot;/&gt;&#10;  &lt;button ng-click=&quot;addExp(expr)&quot;&gt;Evaluate&lt;/button&gt;&#10;  &lt;ul&gt;&#10;   &lt;li ng-repeat=&quot;expr in exprs track by $index&quot;&gt;&#10;     [ &lt;a href=&quot;&quot; ng-click=&quot;removeExp($index)&quot;&gt;X&lt;/a&gt; ]&#10;     &lt;tt&gt;{{expr}}&lt;/tt&gt; =&gt; &lt;span ng-bind=&quot;$parent.$eval(expr)&quot;&gt;&lt;/span&gt;&#10;    &lt;/li&gt;&#10;  &lt;/ul&gt;&#10;&lt;/div&gt;</code></pre>
     </div>
   
     <div class="runnable-example-file" 
       name="script.js"
       language="js"
       type="js">
-      <pre><code>function Cntl2($scope) {&#10;  var exprs = $scope.exprs = [];&#10;  $scope.expr = &#39;3*10|currency&#39;;&#10;  $scope.addExp = function(expr) {&#10;    exprs.push(expr);&#10;  };&#10;&#10;  $scope.removeExp = function(index) {&#10;    exprs.splice(index, 1);&#10;  };&#10;}</code></pre>
+      <pre><code>angular.module(&#39;expressionExample&#39;, [])&#10;  .controller(&#39;ExampleController&#39;, [&#39;$scope&#39;, function($scope) {&#10;    var exprs = $scope.exprs = [];&#10;    $scope.expr = &#39;3*10|currency&#39;;&#10;    $scope.addExp = function(expr) {&#10;      exprs.push(expr);&#10;    };&#10;&#10;    $scope.removeExp = function(index) {&#10;      exprs.splice(index, 1);&#10;    };&#10;  }]);</code></pre>
     </div>
   
     <div class="runnable-example-file" 
       name="protractor.js"
       type="protractor"
       language="js">
-      <pre><code>it(&#39;should allow user expression testing&#39;, function() {&#10;  element(by.css(&#39;.expressions button&#39;)).click();&#10;  var lis = element(by.css(&#39;.expressions ul&#39;)).element.all(by.repeater(&#39;expr in exprs&#39;));&#10;  expect(lis.count()).toBe(1);&#10;  expect(lis.get(0).getText()).toEqual(&#39;[ X ] 3*10|currency =&gt; $30.00&#39;);&#10;});</code></pre>
+      <pre><code>it(&#39;should allow user expression testing&#39;, function() {&#10;  element(by.css(&#39;.expressions button&#39;)).click();&#10;  var lis = element(by.css(&#39;.expressions ul&#39;)).all(by.repeater(&#39;expr in exprs&#39;));&#10;  expect(lis.count()).toBe(1);&#10;  expect(lis.get(0).getText()).toEqual(&#39;[ X ] 3*10|currency =&gt; $30.00&#39;);&#10;});</code></pre>
     </div>
   
 
@@ -113,21 +114,22 @@ provide mockable access to globals.</p>
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
   <div class="runnable-example"
-      path="examples/example-example92">
+      path="examples/example-example92"
+      module="expressionExample">
 
    
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
       type="html">
-      <pre><code>&lt;div class=&quot;example2&quot; ng-controller=&quot;Cntl1&quot;&gt;&#10;  Name: &lt;input ng-model=&quot;name&quot; type=&quot;text&quot;/&gt;&#10;  &lt;button ng-click=&quot;greet()&quot;&gt;Greet&lt;/button&gt;&#10;  &lt;button ng-click=&quot;window.alert(&#39;Should not see me&#39;)&quot;&gt;Won&#39;t greet&lt;/button&gt;&#10;&lt;/div&gt;</code></pre>
+      <pre><code>&lt;div class=&quot;example2&quot; ng-controller=&quot;ExampleController&quot;&gt;&#10;  Name: &lt;input ng-model=&quot;name&quot; type=&quot;text&quot;/&gt;&#10;  &lt;button ng-click=&quot;greet()&quot;&gt;Greet&lt;/button&gt;&#10;  &lt;button ng-click=&quot;window.alert(&#39;Should not see me&#39;)&quot;&gt;Won&#39;t greet&lt;/button&gt;&#10;&lt;/div&gt;</code></pre>
     </div>
   
     <div class="runnable-example-file" 
       name="script.js"
       language="js"
       type="js">
-      <pre><code>function Cntl1($window, $scope){&#10;  $scope.name = &#39;World&#39;;&#10;&#10;  $scope.greet = function() {&#10;    $window.alert(&#39;Hello &#39; + $scope.name);&#10;  };&#10;}</code></pre>
+      <pre><code>angular.module(&#39;expressionExample&#39;, [])&#10;  .controller(&#39;ExampleController&#39;, [&#39;$window&#39;, &#39;$scope&#39;, function($window, $scope) {&#10;    $scope.name = &#39;World&#39;;&#10;&#10;    $scope.greet = function() {&#10;      $window.alert(&#39;Hello &#39; + $scope.name);&#10;    };&#10;  }]);</code></pre>
     </div>
   
     <div class="runnable-example-file" 

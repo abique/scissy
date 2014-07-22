@@ -465,7 +465,8 @@ which push $location updates in both directions. For example:
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
   <div class="runnable-example"
-      path="examples/example-example70">
+      path="examples/example-example70"
+      module="locationExample">
 
    
     <div class="runnable-example-file" 
@@ -479,7 +480,7 @@ which push $location updates in both directions. For example:
       name="script.js"
       language="js"
       type="js">
-      <pre><code>function LocationController($scope, $location) {&#10;$scope.$watch(&#39;locationPath&#39;, function(path) {&#10;  $location.path(path);&#10;});&#10;$scope.$watch(function() {&#10;  return $location.path();&#10;}, function(path) {&#10;  $scope.locationPath = path;&#10;});&#10;}</code></pre>
+      <pre><code>angular.module(&#39;locationExample&#39;, [])&#10;.controller(&#39;LocationController&#39;, [&#39;$scope&#39;, &#39;$location&#39;, function ($scope, $location) {&#10;  $scope.$watch(&#39;locationPath&#39;, function(path) {&#10;    $location.path(path);&#10;  });&#10;  $scope.$watch(function() {&#10;    return $location.path();&#10;  }, function(path) {&#10;    $scope.locationPath = path;&#10;  });&#10;}]);</code></pre>
     </div>
   
 

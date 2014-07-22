@@ -58,8 +58,11 @@ being the element on which the <code>ngApp</code> directive was defined.</p>
 </li>
 <li><p>Double-curly binding with an expression:</p>
 <pre><code>    Nothing here {{&#39;yet&#39; + &#39;!&#39;}}</code></pre>
-<p>This line demonstrates the core feature of Angular&#39;s templating capabilities – a binding, denoted
-by double-curlies <code>{{ }}</code> as well as a simple expression <code>&#39;yet&#39; + &#39;!&#39;</code> used in this binding.</p>
+<p>This line demonstrates two core features of Angular&#39;s templating capabilities:</p>
+<ul>
+<li>a binding, denoted by double-curlies <code>{{ }}</code></li>
+<li>a simple expression <code>&#39;yet&#39; + &#39;!&#39;</code> used in this binding.</li>
+</ul>
 <p>The binding tells Angular that it should evaluate an expression and insert the result into the
 DOM in place of the binding. Rather than a one-time insert, as we&#39;ll see in the next steps, a
 binding will result in efficient continuous updates whenever the result of the expression

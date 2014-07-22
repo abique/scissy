@@ -142,17 +142,23 @@ where injection is supported.</p>
 and <code>config</code> blocks for a module.</p>
 <ul>
 <li><p>Components such as services, directives, filters and animations are defined by an injectable factory
-method or constructor function.  These components can be injected with &quot;service&quot; components as
-dependencies.</p>
-</li>
-<li><p>The <code>run</code> and <code>config</code> methods accept a function, which can also be injected with &quot;service&quot;
+method or constructor function.  These components can be injected with &quot;service&quot; and &quot;value&quot;
 components as dependencies.</p>
 </li>
+<li><p>The <code>run</code> method accepts a function, which can be injected with &quot;service&quot;, &quot;value&quot; and &quot;constant&quot;
+components as dependencies. Note that you cannot inject &quot;providers&quot; into <code>run</code> blocks.</p>
+</li>
+<li><p>The <code>config</code> method accepts a function, which can be injected with &quot;provider&quot; and &quot;constant&quot;
+components as dependencies.  Note that you cannot inject &quot;service&quot; or &quot;value&quot; components into
+configuration</p>
+</li>
 <li><p>Controllers are defined by a constructor function, which can be injected with any of the &quot;service&quot;
-components as dependencies, but they can also be provided with special dependencies. See &quot;DI in
-Controllers&quot; below.</p>
+and &quot;value&quot; components as dependencies, but they can also be provided with special dependencies. See
+<a href="guide/di#controllers">Controllers</a> below for a list of these special dependencies.</p>
 </li>
 </ul>
+<p>See <a href="guide/module#module-loading-dependencies">Modules</a> for more details about injecting dependencies
+into <code>run</code> and <code>config</code> blocks.</p>
 <h3 id="factory-methods">Factory Methods</h3>
 <p>Factory methods are responsible for creating most objects in Angular. Examples are directives,
 services, and filters. The factory methods are registered with the module, and the recommended way
