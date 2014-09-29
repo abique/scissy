@@ -1,8 +1,10 @@
-describe("module:ng.input:input[url]", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-url-input-directive/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-url-input-directive/index-jquery.html");
   });
-
+  
   var text = element(by.binding('text'));
   var valid = element(by.binding('myForm.input.$valid'));
   var input = element(by.model('text'));

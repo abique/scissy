@@ -1,4 +1,4 @@
-<a href='http://github.com/angular/angular.js/edit/master/docs/content/guide/compiler.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/docs/content/guide/compiler.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
 <div class="alert alert-warning">
@@ -47,10 +47,11 @@ cloned template only needs to be compiled once, and then linked once for each cl
 <p>A directive is a behavior which should be triggered when specific HTML constructs are encountered
 during the compilation process. The directives can be placed in element names, attributes, class
 names, as well as comments. Here are some equivalent examples of invoking the <a href="api/ng/directive/ngBind"><code>ng-bind</code></a> directive.</p>
-<pre><code class="lang-html">  &lt;span ng-bind=&quot;exp&quot;&gt;&lt;/span&gt;
-  &lt;span class=&quot;ng-bind: exp;&quot;&gt;&lt;/span&gt;
-  &lt;ng-bind&gt;&lt;/ng-bind&gt;
-  &lt;!-- directive: ng-bind exp --&gt;</code></pre>
+<pre><code class="lang-html">&lt;span ng-bind=&quot;exp&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;ng-bind: exp;&quot;&gt;&lt;/span&gt;
+&lt;ng-bind&gt;&lt;/ng-bind&gt;
+&lt;!-- directive: ng-bind exp --&gt;
+</code></pre>
 <p>A directive is just a function which executes when the compiler encounters it in the DOM. See <a href="api/ng/provider/$compileProvider#directive">directive API</a> for in-depth documentation on how
 to write directives.</p>
 <p>Here is a directive which makes any element draggable. Notice the <code>draggable</code> attribute on the
@@ -58,14 +59,15 @@ to write directives.</p>
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example73')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example72')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example73"
+      path="examples/example-example72"
       module="drag">
 
-   
+  
     <div class="runnable-example-file" 
       name="script.js"
       language="js"
@@ -81,9 +83,10 @@ to write directives.</p>
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example73/index.html" name="example-example73"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example72/index.html" name="example-example72"></iframe>
   </div>
 </div>
+
 
 </p>
 <p>The presence of the <code>draggable</code> attribute on any element gives the element new behavior.
@@ -137,23 +140,24 @@ as each directive is configured to do.</p>
 a model on the compiled scope will be reflected in the DOM.</p>
 <p>Below is the corresponding code using the <code>$compile</code> service.
 This should help give you an idea of what Angular does internally.</p>
-<pre><code class="lang-js">  var $compile = ...; // injected into your code
-  var scope = ...;
-  var parent = ...; // DOM element where the compiled template can be appended
+<pre><code class="lang-js">var $compile = ...; // injected into your code
+var scope = ...;
+var parent = ...; // DOM element where the compiled template can be appended
 
-  var html = &#39;&lt;div ng-bind=&quot;exp&quot;&gt;&lt;/div&gt;&#39;;
+var html = &#39;&lt;div ng-bind=&quot;exp&quot;&gt;&lt;/div&gt;&#39;;
 
-  // Step 1: parse HTML into DOM element
-  var template = angular.element(html);
+// Step 1: parse HTML into DOM element
+var template = angular.element(html);
 
-  // Step 2: compile the template
-  var linkFn = $compile(template);
+// Step 2: compile the template
+var linkFn = $compile(template);
 
-  // Step 3: link the compiled template with the scope.
-  var element = linkFn(scope);
+// Step 3: link the compiled template with the scope.
+var element = linkFn(scope);
 
-  // Step 4: Append to DOM (optional)
-  parent.appendChild(element);</code></pre>
+// Step 4: Append to DOM (optional)
+parent.appendChild(element);
+</code></pre>
 <h3 id="the-difference-between-compile-and-link">The difference between Compile and Link</h3>
 <p>At this point you may wonder why the compile process has separate compile and link phases. The
 short answer is that compile and link separation is needed any time a change in a model causes
@@ -175,7 +179,8 @@ moved to the compile function for performance reasons.
   &lt;li ng-repeat=&quot;action in user.actions&quot;&gt;
     {{action.description}}
   &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+&lt;/ul&gt;
+</code></pre>
 <p>When the above example is compiled, the compiler visits every node and looks for directives.</p>
 <p><code>{{user.name}}</code> matches the <a href="api/ng/service/$interpolate">interpolation directive</a>
 and <code>ng-repeat</code> matches the <a href="api/ng/directive/ngRepeat"><code>ngRepeat</code> directive</a>.</p>
@@ -217,27 +222,29 @@ on the cloned <code>&lt;li&gt;</code>.</p>
 <p>One of the most common use cases for directives is to create reusable components.</p>
 <p>Below is a pseudo code showing how a simplified dialog component may work.</p>
 <pre><code class="lang-html">&lt;div&gt;
-  &lt;button ng-click=&quot;show=true&quot;&gt;show&lt;/button&gt;
+&lt;button ng-click=&quot;show=true&quot;&gt;show&lt;/button&gt;
 
-  &lt;dialog title=&quot;Hello {{username}}.&quot;
-          visible=&quot;show&quot;
-          on-cancel=&quot;show = false&quot;
-          on-ok=&quot;show = false; doSomething()&quot;&gt;
-     Body goes here: {{username}} is {{title}}.
-  &lt;/dialog&gt;
-&lt;/div&gt;</code></pre>
+&lt;dialog title=&quot;Hello {{username}}.&quot;
+        visible=&quot;show&quot;
+        on-cancel=&quot;show = false&quot;
+        on-ok=&quot;show = false; doSomething()&quot;&gt;
+   Body goes here: {{username}} is {{title}}.
+&lt;/dialog&gt;
+&lt;/div&gt;
+</code></pre>
 <p>Clicking on the &quot;show&quot; button will open the dialog. The dialog will have a title, which is
 data bound to <code>username</code>, and it will also have a body which we would like to transclude
 into the dialog.</p>
 <p>Here is an example of what the template definition for the <code>dialog</code> widget may look like.</p>
 <pre><code class="lang-html">&lt;div ng-show=&quot;visible&quot;&gt;
-  &lt;h3&gt;{{title}}&lt;/h3&gt;
-  &lt;div class=&quot;body&quot; ng-transclude&gt;&lt;/div&gt;
-  &lt;div class=&quot;footer&quot;&gt;
-    &lt;button ng-click=&quot;onOk()&quot;&gt;Save changes&lt;/button&gt;
-    &lt;button ng-click=&quot;onCancel()&quot;&gt;Close&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+&lt;h3&gt;{{title}}&lt;/h3&gt;
+&lt;div class=&quot;body&quot; ng-transclude&gt;&lt;/div&gt;
+&lt;div class=&quot;footer&quot;&gt;
+  &lt;button ng-click=&quot;onOk()&quot;&gt;Save changes&lt;/button&gt;
+  &lt;button ng-click=&quot;onCancel()&quot;&gt;Close&lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
 <p>This will not render properly, unless we do some scope magic.</p>
 <p>The first issue we have to solve is that the dialog box template expects <code>title</code> to be defined.
 But we would like the template&#39;s scope property <code>title</code> to be the result of interpolating the
@@ -245,12 +252,13 @@ But we would like the template&#39;s scope property <code>title</code> to be the
 the <code>onOk</code> and <code>onCancel</code> functions to be present in the scope. This limits the usefulness of the
 widget. To solve the mapping issue we use the <code>locals</code> to create local variables which the template
 expects as follows:</p>
-<pre><code class="lang-js">  scope: {
-    title: &#39;@&#39;,             // the title uses the data-binding from the parent scope
-    onOk: &#39;&amp;&#39;,              // create a delegate onOk function
-    onCancel: &#39;&amp;&#39;,          // create a delegate onCancel function
-    visible: &#39;=&#39;            // set up visible to accept data-binding
-  }</code></pre>
+<pre><code class="lang-js">scope: {
+  title: &#39;@&#39;,             // the title uses the data-binding from the parent scope
+  onOk: &#39;&amp;&#39;,              // create a delegate onOk function
+  onCancel: &#39;&amp;&#39;,          // create a delegate onCancel function
+  visible: &#39;=&#39;            // set up visible to accept data-binding
+}
+</code></pre>
 <p>Creating local properties on widget scope creates two problems:</p>
 <ol>
 <li><p>isolation - if the user forgets to set <code>title</code> attribute of the dialog widget the dialog
@@ -279,6 +287,7 @@ scope: {
     visible: &#39;=&#39;            // set up visible to accept data-binding
 },
 restrict: &#39;E&#39;,
-replace: true</code></pre>
+replace: true
+</code></pre>
 
 

@@ -1,8 +1,10 @@
-describe("module:ng.service:$sce", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-example62/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-example62/index-jquery.html");
   });
-
+  
 describe('SCE doc demo', function() {
   it('should sanitize untrusted values', function() {
     expect(element.all(by.css('.htmlComment')).first().getInnerHtml())

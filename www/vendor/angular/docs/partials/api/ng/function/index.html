@@ -43,10 +43,11 @@ to <code>dst</code>. You can specify multiple <code>src</code> objects.</p>
         <td><a href="api/ng/function/angular.noop">angular.noop</a></td>
         <td><p>A function that performs no operations. This function can be useful when writing code in the
 functional style.</p>
-<pre><code class="lang-js">     function foo(callback) {
-       var result = calculateResult();
-       (callback || angular.noop)(result);
-     }</code></pre>
+<pre><code class="lang-js">function foo(callback) {
+  var result = calculateResult();
+  (callback || angular.noop)(result);
+}
+</code></pre>
 </td>
       </tr>
       

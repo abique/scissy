@@ -1,8 +1,10 @@
-describe("module:ng.directive:ngRepeat", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-example41/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-example41/index-jquery.html");
   });
-
+  
 var friends = element.all(by.repeater('friend in friends'));
 
 it('should render initial data set', function() {

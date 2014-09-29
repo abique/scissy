@@ -5,7 +5,7 @@
   <title>Example - example-example-jquery</title>
   
 
-  <script src="../../components/jquery-1.10.2/jquery.js"></script>
+  <script src="../../components/jquery-2.1.1/jquery.js"></script>
   <script src="../../../angular.js"></script>
   
 
@@ -26,7 +26,7 @@ Gender: <input type="radio" ng-model="user.gender" value="male" />male
 </div>
 
 <script>
- angular.module('copyExample')
+ angular.module('copyExample', [])
    .controller('ExampleController', ['$scope', function($scope) {
      $scope.master= {};
 

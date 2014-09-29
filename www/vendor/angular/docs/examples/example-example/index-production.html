@@ -5,7 +5,7 @@
   <title>Example - example-example-production</title>
   
 
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.24/angular.min.js"></script>
   
 
   
@@ -25,7 +25,7 @@ Gender: <input type="radio" ng-model="user.gender" value="male" />male
 </div>
 
 <script>
- angular.module('copyExample')
+ angular.module('copyExample', [])
    .controller('ExampleController', ['$scope', function($scope) {
      $scope.master= {};
 

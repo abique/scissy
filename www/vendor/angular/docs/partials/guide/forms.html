@@ -1,4 +1,4 @@
-<a href='http://github.com/angular/angular.js/edit/master/docs/content/guide/forms.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/docs/content/guide/forms.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
 <p>Controls (<code>input</code>, <code>select</code>, <code>textarea</code>) are ways for a user to enter data.
@@ -14,14 +14,15 @@ In addition it provides an <a href="api/ng/type/ngModel.NgModelController">API</
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example96')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example95')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example96"
+      path="examples/example-example95"
       module="formExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -30,9 +31,10 @@ In addition it provides an <a href="api/ng/type/ngModel.NgModelController">API</
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example96/index.html" name="example-example96"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example95/index.html" name="example-example95"></iframe>
   </div>
 </div>
+
 
 </p>
 <p>Note that <code>novalidate</code> is used to disable browser&#39;s native form validation.</p>
@@ -50,14 +52,15 @@ This ensures that the user is not distracted with an error until after interacti
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example97')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example96')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example97"
+      path="examples/example-example96"
       module="formExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -66,9 +69,10 @@ This ensures that the user is not distracted with an error until after interacti
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example97/index.html" name="example-example97"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example96/index.html" name="example-example96"></iframe>
   </div>
 </div>
+
 
 </p>
 <h1 id="binding-to-form-and-control-state">Binding to form and control state</h1>
@@ -89,19 +93,20 @@ the view using the standard binding primitives.</p>
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example98')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example97')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example98"
+      path="examples/example-example97"
       module="formExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
       type="html">
-      <pre><code>&lt;div ng-controller=&quot;Controller&quot;&gt;&#10;  &lt;form name=&quot;form&quot; class=&quot;css-form&quot; novalidate&gt;&#10;    Name:&#10;      &lt;input type=&quot;text&quot; ng-model=&quot;user.name&quot; name=&quot;uName&quot; required /&gt;&lt;br /&gt;&#10;    E-mail:&#10;      &lt;input type=&quot;email&quot; ng-model=&quot;user.email&quot; name=&quot;uEmail&quot; required/&gt;&lt;br /&gt;&#10;    &lt;div ng-show=&quot;form.uEmail.$dirty &amp;&amp; form.uEmail.$invalid&quot;&gt;Invalid:&#10;      &lt;span ng-show=&quot;form.uEmail.$error.required&quot;&gt;Tell us your email.&lt;/span&gt;&#10;      &lt;span ng-show=&quot;form.uEmail.$error.email&quot;&gt;This is not a valid email.&lt;/span&gt;&#10;    &lt;/div&gt;&#10;&#10;    Gender: &lt;input type=&quot;radio&quot; ng-model=&quot;user.gender&quot; value=&quot;male&quot; /&gt;male&#10;    &lt;input type=&quot;radio&quot; ng-model=&quot;user.gender&quot; value=&quot;female&quot; /&gt;female&lt;br /&gt;&#10;&#10;    &lt;input type=&quot;checkbox&quot; ng-model=&quot;user.agree&quot; name=&quot;userAgree&quot; required /&gt;&#10;    I agree: &lt;input ng-show=&quot;user.agree&quot; type=&quot;text&quot; ng-model=&quot;user.agreeSign&quot;&#10;              required /&gt;&lt;br /&gt;&#10;    &lt;div ng-show=&quot;!user.agree || !user.agreeSign&quot;&gt;Please agree and sign.&lt;/div&gt;&#10;&#10;    &lt;button ng-click=&quot;reset()&quot; ng-disabled=&quot;isUnchanged(user)&quot;&gt;RESET&lt;/button&gt;&#10;    &lt;button ng-click=&quot;update(user)&quot;&#10;            ng-disabled=&quot;form.$invalid || isUnchanged(user)&quot;&gt;SAVE&lt;/button&gt;&#10;  &lt;/form&gt;&#10;&lt;/div&gt;</code></pre>
+      <pre><code>&lt;div ng-controller=&quot;ExampleController&quot;&gt;&#10;  &lt;form name=&quot;form&quot; class=&quot;css-form&quot; novalidate&gt;&#10;    Name:&#10;      &lt;input type=&quot;text&quot; ng-model=&quot;user.name&quot; name=&quot;uName&quot; required /&gt;&lt;br /&gt;&#10;    E-mail:&#10;      &lt;input type=&quot;email&quot; ng-model=&quot;user.email&quot; name=&quot;uEmail&quot; required/&gt;&lt;br /&gt;&#10;    &lt;div ng-show=&quot;form.uEmail.$dirty &amp;&amp; form.uEmail.$invalid&quot;&gt;Invalid:&#10;      &lt;span ng-show=&quot;form.uEmail.$error.required&quot;&gt;Tell us your email.&lt;/span&gt;&#10;      &lt;span ng-show=&quot;form.uEmail.$error.email&quot;&gt;This is not a valid email.&lt;/span&gt;&#10;    &lt;/div&gt;&#10;&#10;    Gender: &lt;input type=&quot;radio&quot; ng-model=&quot;user.gender&quot; value=&quot;male&quot; /&gt;male&#10;    &lt;input type=&quot;radio&quot; ng-model=&quot;user.gender&quot; value=&quot;female&quot; /&gt;female&lt;br /&gt;&#10;&#10;    &lt;input type=&quot;checkbox&quot; ng-model=&quot;user.agree&quot; name=&quot;userAgree&quot; required /&gt;&#10;    I agree: &lt;input ng-show=&quot;user.agree&quot; type=&quot;text&quot; ng-model=&quot;user.agreeSign&quot;&#10;              required /&gt;&lt;br /&gt;&#10;    &lt;div ng-show=&quot;!user.agree || !user.agreeSign&quot;&gt;Please agree and sign.&lt;/div&gt;&#10;&#10;    &lt;button ng-click=&quot;reset()&quot; ng-disabled=&quot;isUnchanged(user)&quot;&gt;RESET&lt;/button&gt;&#10;    &lt;button ng-click=&quot;update(user)&quot;&#10;            ng-disabled=&quot;form.$invalid || isUnchanged(user)&quot;&gt;SAVE&lt;/button&gt;&#10;  &lt;/form&gt;&#10;&lt;/div&gt;</code></pre>
     </div>
   
     <div class="runnable-example-file" 
@@ -112,9 +117,10 @@ the view using the standard binding primitives.</p>
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example98/index.html" name="example-example98"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example97/index.html" name="example-example97"></iframe>
   </div>
 </div>
+
 
 </p>
 <h1 id="custom-validation">Custom Validation</h1>
@@ -125,11 +131,11 @@ To get a hold of the controller the directive specifies a dependency as shown in
 The validation can occur in two places:</p>
 <ul>
 <li><p><strong>Model to View update</strong> -
-Whenever the bound model changes, all functions in <a href="api/ng/type/ngModel.NgModelController#properties_$formatters">NgModelController#$formatters</a> array are pipe-lined, so that each of these functions has an opportunity to format the value and change validity state of the form control through <a href="api/ng/method/$setValidity">NgModelController#$setValidity</a>.</p>
+Whenever the bound model changes, all functions in <a href="api/ng/type/ngModel.NgModelController#properties_$formatters">NgModelController#$formatters</a> array are pipe-lined, so that each of these functions has an opportunity to format the value and change validity state of the form control through <a href="api/ng/type/ngModel.NgModelController#$setValidity">NgModelController#$setValidity</a>.</p>
 </li>
 <li><p><strong>View to Model update</strong> -
-In a similar way, whenever a user interacts with a control it calls <a href="api/ng/method/$setViewValue">NgModelController#$setViewValue</a>.
-This in turn pipelines all functions in the <a href="api/ng/type/ngModel.NgModelController#properties_$parsers">NgModelController#$parsers</a> array, so that each of these functions has an opportunity to convert the value and change validity state of the form control through <a href="api/ng/method/$setValidity">NgModelController#$setValidity</a>.</p>
+In a similar way, whenever a user interacts with a control it calls <a href="api/ng/type/ngModel.NgModelController#$setViewValue">NgModelController#$setViewValue</a>.
+This in turn pipelines all functions in the <a href="api/ng/type/ngModel.NgModelController#properties_$parsers">NgModelController#$parsers</a> array, so that each of these functions has an opportunity to convert the value and change validity state of the form control through <a href="api/ng/type/ngModel.NgModelController#$setValidity">NgModelController#$setValidity</a>.</p>
 </li>
 </ul>
 <p>In the following example we create two directives.</p>
@@ -137,7 +143,7 @@ This in turn pipelines all functions in the <a href="api/ng/type/ngModel.NgModel
 <li><p>The first one is <code>integer</code> and it validates whether the input is a valid integer.
 For example <code>1.23</code> is an invalid value, since it contains a fraction.
 Note that we unshift the array instead of pushing.
-This is because we want to be first parser and consume the control string value, as we need to execute the validation function before a conversion to number occurs.</p>
+This is because we want it to be the first parser and consume the control string value, as we need to execute the validation function before a conversion to number occurs.</p>
 </li>
 <li><p>The second directive is a <code>smart-float</code>.
 It parses both <code>1.2</code> and <code>1,2</code> into a valid float number <code>1.2</code>.
@@ -147,14 +153,15 @@ Note that we can&#39;t use input type <code>number</code> here as HTML5 browsers
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example99')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example98')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example99"
+      path="examples/example-example98"
       module="form-example1">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -170,9 +177,10 @@ Note that we can&#39;t use input type <code>number</code> here as HTML5 browsers
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example99/index.html" name="example-example99"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example98/index.html" name="example-example98"></iframe>
   </div>
 </div>
+
 
 </p>
 <h1 id="implementing-custom-form-controls-using-ngmodel-">Implementing custom form controls (using <code>ngModel</code>)</h1>
@@ -188,14 +196,15 @@ However, if you need more flexibility, you can write your own form control as a 
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example100')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example99')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example100"
+      path="examples/example-example99"
       module="form-example2">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -211,9 +220,10 @@ However, if you need more flexibility, you can write your own form control as a 
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example100/index.html" name="example-example100"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example99/index.html" name="example-example99"></iframe>
   </div>
 </div>
+
 
 </p>
 

@@ -1,8 +1,10 @@
-describe("module:ng.directive:ngSubmit", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-example32/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-example32/index-jquery.html");
   });
-
+  
   it('should check ng-submit', function() {
     expect(element(by.binding('list')).getText()).toBe('list=[]');
     element(by.css('#submit')).click();

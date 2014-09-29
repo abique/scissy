@@ -1,8 +1,8 @@
   angular.module('scopeExample', [])
-    .controller('MyController', ['$scope', function($scope) {
-      $scope.username = 'World';
-
-      $scope.sayHello = function() {
-        $scope.greeting = 'Hello ' + $scope.username + '!';
-      };
+    .controller('GreetController', ['$scope', '$rootScope', function($scope, $rootScope) {
+      $scope.name = 'World';
+      $rootScope.department = 'Angular';
+    }])
+    .controller('ListController', ['$scope', function($scope) {
+      $scope.names = ['Igor', 'Misko', 'Vojta'];
     }]);

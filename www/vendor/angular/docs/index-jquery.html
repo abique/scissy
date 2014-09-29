@@ -33,7 +33,7 @@
       addTag('link', {rel: 'stylesheet', href: 'css/animations.css', type: 'text/css'});
       
 
-      addTag('script', {src: 'components/jquery-1.10.2/jquery.js' }, sync);
+      addTag('script', {src: 'components/jquery-2.1.1/jquery.js' }, sync);
       addTag('script', {src: '../angular.min.js' }, sync);
       addTag('script', {src: '../angular-resource.min.js' }, sync);
       addTag('script', {src: '../angular-route.min.js' }, sync);
@@ -41,7 +41,7 @@
       addTag('script', {src: '../angular-sanitize.min.js' }, sync);
       addTag('script', {src: '../angular-touch.min.js' }, sync);
       addTag('script', {src: '../angular-animate.min.js' }, sync);
-      addTag('script', {src: 'components/marked-0.3.1/lib/marked.js' }, sync);
+      addTag('script', {src: 'components/marked-0.3.2/lib/marked.js' }, sync);
       addTag('script', {src: 'js/angular-bootstrap/bootstrap.js' }, sync);
       addTag('script', {src: 'js/angular-bootstrap/bootstrap-prettify.js' }, sync);
       addTag('script', {src: 'js/angular-bootstrap/dropdown-toggle.js' }, sync);
@@ -196,7 +196,7 @@
         <div class="container main-grid main-header-grid">
           <div class="grid-left">
             <div ng-controller="DocsVersionsCtrl" class="picker version-picker">
-              <select ng-options="v as ('v' + v.version + (v.isSnapshot ? ' (snapshot)' : '')) group by (v.isStable?'Stable':'Unstable') for v in docs_versions"
+              <select ng-options="v as ('v' + v.version + (v.isSnapshot ? ' (snapshot)' : '')) group by getGroupName(v) for v in docs_versions"
                       ng-model="docs_version"
                       ng-change="jumpToDocsVersion(docs_version)"
                       class="docs-version-jump">

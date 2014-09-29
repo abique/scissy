@@ -1,8 +1,10 @@
-describe("module:ng.directive:input", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-input-directive/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-input-directive/index-jquery.html");
   });
-
+  
   var user = element(by.binding('{{user}}'));
   var userNameValid = element(by.binding('myForm.userName.$valid'));
   var lastNameValid = element(by.binding('myForm.lastName.$valid'));

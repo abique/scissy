@@ -1,7 +1,7 @@
-<a href='http://github.com/angular/angular.js/edit/master/docs/content/error/$controller/noscp.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/docs/content/error/$controller/noscp.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
-<h1>Error: $controller:noscp
+<h1>Error: error:noscp
   <div><span class='hint'>Missing $scope object</span></div>
 </h1>
 
@@ -15,9 +15,11 @@
 <p>Example of incorrect usage that leads to this error:</p>
 <pre><code>$controller(MyController);
 //or
-$controller(MyController, {scope: newScope});</code></pre>
+$controller(MyController, {scope: newScope});
+</code></pre>
 <p>To fix the example above please provide a scope to the $controller call:</p>
-<pre><code>$controller(MyController, {$scope, newScope});</code></pre>
+<pre><code>$controller(MyController, {$scope, newScope});
+</code></pre>
 <p>Please consult the <a href="api/ng/service/$controller">$controller</a> service api docs to learn more.</p>
 
 </div>

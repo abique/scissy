@@ -1,8 +1,10 @@
-describe("module:ng.input:input[radio]", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-radio-input-directive/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-radio-input-directive/index-jquery.html");
   });
-
+  
   it('should change state', function() {
     var color = element(by.binding('color'));
 

@@ -1,4 +1,4 @@
-<a href='http://github.com/angular/angular.js/edit/master/docs/content/guide/filter.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/docs/content/guide/filter.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
 <p>A filter formats the value of an expression for display to the user. They can be used in view templates,
@@ -6,14 +6,17 @@ controllers or services and it is easy to define your own filter.</p>
 <p>The underlying API is the <a href="api/ng/provider/$filterProvider"><code>filterProvider</code></a>.</p>
 <h2 id="using-filters-in-view-templates">Using filters in view templates</h2>
 <p>Filters can be applied to expressions in view templates using the following syntax:</p>
-<pre><code>    {{ expression | filter }}</code></pre>
+<pre><code>{{ expression | filter }}
+</code></pre>
 <p>E.g. the markup <code>{{ 12 | currency }}</code> formats the number 12 as a currency using the <a href="api/ng/filter/currency"><code>currency</code></a>
 filter. The resulting value is <code>$12.00</code>.</p>
 <p>Filters can be applied to the result of another filter. This is called &quot;chaining&quot; and uses
 the following syntax:</p>
-<pre><code>    {{ expression | filter1 | filter2 | ... }}</code></pre>
+<pre><code>{{ expression | filter1 | filter2 | ... }}
+</code></pre>
 <p>Filters may have arguments. The syntax for this is</p>
-<pre><code>    {{ expression | filter:argument1:argument2:... }}</code></pre>
+<pre><code>{{ expression | filter:argument1:argument2:... }}
+</code></pre>
 <p>E.g. the markup <code>{{ 1234 | number:2 }}</code> formats the number 1234 with 2 decimal points using the
 <a href="api/ng/filter/number"><code>number</code></a> filter. The resulting value is <code>1,234.00</code>.</p>
 <h2 id="using-filters-in-controllers-services-and-directives">Using filters in controllers, services, and directives</h2>
@@ -33,14 +36,15 @@ or the filter expression is changed).</p>
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example94')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example93')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example94"
+      path="examples/example-example93"
       module="FilterInControllerModule">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -56,9 +60,10 @@ or the filter expression is changed).</p>
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example94/index.html" name="example-example94"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example93/index.html" name="example-example93"></iframe>
   </div>
 </div>
+
 
 </p>
 <h2 id="creating-custom-filters">Creating custom filters</h2>
@@ -72,14 +77,15 @@ text upper-case.</p>
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example95')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example94')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example95"
+      path="examples/example-example94"
       module="myReverseModule">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -95,9 +101,10 @@ text upper-case.</p>
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example95/index.html" name="example-example95"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example94/index.html" name="example-example94"></iframe>
   </div>
 </div>
+
 
 </p>
 <h2 id="testing-custom-filters">Testing custom filters</h2>

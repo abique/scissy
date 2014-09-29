@@ -1,8 +1,10 @@
-describe("module:ng.directive:ngInclude", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-example37/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-example37/index-jquery.html");
   });
-
+  
   var templateSelect = element(by.model('template'));
   var includeElem = element(by.css('[ng-include]'));
 

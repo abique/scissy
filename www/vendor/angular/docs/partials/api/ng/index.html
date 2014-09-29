@@ -1,4 +1,4 @@
-<a href='http://github.com/angular/angular.js/edit/master/src/Angular.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/src/Angular.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
 <h1>
@@ -57,10 +57,11 @@ to <code>dst</code>. You can specify multiple <code>src</code> objects.</p>
         <td><a href="api/ng/function/angular.noop">angular.noop</a></td>
         <td><p>A function that performs no operations. This function can be useful when writing code in the
 functional style.</p>
-<pre><code class="lang-js">     function foo(callback) {
-       var result = calculateResult();
-       (callback || angular.noop)(result);
-     }</code></pre>
+<pre><code class="lang-js">function foo(callback) {
+  var result = calculateResult();
+  (callback || angular.noop)(result);
+}
+</code></pre>
 </td>
       </tr>
       
@@ -245,10 +246,11 @@ text <code>{{hash}}</code> until Angular replaces the expression inside
       
       <tr>
         <td><a href="api/ng/directive/ngDisabled">ngDisabled</a></td>
-        <td><p>The following markup will make the button enabled on Chrome/Firefox but not on IE8 and older IEs:</p>
+        <td><p>We shouldn&#39;t do this, because it will make the button enabled on Chrome/Firefox but not on IE8 and older IEs:</p>
 <pre><code class="lang-html">&lt;div ng-init=&quot;scope = { isDisabled: false }&quot;&gt;
- &lt;button disabled=&quot;{{scope.isDisabled}}&quot;&gt;Disabled&lt;/button&gt;
-&lt;/div&gt;</code></pre>
+&lt;button disabled=&quot;{{scope.isDisabled}}&quot;&gt;Disabled&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
 </td>
       </tr>
       
@@ -593,8 +595,8 @@ and <code>$index</code> is set to the item index or key.</p>
       <tr>
         <td><a href="api/ng/directive/ngShow">ngShow</a></td>
         <td><p>The <code>ngShow</code> directive shows or hides the given HTML element based on the expression
-provided to the ngShow attribute. The element is shown or hidden by removing or adding
-the <code>ng-hide</code> CSS class onto the element. The <code>.ng-hide</code> CSS class is predefined
+provided to the <code>ngShow</code> attribute. The element is shown or hidden by removing or adding
+the <code>.ng-hide</code> CSS class onto the element. The <code>.ng-hide</code> CSS class is predefined
 in AngularJS and sets the display style to none (using an !important flag).
 For CSP mode please add <code>angular-csp.css</code> to your html file (see <a href="api/ng/directive/ngCsp">ngCsp</a>).</p>
 </td>
@@ -603,7 +605,7 @@ For CSP mode please add <code>angular-csp.css</code> to your html file (see <a h
       <tr>
         <td><a href="api/ng/directive/ngHide">ngHide</a></td>
         <td><p>The <code>ngHide</code> directive shows or hides the given HTML element based on the expression
-provided to the ngHide attribute. The element is shown or hidden by removing or adding
+provided to the <code>ngHide</code> attribute. The element is shown or hidden by removing or adding
 the <code>ng-hide</code> CSS class onto the element. The <code>.ng-hide</code> CSS class is predefined
 in AngularJS and sets the display style to none (using an !important flag).
 For CSP mode please add <code>angular-csp.css</code> to your html file (see <a href="api/ng/directive/ngCsp">ngCsp</a>).</p>
@@ -1021,7 +1023,7 @@ that the URLs used for sourcing Angular templates are safe.  Refer <a href="api/
       
       <tr>
         <td><a href="api/ng/input/input[text]">input[text]</a></td>
-        <td><p>Standard HTML text input with angular data binding.</p>
+        <td><p>Standard HTML text input with angular data binding, inherited by most of the <code>input</code> elements.</p>
 </td>
       </tr>
       

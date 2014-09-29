@@ -1,8 +1,10 @@
-describe("module:ng.directive:ngSwitch", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-example45/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-example45/index-jquery.html");
   });
-
+  
   var switchElem = element(by.css('[ng-switch]'));
   var select = element(by.model('selection'));
 

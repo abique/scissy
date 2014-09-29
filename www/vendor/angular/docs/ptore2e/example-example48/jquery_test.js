@@ -1,8 +1,10 @@
-describe("module:ng.directive:select", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-example48/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-example48/index-jquery.html");
   });
-
+  
    it('should check ng-options', function() {
      expect(element(by.binding('{selected_color:myColor}')).getText()).toMatch('red');
      element.all(by.model('myColor')).first().click();

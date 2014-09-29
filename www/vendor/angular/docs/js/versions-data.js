@@ -1,27 +1,125 @@
 // Meta data used by the AngularJS docs app
 angular.module('versionsData', [])
   .value('NG_VERSION', {
-  "raw": "v1.2.20",
+  "raw": "v1.2.25",
   "major": 1,
   "minor": 2,
-  "patch": 20,
+  "patch": 25,
   "prerelease": [],
   "build": [],
-  "version": "1.2.20",
-  "codeName": "accidental-beautification",
-  "full": "1.2.20"
+  "version": "1.2.25",
+  "codeName": "hypnotic-gesticulation",
+  "full": "1.2.25"
 })
   .value('NG_VERSIONS', [
   {
-    "raw": "v1.2.20",
+    "raw": "v1.2.25",
     "major": 1,
     "minor": 2,
-    "patch": 20,
+    "patch": 25,
     "prerelease": [],
     "build": [],
-    "version": "1.2.20",
-    "codeName": "accidental-beautification",
-    "full": "1.2.20"
+    "version": "1.2.25",
+    "codeName": "hypnotic-gesticulation",
+    "full": "1.2.25"
+  },
+  {
+    "raw": "v1.3.0-rc.2",
+    "major": 1,
+    "minor": 3,
+    "patch": 0,
+    "prerelease": [
+      "rc",
+      2
+    ],
+    "build": [],
+    "version": "1.3.0-rc.2",
+    "isStable": false,
+    "docsUrl": "http://code.angularjs.org/1.3.0-rc.2/docs"
+  },
+  {
+    "raw": "v1.3.0-rc.1",
+    "major": 1,
+    "minor": 3,
+    "patch": 0,
+    "prerelease": [
+      "rc",
+      1
+    ],
+    "build": [],
+    "version": "1.3.0-rc.1",
+    "isStable": false,
+    "docsUrl": "http://code.angularjs.org/1.3.0-rc.1/docs"
+  },
+  {
+    "raw": "v1.3.0-rc.0",
+    "major": 1,
+    "minor": 3,
+    "patch": 0,
+    "prerelease": [
+      "rc",
+      0
+    ],
+    "build": [],
+    "version": "1.3.0-rc.0",
+    "isStable": false,
+    "docsUrl": "http://code.angularjs.org/1.3.0-rc.0/docs"
+  },
+  {
+    "raw": "v1.3.0-beta.19",
+    "major": 1,
+    "minor": 3,
+    "patch": 0,
+    "prerelease": [
+      "beta",
+      19
+    ],
+    "build": [],
+    "version": "1.3.0-beta.19",
+    "isStable": false,
+    "docsUrl": "http://code.angularjs.org/1.3.0-beta.19/docs"
+  },
+  {
+    "raw": "v1.3.0-beta.18",
+    "major": 1,
+    "minor": 3,
+    "patch": 0,
+    "prerelease": [
+      "beta",
+      18
+    ],
+    "build": [],
+    "version": "1.3.0-beta.18",
+    "isStable": false,
+    "docsUrl": "http://code.angularjs.org/1.3.0-beta.18/docs"
+  },
+  {
+    "raw": "v1.3.0-beta.17",
+    "major": 1,
+    "minor": 3,
+    "patch": 0,
+    "prerelease": [
+      "beta",
+      17
+    ],
+    "build": [],
+    "version": "1.3.0-beta.17",
+    "isStable": false,
+    "docsUrl": "http://code.angularjs.org/1.3.0-beta.17/docs"
+  },
+  {
+    "raw": "v1.3.0-beta.16",
+    "major": 1,
+    "minor": 3,
+    "patch": 0,
+    "prerelease": [
+      "beta",
+      16
+    ],
+    "build": [],
+    "version": "1.3.0-beta.16",
+    "isStable": false,
+    "docsUrl": "http://code.angularjs.org/1.3.0-beta.16/docs"
   },
   {
     "raw": "v1.3.0-beta.15",
@@ -232,6 +330,61 @@ angular.module('versionsData', [])
     "version": "1.3.0-beta.1",
     "isStable": false,
     "docsUrl": "http://code.angularjs.org/1.3.0-beta.1/docs"
+  },
+  {
+    "raw": "v1.2.24",
+    "major": 1,
+    "minor": 2,
+    "patch": 24,
+    "prerelease": [],
+    "build": [],
+    "version": "1.2.24",
+    "isStable": true,
+    "docsUrl": "http://code.angularjs.org/1.2.24/docs"
+  },
+  {
+    "raw": "v1.2.23",
+    "major": 1,
+    "minor": 2,
+    "patch": 23,
+    "prerelease": [],
+    "build": [],
+    "version": "1.2.23",
+    "isStable": true,
+    "docsUrl": "http://code.angularjs.org/1.2.23/docs"
+  },
+  {
+    "raw": "v1.2.22",
+    "major": 1,
+    "minor": 2,
+    "patch": 22,
+    "prerelease": [],
+    "build": [],
+    "version": "1.2.22",
+    "isStable": true,
+    "docsUrl": "http://code.angularjs.org/1.2.22/docs"
+  },
+  {
+    "raw": "v1.2.21",
+    "major": 1,
+    "minor": 2,
+    "patch": 21,
+    "prerelease": [],
+    "build": [],
+    "version": "1.2.21",
+    "isStable": true,
+    "docsUrl": "http://code.angularjs.org/1.2.21/docs"
+  },
+  {
+    "raw": "v1.2.20",
+    "major": 1,
+    "minor": 2,
+    "patch": 20,
+    "prerelease": [],
+    "build": [],
+    "version": "1.2.20",
+    "isStable": true,
+    "docsUrl": "http://code.angularjs.org/1.2.20/docs"
   },
   {
     "raw": "v1.2.19",

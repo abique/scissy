@@ -1,8 +1,10 @@
-describe("module:ngRoute.service:$route", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-$route-service/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-$route-service/index-jquery.html");
   });
-
+  
   it('should load and compile correct template', function() {
     element(by.linkText('Moby: Ch1')).click();
     var content = element(by.css('[ng-view]')).getText();

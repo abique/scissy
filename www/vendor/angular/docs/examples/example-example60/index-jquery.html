@@ -5,7 +5,7 @@
   <title>Example - example-example60-jquery</title>
   
 
-  <script src="../../components/jquery-1.10.2/jquery.js"></script>
+  <script src="../../components/jquery-2.1.1/jquery.js"></script>
   <script src="../../../angular.js"></script>
   
 
@@ -48,10 +48,10 @@
       };
 
       $scope.$on('$destroy', function() {
-        // Make sure that the interval nis destroyed too
+        // Make sure that the interval is destroyed too
         $scope.stopFight();
       });
-    })
+    }])
     // Register the 'myCurrentTime' directive factory method.
     // We inject $interval and dateFilter service since the factory method is DI.
     .directive('myCurrentTime', ['$interval', 'dateFilter',
@@ -80,7 +80,7 @@
             $interval.cancel(stopTime);
           });
         }
-      });
+      }]);
 </script>
 
 <div>

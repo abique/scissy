@@ -1,8 +1,10 @@
-describe("module:ng.directive:ngClass", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-example16/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-example16/index-jquery.html");
   });
-
+  
   var ps = element.all(by.css('p'));
 
   it('should let you toggle the class', function() {

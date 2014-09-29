@@ -1,8 +1,8 @@
-<a href='http://github.com/angular/angular.js/edit/master/src/ng/compile.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/src/ng/compile.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
 
-<a href='http://github.com/angular/angular.js/tree/master/src/ng/compile.js#L21' class='view-source pull-right btn btn-primary'>
+<a href='https://github.com/angular/angular.js/tree/master/src/ng/compile.js#L21' class='view-source pull-right btn btn-primary'>
   <i class="glyphicon glyphicon-zoom-in">&nbsp;</i>View Source
 </a>
 
@@ -44,53 +44,55 @@ or just the <code>postLink</code> function (all other properties will have the d
 </div>
 
 <p>Here&#39;s an example directive declared with a Directive Definition Object:</p>
-<pre><code class="lang-js">  var myModule = angular.module(...);
+<pre><code class="lang-js">var myModule = angular.module(...);
 
-  myModule.directive(&#39;directiveName&#39;, function factory(injectables) {
-    var directiveDefinitionObject = {
-      priority: 0,
-      template: &#39;&lt;div&gt;&lt;/div&gt;&#39;, // or // function(tElement, tAttrs) { ... },
+myModule.directive(&#39;directiveName&#39;, function factory(injectables) {
+  var directiveDefinitionObject = {
+    priority: 0,
+    template: &#39;&lt;div&gt;&lt;/div&gt;&#39;, // or // function(tElement, tAttrs) { ... },
+    // or
+    // templateUrl: &#39;directive.html&#39;, // or // function(tElement, tAttrs) { ... },
+    transclude: false,
+    restrict: &#39;A&#39;,
+    scope: false,
+    controller: function($scope, $element, $attrs, $transclude, otherInjectables) { ... },
+    controllerAs: &#39;stringAlias&#39;,
+    require: &#39;siblingDirectiveName&#39;, // or // [&#39;^parentDirectiveName&#39;, &#39;?optionalDirectiveName&#39;, &#39;?^optionalParent&#39;],
+    compile: function compile(tElement, tAttrs, transclude) {
+      return {
+        pre: function preLink(scope, iElement, iAttrs, controller) { ... },
+        post: function postLink(scope, iElement, iAttrs, controller) { ... }
+      }
       // or
-      // templateUrl: &#39;directive.html&#39;, // or // function(tElement, tAttrs) { ... },
-      transclude: false,
-      restrict: &#39;A&#39;,
-      scope: false,
-      controller: function($scope, $element, $attrs, $transclude, otherInjectables) { ... },
-      controllerAs: &#39;stringAlias&#39;,
-      require: &#39;siblingDirectiveName&#39;, // or // [&#39;^parentDirectiveName&#39;, &#39;?optionalDirectiveName&#39;, &#39;?^optionalParent&#39;],
-      compile: function compile(tElement, tAttrs, transclude) {
-        return {
-          pre: function preLink(scope, iElement, iAttrs, controller) { ... },
-          post: function postLink(scope, iElement, iAttrs, controller) { ... }
-        }
-        // or
-        // return function postLink( ... ) { ... }
-      },
-      // or
-      // link: {
-      //  pre: function preLink(scope, iElement, iAttrs, controller) { ... },
-      //  post: function postLink(scope, iElement, iAttrs, controller) { ... }
-      // }
-      // or
-      // link: function postLink( ... ) { ... }
-    };
-    return directiveDefinitionObject;
-  });</code></pre>
+      // return function postLink( ... ) { ... }
+    },
+    // or
+    // link: {
+    //  pre: function preLink(scope, iElement, iAttrs, controller) { ... },
+    //  post: function postLink(scope, iElement, iAttrs, controller) { ... }
+    // }
+    // or
+    // link: function postLink( ... ) { ... }
+  };
+  return directiveDefinitionObject;
+});
+</code></pre>
 <div class="alert alert-warning">
 <strong>Note:</strong> Any unspecified options will use the default value. You can see the default values below.
 </div>
 
 <p>Therefore the above can be simplified as:</p>
-<pre><code class="lang-js">  var myModule = angular.module(...);
+<pre><code class="lang-js">var myModule = angular.module(...);
 
-  myModule.directive(&#39;directiveName&#39;, function factory(injectables) {
-    var directiveDefinitionObject = {
-      link: function postLink(scope, iElement, iAttrs) { ... }
-    };
-    return directiveDefinitionObject;
-    // or
-    // return function postLink(scope, iElement, iAttrs) { ... }
-  });</code></pre>
+myModule.directive(&#39;directiveName&#39;, function factory(injectables) {
+  var directiveDefinitionObject = {
+    link: function postLink(scope, iElement, iAttrs) { ... }
+  };
+  return directiveDefinitionObject;
+  // or
+  // return function postLink(scope, iElement, iAttrs) { ... }
+});
+</code></pre>
 <h3 id="directive-definition-object">Directive Definition Object</h3>
 <p>The directive definition object provides instructions to the <a href="api/ng/service/$compile">compiler</a>. The attributes are:</p>
 <h4 id="-priority-"><code>priority</code></h4>
@@ -167,9 +169,9 @@ found, or if the directive does not have a controller, then an error is raised. 
 <ul>
 <li>(no prefix) - Locate the required controller on the current element. Throw an error if not found.</li>
 <li><code>?</code> - Attempt to locate the required controller or pass <code>null</code> to the <code>link</code> fn if not found.</li>
-<li><code>^</code> - Locate the required controller by searching the element&#39;s parents. Throw an error if not found.</li>
-<li><code>?^</code> - Attempt to locate the required controller by searching the element&#39;s parents or pass <code>null</code> to the
-<code>link</code> fn if not found.</li>
+<li><code>^</code> - Locate the required controller by searching the element and its parents. Throw an error if not found.</li>
+<li><code>?^</code> - Attempt to locate the required controller by searching the element and its parents or pass
+<code>null</code> to the <code>link</code> fn if not found.</li>
 </ul>
 <h4 id="-controlleras-"><code>controllerAs</code></h4>
 <p>Controller alias at the directive scope. An alias for the controller so it
@@ -185,12 +187,18 @@ declaration style. If omitted, the default (attributes only) is used.</p>
 <li><code>M</code> - Comment: <code>&lt;!-- directive: my-directive exp --&gt;</code></li>
 </ul>
 <h4 id="-template-"><code>template</code></h4>
-<p>replace the current element with the contents of the HTML. The replacement process
-migrates all of the attributes / classes from the old element to the new one. See the
-<a href="guide/directive#creating-custom-directives_creating-directives_template-expanding-directive">Directives Guide</a> for an example.</p>
-<p>You can specify <code>template</code> as a string representing the template or as a function which takes
-two arguments <code>tElement</code> and <code>tAttrs</code> (described in the <code>compile</code> function api below) and
-returns a string value representing the template.</p>
+<p>HTML markup that may:</p>
+<ul>
+<li>Replace the contents of the directive&#39;s element (default).</li>
+<li>Replace the directive&#39;s element itself (if <code>replace</code> is true - DEPRECATED).</li>
+<li>Wrap the contents of the directive&#39;s element (if <code>transclude</code> is true).</li>
+</ul>
+<p>Value may be:</p>
+<ul>
+<li>A string. For example <code>&lt;div red-on-hover&gt;{{delete_str}}&lt;/div&gt;</code>.</li>
+<li>A function which takes two arguments <code>tElement</code> and <code>tAttrs</code> (described in the <code>compile</code>
+function api below) and returns a string value.</li>
+</ul>
 <h4 id="-templateurl-"><code>templateUrl</code></h4>
 <p>Same as <code>template</code> but the template is loaded from the specified URL. Because
 the template loading is asynchronous the compilation/linking is suspended until the template
@@ -199,11 +207,13 @@ is loaded.</p>
 arguments <code>tElement</code> and <code>tAttrs</code> (described in the <code>compile</code> function api below) and returns
 a string value representing the url.  In either case, the template URL is passed through <a href="api/ng.$sce#getTrustedResourceUrl">$sce.getTrustedResourceUrl</a>.</p>
 <h4 id="-replace-deprecated-will-be-removed-in-next-major-release-"><code>replace</code> ([<em>DEPRECATED</em>!], will be removed in next major release)</h4>
-<p>specify where the template should be inserted. Defaults to <code>false</code>.</p>
+<p>specify what the template should replace. Defaults to <code>false</code>.</p>
 <ul>
-<li><code>true</code> - the template will replace the current element.</li>
-<li><code>false</code> - the template will replace the contents of the current element.</li>
+<li><code>true</code> - the template will replace the directive&#39;s element.</li>
+<li><code>false</code> - the template will replace the contents of the directive&#39;s element.</li>
 </ul>
+<p>The replacement process migrates all of the attributes / classes from the old element to the new
+one. See the <a href="guide/directive#creating-custom-directives_creating-directives_template-expanding-directive">Directives Guide</a> for an example.</p>
 <h4 id="-transclude-"><code>transclude</code></h4>
 <p>compile the content of the element and make it available to the directive.
 Typically used with <a href="api/ng/directive/ngTransclude">ngTransclude</a>. The advantage of transclusion is that the linking function receives a
@@ -215,8 +225,14 @@ be bound to the parent (pre-<code>isolate</code>) scope.</p>
 <li><code>true</code> - transclude the content of the directive.</li>
 <li><code>&#39;element&#39;</code> - transclude the whole element including any directives defined at lower priority.</li>
 </ul>
+<div class="alert alert-warning">
+<strong>Note:</strong> When testing an element transclude directive you must not place the directive at the root of the
+DOM fragment that is being compiled. See <a href="guide/unit-testing#testing-transclusion-directives">Testing Transclusion Directives</a>.
+</div>
+
 <h4 id="-compile-"><code>compile</code></h4>
-<pre><code class="lang-js">  function compile(tElement, tAttrs, transclude) { ... }</code></pre>
+<pre><code class="lang-js">function compile(tElement, tAttrs, transclude) { ... }
+</code></pre>
 <p>The compile function deals with transforming the template DOM. Since most directives do not do
 template transformation, it is not used often. The compile function takes the following arguments:</p>
 <ul>
@@ -264,7 +280,8 @@ pre-linking and post-linking functions below.</p>
 </ul>
 <h4 id="-link-"><code>link</code></h4>
 <p>This property is used only if the <code>compile</code> property is not defined.</p>
-<pre><code class="lang-js">  function link(scope, iElement, iAttrs, controller, transcludeFn) { ... }</code></pre>
+<pre><code class="lang-js">function link(scope, iElement, iAttrs, controller, transcludeFn) { ... }
+</code></pre>
 <p>The link function is responsible for registering DOM listeners as well as updating the DOM. It is
 executed after the template has been cloned. This is where most of the directive logic will be
 put.</p>
@@ -317,17 +334,18 @@ hasn&#39;t been evaluated yet and so the value is at this time set to <code>unde
 </li>
 </ul>
 <pre><code class="lang-js">function linkingFn(scope, elm, attrs, ctrl) {
-  // get the attribute value
-  console.log(attrs.ngModel);
+// get the attribute value
+console.log(attrs.ngModel);
 
-  // change the attribute
-  attrs.$set(&#39;ngModel&#39;, &#39;new value&#39;);
+// change the attribute
+attrs.$set(&#39;ngModel&#39;, &#39;new value&#39;);
 
-  // observe changes to interpolated attribute
-  attrs.$observe(&#39;ngModel&#39;, function(value) {
-    console.log(&#39;ngModel has changed value to &#39; + value);
-  });
-}</code></pre>
+// observe changes to interpolated attribute
+attrs.$observe(&#39;ngModel&#39;, function(value) {
+  console.log(&#39;ngModel has changed value to &#39; + value);
+});
+}
+</code></pre>
 <p>Below is an example using <code>$compileProvider</code>.</p>
 <div class="alert alert-warning">
 <strong>Note</strong>: Typically directives are registered with <code>module.directive</code>. The example below is
@@ -340,11 +358,12 @@ to illustrate how <code>$compile</code> works.
   <a ng-click="openPlunkr('examples/example-example4')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
       path="examples/example-example4"
       module="compileExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -363,6 +382,7 @@ to illustrate how <code>$compile</code> works.
     <iframe class="runnable-example-frame" src="examples/example-example4/index.html" name="example-example4"></iframe>
   </div>
 </div>
+
 
 </p>
 
@@ -477,19 +497,21 @@ Angular automatically.</p>
 <ul>
 <li><p>If you are not asking the linking function to clone the template, create the DOM element(s)
 before you send them to the compiler and keep this reference around.</p>
-<pre><code class="lang-js">  var element = $compile(&#39;&lt;p&gt;{{total}}&lt;/p&gt;&#39;)(scope);</code></pre>
+<pre><code class="lang-js">var element = $compile(&#39;&lt;p&gt;{{total}}&lt;/p&gt;&#39;)(scope);
+</code></pre>
 </li>
 <li><p>if on the other hand, you need the element to be cloned, the view reference from the original
 example would not point to the clone, but rather to the original template that was cloned. In
 this case, you can access the clone via the cloneAttachFn:</p>
-<pre><code class="lang-js">  var templateElement = angular.element(&#39;&lt;p&gt;{{total}}&lt;/p&gt;&#39;),
-      scope = ....;
+<pre><code class="lang-js">var templateElement = angular.element(&#39;&lt;p&gt;{{total}}&lt;/p&gt;&#39;),
+    scope = ....;
 
-  var clonedElement = $compile(templateElement)(scope, function(clonedElement, scope) {
-    //attach the clone to DOM document at the right place
-  });
+var clonedElement = $compile(templateElement)(scope, function(clonedElement, scope) {
+  //attach the clone to DOM document at the right place
+});
 
-  //now we have reference to the cloned DOM via `clonedElement`</code></pre>
+//now we have reference to the cloned DOM via `clonedElement`
+</code></pre>
 </li>
 </ul>
 <p>For information on how the compiler works, see the

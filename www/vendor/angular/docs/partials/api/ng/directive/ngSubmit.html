@@ -1,8 +1,8 @@
-<a href='http://github.com/angular/angular.js/edit/master/src/ng/directive/ngEventDirs.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/src/ng/directive/ngEventDirs.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
 
-<a href='http://github.com/angular/angular.js/tree/master/src/ng/directive/ngEventDirs.js#L299' class='view-source pull-right btn btn-primary'>
+<a href='https://github.com/angular/angular.js/tree/master/src/ng/directive/ngEventDirs.js#L314' class='view-source pull-right btn btn-primary'>
   <i class="glyphicon glyphicon-zoom-in">&nbsp;</i>View Source
 </a>
 
@@ -24,7 +24,12 @@
 <p>Additionally it prevents the default action (which for form means sending the request to the
 server and reloading the current page), but only if the form does not contain <code>action</code>,
 <code>data-action</code>, or <code>x-action</code> attributes.</p>
-
+<div class="alert alert-warning">
+<strong>Warning:</strong> Be careful not to cause &quot;double-submission&quot; by using both the <code>ngClick</code> and
+<code>ngSubmit</code> handlers together. See the
+<a href="api/ng/directive/form#submitting-a-form-and-preventing-the-default-action"><code>form</code> directive documentation</a>
+for a detailed discussion of when <code>ngSubmit</code> may be triggered.
+</div>
 </div>
 
 
@@ -95,11 +100,12 @@ server and reloading the current page), but only if the form does not contain <c
   <a ng-click="openPlunkr('examples/example-example32')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
       path="examples/example-example32"
       module="submitExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -118,6 +124,7 @@ server and reloading the current page), but only if the form does not contain <c
     <iframe class="runnable-example-frame" src="examples/example-example32/index.html" name="example-example32"></iframe>
   </div>
 </div>
+
 
 </p>
 

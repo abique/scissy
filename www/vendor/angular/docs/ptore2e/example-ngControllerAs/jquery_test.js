@@ -1,8 +1,10 @@
-describe("module:ng.directive:ngController", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-ngControllerAs/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-ngControllerAs/index-jquery.html");
   });
-
+  
   it('should check controller as', function() {
     var container = element(by.id('ctrl-as-exmpl'));
       expect(container.element(by.model('settings.name'))

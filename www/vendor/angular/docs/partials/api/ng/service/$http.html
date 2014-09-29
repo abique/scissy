@@ -1,8 +1,8 @@
-<a href='http://github.com/angular/angular.js/edit/master/src/ng/http.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/src/ng/http.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
 
-<a href='http://github.com/angular/angular.js/tree/master/src/ng/http.js#L200' class='view-source pull-right btn btn-primary'>
+<a href='https://github.com/angular/angular.js/tree/master/src/ng/http.js#L196' class='view-source pull-right btn btn-primary'>
   <i class="glyphicon glyphicon-zoom-in">&nbsp;</i>View Source
 </a>
 
@@ -37,15 +37,16 @@ it is important to familiarize yourself with these APIs and the guarantees they 
 <p>The <code>$http</code> service is a function which takes a single argument — a configuration object —
 that is used to generate an HTTP request and returns  a <a href="api/ng/service/$q">promise</a>
 with two $http specific methods: <code>success</code> and <code>error</code>.</p>
-<pre><code class="lang-js">  $http({method: &#39;GET&#39;, url: &#39;/someUrl&#39;}).
-    success(function(data, status, headers, config) {
-      // this callback will be called asynchronously
-      // when the response is available
-    }).
-    error(function(data, status, headers, config) {
-      // called asynchronously if an error occurs
-      // or server returns response with an error status.
-    });</code></pre>
+<pre><code class="lang-js">$http({method: &#39;GET&#39;, url: &#39;/someUrl&#39;}).
+  success(function(data, status, headers, config) {
+    // this callback will be called asynchronously
+    // when the response is available
+  }).
+  error(function(data, status, headers, config) {
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+  });
+</code></pre>
 <p>Since the returned value of calling the $http function is a <code>promise</code>, you can also use
 the <code>then</code> method to register callbacks, and these callbacks will receive a single argument –
 an object representing the response. See the API signature and type info below for more
@@ -60,12 +61,14 @@ called for such responses.</p>
 request using trained responses.</p>
 <pre><code>$httpBackend.expectGET(...);
 $http.get(...);
-$httpBackend.flush();</code></pre>
+$httpBackend.flush();
+</code></pre>
 <h1 id="shortcut-methods">Shortcut methods</h1>
 <p>Shortcut methods are also available. All shortcut methods require passing in the URL, and
 request data must be passed in for POST/PUT requests.</p>
-<pre><code class="lang-js">  $http.get(&#39;/someUrl&#39;).success(successCallback);
-  $http.post(&#39;/someUrl&#39;, data).success(successCallback);</code></pre>
+<pre><code class="lang-js">$http.get(&#39;/someUrl&#39;).success(successCallback);
+$http.post(&#39;/someUrl&#39;, data).success(successCallback);
+</code></pre>
 <p>Complete list of shortcut methods:</p>
 <ul>
 <li><a href="api/ng/service/$http#get">$http.get</a></li>
@@ -74,6 +77,7 @@ request data must be passed in for POST/PUT requests.</p>
 <li><a href="api/ng/service/$http#put">$http.put</a></li>
 <li><a href="api/ng/service/$http#delete">$http.delete</a></li>
 <li><a href="api/ng/service/$http#jsonp">$http.jsonp</a></li>
+<li><a href="api/ng/service/$http#patch">$http.patch</a></li>
 </ul>
 <h1 id="setting-http-headers">Setting HTTP Headers</h1>
 <p>The $http service will automatically add certain HTTP headers to all requests. These defaults
@@ -100,8 +104,9 @@ with the lowercased HTTP method name as the key, e.g.
 <p>The defaults can also be set at runtime via the <code>$http.defaults</code> object in the same
 fashion. For example:</p>
 <pre><code>module.run(function($http) {
-  $http.defaults.headers.common.Authorization = &#39;Basic YmVlcDpib29w&#39;
-});</code></pre>
+$http.defaults.headers.common.Authorization = &#39;Basic YmVlcDpib29w&#39;
+});
+</code></pre>
 <p>In addition, you can supply a <code>headers</code> property in the config object passed when
 calling <code>$http(config)</code>, which overrides the defaults without changing them globally.</p>
 <h1 id="transforming-requests-and-responses">Transforming Requests and Responses</h1>
@@ -169,58 +174,59 @@ object directly, or as a promise containing the <code>response</code> or a new <
 <li><code>responseError</code>: interceptor gets called when a previous interceptor threw an error or
 resolved with a rejection.</li>
 </ul>
-<pre><code class="lang-js">  // register the interceptor as a service
-  $provide.factory(&#39;myHttpInterceptor&#39;, function($q, dependency1, dependency2) {
-    return {
-      // optional method
-      &#39;request&#39;: function(config) {
-        // do something on success
-        return config;
-      },
+<pre><code class="lang-js">// register the interceptor as a service
+$provide.factory(&#39;myHttpInterceptor&#39;, function($q, dependency1, dependency2) {
+  return {
+    // optional method
+    &#39;request&#39;: function(config) {
+      // do something on success
+      return config;
+    },
 
-      // optional method
-     &#39;requestError&#39;: function(rejection) {
-        // do something on error
-        if (canRecover(rejection)) {
-          return responseOrNewPromise
-        }
-        return $q.reject(rejection);
-      },
-
-
-
-      // optional method
-      &#39;response&#39;: function(response) {
-        // do something on success
-        return response;
-      },
-
-      // optional method
-     &#39;responseError&#39;: function(rejection) {
-        // do something on error
-        if (canRecover(rejection)) {
-          return responseOrNewPromise
-        }
-        return $q.reject(rejection);
+    // optional method
+   &#39;requestError&#39;: function(rejection) {
+      // do something on error
+      if (canRecover(rejection)) {
+        return responseOrNewPromise
       }
-    };
-  });
-
-  $httpProvider.interceptors.push(&#39;myHttpInterceptor&#39;);
+      return $q.reject(rejection);
+    },
 
 
-  // alternatively, register the interceptor via an anonymous factory
-  $httpProvider.interceptors.push(function($q, dependency1, dependency2) {
-    return {
-     &#39;request&#39;: function(config) {
-         // same as above
-      },
 
-      &#39;response&#39;: function(response) {
-         // same as above
+    // optional method
+    &#39;response&#39;: function(response) {
+      // do something on success
+      return response;
+    },
+
+    // optional method
+   &#39;responseError&#39;: function(rejection) {
+      // do something on error
+      if (canRecover(rejection)) {
+        return responseOrNewPromise
       }
-    };
-  });</code></pre>
+      return $q.reject(rejection);
+    }
+  };
+});
+
+$httpProvider.interceptors.push(&#39;myHttpInterceptor&#39;);
+
+
+// alternatively, register the interceptor via an anonymous factory
+$httpProvider.interceptors.push(function($q, dependency1, dependency2) {
+  return {
+   &#39;request&#39;: function(config) {
+       // same as above
+    },
+
+    &#39;response&#39;: function(response) {
+       // same as above
+    }
+  };
+});
+</code></pre>
 <h1 id="response-interceptors-deprecated-">Response interceptors (DEPRECATED)</h1>
 <p>Before you start creating interceptors, be sure to understand the
 <a href="api/ng/service/$q">$q and deferred/promise APIs</a>.</p>
@@ -232,31 +238,32 @@ initiated these requests. The response interceptors leverage the <a href="api/ng
 adding them to the <code>$httpProvider.responseInterceptors</code> array. The factory is called and
 injected with dependencies (if specified) and returns the interceptor  — a function that
 takes a <a href="api/ng/service/$q">promise</a> and returns the original or a new promise.</p>
-<pre><code class="lang-js">  // register the interceptor as a service
-  $provide.factory(&#39;myHttpInterceptor&#39;, function($q, dependency1, dependency2) {
-    return function(promise) {
-      return promise.then(function(response) {
-        // do something on success
-        return response;
-      }, function(response) {
-        // do something on error
-        if (canRecover(response)) {
-          return responseOrNewPromise
-        }
-        return $q.reject(response);
-      });
-    }
-  });
+<pre><code class="lang-js">// register the interceptor as a service
+$provide.factory(&#39;myHttpInterceptor&#39;, function($q, dependency1, dependency2) {
+  return function(promise) {
+    return promise.then(function(response) {
+      // do something on success
+      return response;
+    }, function(response) {
+      // do something on error
+      if (canRecover(response)) {
+        return responseOrNewPromise
+      }
+      return $q.reject(response);
+    });
+  }
+});
 
-  $httpProvider.responseInterceptors.push(&#39;myHttpInterceptor&#39;);
+$httpProvider.responseInterceptors.push(&#39;myHttpInterceptor&#39;);
 
 
-  // register the interceptor via an anonymous factory
-  $httpProvider.responseInterceptors.push(function($q, dependency1, dependency2) {
-    return function(promise) {
-      // same as above
-    }
-  });</code></pre>
+// register the interceptor via an anonymous factory
+$httpProvider.responseInterceptors.push(function($q, dependency1, dependency2) {
+  return function(promise) {
+    // same as above
+  }
+});
+</code></pre>
 <h1 id="security-considerations">Security Considerations</h1>
 <p>When designing web applications, consider security threats from:</p>
 <ul>
@@ -273,10 +280,12 @@ allows third party website to turn your JSON resource URL into
 counter this your server can prefix all JSON requests with following string <code>&quot;)]}&#39;,\n&quot;</code>.
 Angular will automatically strip the prefix before processing it as JSON.</p>
 <p>For example if your server needs to return:</p>
-<pre><code class="lang-js">[&#39;one&#39;,&#39;two&#39;]</code></pre>
+<pre><code class="lang-js">[&#39;one&#39;,&#39;two&#39;]
+</code></pre>
 <p>which is vulnerable to attack, your server can return:</p>
 <pre><code class="lang-js">)]}&#39;,
-[&#39;one&#39;,&#39;two&#39;]</code></pre>
+[&#39;one&#39;,&#39;two&#39;]
+</code></pre>
 <p>Angular will strip the prefix, before processing the JSON.</p>
 <h2 id="cross-site-request-forgery-xsrf-protection">Cross Site Request Forgery (XSRF) Protection</h2>
 <p><a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">XSRF</a> is a technique by which
@@ -292,7 +301,7 @@ server can verify that the cookie matches <code>X-XSRF-TOKEN</code> HTTP header,
 that only JavaScript running on your domain could have sent the request. The token must be
 unique for each user and must be verifiable by the server (to prevent the JavaScript from
 making up its own tokens). We recommend that the token is a digest of your site&#39;s
-authentication cookie with a <a href="https://en.wikipedia.org/wiki/Salt_(cryptography">salt</a>)
+authentication cookie with a <a href="https://en.wikipedia.org/wiki/Salt_(cryptography&#41;">salt</a>
 for added security.</p>
 <p>The name of the headers can be specified using the xsrfHeaderName and xsrfCookieName
 properties of either $httpProvider.defaults at config-time, $http.defaults at run-time,
@@ -373,7 +382,7 @@ caching.</li>
 <li><strong>timeout</strong> – <code>{number|Promise}</code> – timeout in milliseconds, or <a href="api/ng/service/$q">promise</a>
 that should abort the request when resolved.</li>
 <li><strong>withCredentials</strong> - <code>{boolean}</code> - whether to set the <code>withCredentials</code> flag on the
-XHR object. See [requests with credentials]<a href="https://developer.mozilla.org/en/http_access_control#section_5">https://developer.mozilla.org/en/http_access_control#section_5</a>
+XHR object. See <a href="https://developer.mozilla.org/docs/Web/HTTP/Access_control_CORS#Requests_with_credentials">requests with credentials</a>
 for more information.</li>
 <li><strong>responseType</strong> - <code>{string}</code> - see
 <a href="https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest#responseType">requestType</a>.</li>
@@ -661,7 +670,7 @@ functions.</li>
       </td>
       <td>
         <p>Relative or absolute URL specifying the destination of the request.
-                    Should contain <code>JSON_CALLBACK</code> string.</p>
+                    The name of the callback should be the string <code>JSON_CALLBACK</code>.</p>
 
         
       </td>
@@ -918,11 +927,12 @@ default headers, withCredentials as well as request and response transformations
   <a ng-click="openPlunkr('examples/example-example58')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
       path="examples/example-example58"
       module="httpExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -955,6 +965,7 @@ default headers, withCredentials as well as request and response transformations
     <iframe class="runnable-example-frame" src="examples/example-example58/index.html" name="example-example58"></iframe>
   </div>
 </div>
+
 
 </p>
 

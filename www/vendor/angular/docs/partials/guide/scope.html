@@ -1,4 +1,4 @@
-<a href='http://github.com/angular/angular.js/edit/master/docs/content/guide/scope.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/docs/content/guide/scope.ngdoc' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
 <h1 id="what-are-scopes-">What are Scopes?</h1>
@@ -38,14 +38,15 @@ the applications.</p>
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example103')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example102')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example103"
+      path="examples/example-example102"
       module="scopeExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="script.js"
       language="js"
@@ -61,9 +62,10 @@ the applications.</p>
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example103/index.html" name="example-example103"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example102/index.html" name="example-example102"></iframe>
   </div>
 </div>
+
 
 </p>
 <p>In the above example notice that the <code>MyController</code> assigns <code>World</code> to the <code>username</code> property of
@@ -87,25 +89,26 @@ and assign the result to the text of the enclosing DOM element.</p>
 scope is the single source-of-truth for all things view related.</p>
 <p>From a testability point of view, the separation of the controller and the view is desirable, because it allows us
 to test the behavior without being distracted by the rendering details.</p>
-<pre><code class="lang-js">  it(&#39;should say hello&#39;, function() {
-    var scopeMock = {};
-    var cntl = new MyController(scopeMock);
+<pre><code class="lang-js">it(&#39;should say hello&#39;, function() {
+  var scopeMock = {};
+  var cntl = new MyController(scopeMock);
 
-    // Assert that username is pre-filled
-    expect(scopeMock.username).toEqual(&#39;World&#39;);
+  // Assert that username is pre-filled
+  expect(scopeMock.username).toEqual(&#39;World&#39;);
 
-    // Assert that we read new username and greet
-    scopeMock.username = &#39;angular&#39;;
-    scopeMock.sayHello();
-    expect(scopeMock.greeting).toEqual(&#39;Hello angular!&#39;);
-  });</code></pre>
+  // Assert that we read new username and greet
+  scopeMock.username = &#39;angular&#39;;
+  scopeMock.sayHello();
+  expect(scopeMock.greeting).toEqual(&#39;Hello angular!&#39;);
+});
+</code></pre>
 <h2 id="scope-hierarchies">Scope Hierarchies</h2>
 <p>Each Angular application has exactly one <a href="api/ng/service/$rootScope">root scope</a>, but
 may have several child scopes.</p>
 <p>The application can have multiple scopes, because some <a href="guide/directive">directives</a> create
 new child scopes (refer to directive documentation to see which directives create new scopes).
 When new scopes are created, they are added as children of their parent scope. This creates a tree
-structure which parallels the DOM where they&#39;re attached</p>
+structure which parallels the DOM where they&#39;re attached.</p>
 <p>When Angular evaluates <code>{{name}}</code>, it first looks at the scope associated with the given
 element for the <code>name</code> property. If no such property is found, it searches the parent scope
 and so on until the root scope is reached. In JavaScript this behavior is known as prototypical
@@ -115,14 +118,15 @@ a diagram depicting the scope boundaries.</p>
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example104')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example103')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example104"
+      path="examples/example-example103"
       module="scopeExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -145,9 +149,10 @@ a diagram depicting the scope boundaries.</p>
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example104/index.html" name="example-example104"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example103/index.html" name="example-example103"></iframe>
   </div>
 </div>
+
 
 </p>
 <p><img class="center" src="img/guide/concepts-scope.png"></p>
@@ -180,14 +185,15 @@ variable.</p>
 <p>
 
 <div>
-  <a ng-click="openPlunkr('examples/example-example105')" class="btn pull-right">
+  <a ng-click="openPlunkr('examples/example-example104')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
-      path="examples/example-example105"
+      path="examples/example-example104"
       module="eventExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="script.js"
       language="js"
@@ -203,9 +209,10 @@ variable.</p>
     </div>
   
 
-    <iframe class="runnable-example-frame" src="examples/example-example105/index.html" name="example-example105"></iframe>
+    <iframe class="runnable-example-frame" src="examples/example-example104/index.html" name="example-example104"></iframe>
   </div>
 </div>
+
 
 </p>
 <h2 id="scope-life-cycle">Scope Life Cycle</h2>

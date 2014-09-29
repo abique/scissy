@@ -1,8 +1,8 @@
-<a href='http://github.com/angular/angular.js/edit/master/src/ng/filter/orderBy.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
+<a href='https://github.com/angular/angular.js/edit/master/src/ng/filter/orderBy.js' class='improve-docs btn btn-primary'><i class="glyphicon glyphicon-edit">&nbsp;</i>Improve this doc</a>
 
 
 
-<a href='http://github.com/angular/angular.js/tree/master/src/ng/filter/orderBy.js#L3' class='view-source pull-right btn btn-primary'>
+<a href='https://github.com/angular/angular.js/tree/master/src/ng/filter/orderBy.js#L3' class='view-source pull-right btn btn-primary'>
   <i class="glyphicon glyphicon-zoom-in">&nbsp;</i>View Source
 </a>
 
@@ -88,9 +88,13 @@ correctly, make sure they are actually being saved as numbers and not strings.</
 <ul>
 <li><code>function</code>: Getter function. The result of this function will be sorted using the
 <code>&lt;</code>, <code>=</code>, <code>&gt;</code> operator.</li>
-<li><code>string</code>: An Angular expression which evaluates to an object to order by, such as &#39;name&#39;
-to sort by a property called &#39;name&#39;. Optionally prefixed with <code>+</code> or <code>-</code> to control
-ascending or descending sort order (for example, +name or -name).</li>
+<li><code>string</code>: An Angular expression. The result of this expression is used to compare elements
+(for example <code>name</code> to sort by a property called <code>name</code> or <code>name.substr(0, 3)</code> to sort by
+3 first characters of a property called <code>name</code>). The result of a constant expression
+is interpreted as a property name to be used in comparisons (for example <code>&quot;special name&quot;</code>
+to sort object by the value of their <code>special name</code> property). An expression can be
+optionally prefixed with <code>+</code> or <code>-</code> to control ascending or descending sort order
+(for example, <code>+name</code> or <code>-name</code>).</li>
 <li><code>Array</code>: An array of function or string predicates. The first predicate in the array
 is used for sorting, but when two items are equivalent, the next predicate is used.</li>
 </ul>
@@ -137,11 +141,12 @@ is used for sorting, but when two items are equivalent, the next predicate is us
   <a ng-click="openPlunkr('examples/example-example56')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
       path="examples/example-example56"
       module="orderByExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
@@ -154,6 +159,7 @@ is used for sorting, but when two items are equivalent, the next predicate is us
   </div>
 </div>
 
+
 </p>
 <p>It&#39;s also possible to call the orderBy filter manually, by injecting <code>$filter</code>, retrieving the
 filter routine with <code>$filter(&#39;orderBy&#39;)</code>, and calling the returned filter routine with the
@@ -165,16 +171,17 @@ desired parameters.</p>
   <a ng-click="openPlunkr('examples/example-example57')" class="btn pull-right">
     <i class="glyphicon glyphicon-edit">&nbsp;</i>
     Edit in Plunker</a>
+
   <div class="runnable-example"
       path="examples/example-example57"
       module="orderByExample">
 
-   
+  
     <div class="runnable-example-file" 
       name="index.html"
       language="html"
       type="html">
-      <pre><code>&lt;div ng-controller=&quot;Ctrl&quot;&gt;&#10;  &lt;table class=&quot;friend&quot;&gt;&#10;    &lt;tr&gt;&#10;      &lt;th&gt;&lt;a href=&quot;&quot; ng-click=&quot;reverse=false;order(&#39;name&#39;, false)&quot;&gt;Name&lt;/a&gt;&#10;        (&lt;a href=&quot;&quot; ng-click=&quot;order(&#39;-name&#39;,false)&quot;&gt;^&lt;/a&gt;)&lt;/th&gt;&#10;      &lt;th&gt;&lt;a href=&quot;&quot; ng-click=&quot;reverse=!reverse;order(&#39;phone&#39;, reverse)&quot;&gt;Phone Number&lt;/a&gt;&lt;/th&gt;&#10;      &lt;th&gt;&lt;a href=&quot;&quot; ng-click=&quot;reverse=!reverse;order(&#39;age&#39;,reverse)&quot;&gt;Age&lt;/a&gt;&lt;/th&gt;&#10;    &lt;/tr&gt;&#10;    &lt;tr ng-repeat=&quot;friend in friends&quot;&gt;&#10;      &lt;td&gt;{{friend.name}}&lt;/td&gt;&#10;      &lt;td&gt;{{friend.phone}}&lt;/td&gt;&#10;      &lt;td&gt;{{friend.age}}&lt;/td&gt;&#10;    &lt;/tr&gt;&#10;  &lt;/table&gt;&#10;&lt;/div&gt;</code></pre>
+      <pre><code>&lt;div ng-controller=&quot;ExampleController&quot;&gt;&#10;  &lt;table class=&quot;friend&quot;&gt;&#10;    &lt;tr&gt;&#10;      &lt;th&gt;&lt;a href=&quot;&quot; ng-click=&quot;reverse=false;order(&#39;name&#39;, false)&quot;&gt;Name&lt;/a&gt;&#10;        (&lt;a href=&quot;&quot; ng-click=&quot;order(&#39;-name&#39;,false)&quot;&gt;^&lt;/a&gt;)&lt;/th&gt;&#10;      &lt;th&gt;&lt;a href=&quot;&quot; ng-click=&quot;reverse=!reverse;order(&#39;phone&#39;, reverse)&quot;&gt;Phone Number&lt;/a&gt;&lt;/th&gt;&#10;      &lt;th&gt;&lt;a href=&quot;&quot; ng-click=&quot;reverse=!reverse;order(&#39;age&#39;,reverse)&quot;&gt;Age&lt;/a&gt;&lt;/th&gt;&#10;    &lt;/tr&gt;&#10;    &lt;tr ng-repeat=&quot;friend in friends&quot;&gt;&#10;      &lt;td&gt;{{friend.name}}&lt;/td&gt;&#10;      &lt;td&gt;{{friend.phone}}&lt;/td&gt;&#10;      &lt;td&gt;{{friend.age}}&lt;/td&gt;&#10;    &lt;/tr&gt;&#10;  &lt;/table&gt;&#10;&lt;/div&gt;</code></pre>
     </div>
   
     <div class="runnable-example-file" 
@@ -188,6 +195,7 @@ desired parameters.</p>
     <iframe class="runnable-example-frame" src="examples/example-example57/index.html" name="example-example57"></iframe>
   </div>
 </div>
+
 
 </p>
 

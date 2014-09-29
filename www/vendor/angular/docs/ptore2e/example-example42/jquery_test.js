@@ -1,8 +1,10 @@
-describe("module:ng.directive:ngShow", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-example42/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-example42/index-jquery.html");
   });
-
+  
   var thumbsUp = element(by.css('span.glyphicon-thumbs-up'));
   var thumbsDown = element(by.css('span.glyphicon-thumbs-down'));
 

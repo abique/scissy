@@ -1,8 +1,10 @@
-describe("module:ng.directive:ngStyle", function() {
+describe("", function() {
+  var rootEl;
   beforeEach(function() {
-    browser.get("./examples/example-example44/index-jquery.html");
+    rootEl = browser.rootEl;
+    browser.get("examples/example-example44/index-jquery.html");
   });
-
+  
   var colorSpan = element(by.css('span'));
 
   it('should check ng-style', function() {
