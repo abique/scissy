@@ -1,6 +1,6 @@
 begin transaction;
 
-pragma user_version = 1;
+pragma user_version = 2;
 
 create table if not exists roles
 (
@@ -18,7 +18,9 @@ create table if not exists users
   user_id integer not null primary key autoincrement,
   login text not null unique,
   email text not null unique,
-  password blob not null, -- sha512(password)
+  password_type text not null,
+  password_salt text not null,
+  password_hash text not null,
   role_id integer not null default 2
 );
 

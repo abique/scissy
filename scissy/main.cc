@@ -27,7 +27,7 @@
 #include "session-handler.hh"
 #include "service.hh"
 
-#define USER_VERSION 1
+#define USER_VERSION 2
 
 int main(int argc, char ** argv)
 {
