@@ -5,6 +5,9 @@
 
 #include <crack.h>
 
+#include <gnutls/gnutls.h>
+#include <gnutls/crypto.h>
+
 #include <mimosa/git/blob.hh>
 #include <mimosa/git/commit.hh>
 #include <mimosa/git/diff.hh>
@@ -218,14 +221,32 @@ namespace scissy
       }
     }
 
-    mimosa::stream::Sha512 sha512;
-    sha512.write(request.password().data(), request.password().size());
+    // generate a salt
+    char salt[16];
+    if (::gnutls_rnd(GNUTLS_RND_NONCE, salt, sizeof (salt)) < 0) {
+      response.set_status(pb::kFailed);
+      response.set_msg("internal error, please contact your administrator");
+      return true;
+    }
 
+    std::string salt16 = mimosa::stream::filter<mimosa::stream::Base16Encoder>(
+      salt, sizeof (salt));
+
+    // compute hash
+    mimosa::stream::Sha3_512 hash;
+    hash.write(salt, sizeof (salt));
+    hash.write(request.password().data(), request.password().size());
+
+    std::string hash16 = mimosa::stream::filter<mimosa::stream::Base16Encoder>(
+      hash.digest(), hash.digestLen());
+
+    // save user
     auto stmt = Db::prepare(
-      "insert or fail into users (login, email, password)"
+      "insert or fail into users (login, email, password_type,"
+      "                           password_salt, password_hash)"
       " values (?, ?, ?)");
     int err = stmt.bind(request.user(), request.email(),
-                        (const void*)sha512.digest(), sha512.digestLen()).step();
+                        std::string("SHA3-512"), hash16, salt16).step();
 
     if (err == SQLITE_CONSTRAINT) {
       response.set_status(pb::kFailed);
