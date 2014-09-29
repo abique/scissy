@@ -7,7 +7,7 @@ function usage() {
 
 if [[ "$USER" = "root" ]] || [[ "$1" = "--help" ]]  || [[ "$1" = "-h" ]] ; then
     usage
-if
+fi
 
 cd
 mkdir -m 0700 .ssh
