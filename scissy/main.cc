@@ -4,6 +4,8 @@
 
 #include <cerrno>
 
+#include <git2/global.h>
+
 #include <mimosa/http/dispatch-handler.hh>
 #include <mimosa/http/fs-handler.hh>
 #include <mimosa/http/log-handler.hh>
@@ -33,6 +35,7 @@ int main(int argc, char ** argv)
 {
   bool stop = false;
 
+  git_libgit2_init();
   sqlite3_initialize();
   mimosa::init(argc, argv);
   scissy::Config::instance();
@@ -124,5 +127,6 @@ int main(int argc, char ** argv)
   scissy::Config::release();
   mimosa::deinit();
   sqlite3_shutdown();
+  git_libgit2_shutdown();
   return 0;
 }
