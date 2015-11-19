@@ -244,7 +244,7 @@ namespace scissy
     auto stmt = Db::prepare(
       "insert or fail into users (login, email, password_type,"
       "                           password_salt, password_hash)"
-      " values (?, ?, ?)");
+      " values (?, ?, ?, ?, ?)");
     int err = stmt.bind(request.user(), request.email(),
                         std::string("SHA3-512"), hash16, salt16).step();
 
@@ -274,7 +274,7 @@ namespace scissy
       return true;
 
     // Ensure the user has an account
-    if (!Db::userGetOrCreateId(request.user(), &user_id)) {
+    if (!Db::userGetId(request.user(), &user_id)) {
       response.set_status(pb::kFailed);
       response.set_msg("2 internal error, please contact your administrator");
       return true;

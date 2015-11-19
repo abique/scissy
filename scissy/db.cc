@@ -37,20 +37,6 @@ namespace scissy
   /**************/
 
   bool
-  Db::userGetOrCreateId(const std::string & user, int64_t * user_id)
-  {
-    if (userGetId(user, user_id))
-      return true;
-    auto stmt = prepare("insert into users (login, email, password, role_id)"
-                        " values (?, ?, ?, ?)");
-    stmt.bind(user, user + "@" + Config::instance().cloneHost(),
-              std::string(), static_cast<int64_t>(pb::kWriter));
-    if (stmt.step() != SQLITE_DONE)
-      return false;
-    return userGetId(user, user_id);
-  }
-
-  bool
   Db::userGetId(const std::string & user, int64_t * user_id)
   {
     auto stmt = prepare("select user_id from users where login = ?");
