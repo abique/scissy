@@ -174,13 +174,16 @@ namespace scissy
     static const RE2 login_match("^[[:alnum:]]+$");
     static const RE2 email_match("^[-._a-zA-Z0-9]+@[-._a-zA-Z0-9]+$");
 
+    const std::string &login = request.user();
+    const std::string &email = request.email();
+
     if (!Config::instance().isRegisterEnabled()) {
       response.set_status(pb::kForbidden);
       response.set_msg("registration disabled");
       return true;
     }
 
-    if (request.user().size() > 64) {
+    if (login.size() > 64) {
       response.set_status(pb::kFailed);
       response.set_msg("login too long (64 characters at most)");
       return true;
@@ -198,13 +201,13 @@ namespace scissy
       return true;
     }
 
-    if (!RE2::FullMatch(request.user(), login_match)) {
+    if (!RE2::FullMatch(login, login_match)) {
       response.set_status(pb::kFailed);
       response.set_msg("login contains invalid characters");
       return true;
     }
 
-    if (!RE2::FullMatch(request.email(), email_match)) {
+    if (!RE2::FullMatch(email, email_match)) {
       response.set_status(pb::kFailed);
       response.set_msg("invalid email");
       return true;
@@ -240,13 +243,15 @@ namespace scissy
     std::string hash16 = mimosa::stream::filter<mimosa::stream::Base16Encoder>(
       hash.digest(), hash.digestLen());
 
+    static const std::string hash_name("SHA-512");
+
     // save user
     auto stmt = Db::prepare(
       "insert or fail into users (login, email, password_type,"
       "                           password_salt, password_hash)"
       " values (?, ?, ?, ?, ?)");
-    int err = stmt.bind(request.user(), request.email(),
-                        std::string("SHA3-512"), hash16, salt16).step();
+
+    int err = stmt.bind(login, email, hash_name, hash16, salt16).step();
 
     if (err == SQLITE_CONSTRAINT) {
       response.set_status(pb::kFailed);
