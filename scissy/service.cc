@@ -146,6 +146,44 @@ namespace scissy
     throw err;
   }
 
+  static bool
+  userGetSession(pb::Session & response)
+  {
+    auto & session = SessionHandler::threadSession();
+    response.set_user(session.user());
+    response.set_role(session.role());
+    response.set_user_id(session.userId());
+    return true;
+  }
+
+  static bool
+  userCheckPassword(const std::string &password, pb::StatusMsg &response)
+  {
+    if (password.size() < 5) {
+      response.set_status(pb::kFailed);
+      response.set_msg("password too short (5 characters at least)");
+      return false;
+    }
+
+    if (password.size() > 32) {
+      response.set_status(pb::kFailed);
+      response.set_msg("password too long (32 characters at most)");
+      return false;
+    }
+
+    // useful check in dev mode
+    if (scissy::Config::instance().crackPasswords()) {
+      const char * errmsg = ::FascistCheck(password.c_str(), ::GetDefaultCracklibDict());
+      if (errmsg) {
+        response.set_status(pb::kFailed);
+        response.set_msg(errmsg);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   /////////////
   // Service //
   /////////////
@@ -189,17 +227,8 @@ namespace scissy
       return true;
     }
 
-    if (request.password().size() < 5) {
-      response.set_status(pb::kFailed);
-      response.set_msg("password too short (5 characters at least)");
+    if (!userCheckPassword(request.password(), response))
       return true;
-    }
-
-    if (request.password().size() > 32) {
-      response.set_status(pb::kFailed);
-      response.set_msg("password too long (32 characters at most)");
-      return true;
-    }
 
     if (!RE2::FullMatch(login, login_match)) {
       response.set_status(pb::kFailed);
@@ -211,17 +240,6 @@ namespace scissy
       response.set_status(pb::kFailed);
       response.set_msg("invalid email");
       return true;
-    }
-
-    // useful check in dev mode
-    if (scissy::Config::instance().crackPasswords()) {
-      const char * errmsg = ::FascistCheck(request.password().c_str(),
-                                           ::GetDefaultCracklibDict());
-      if (errmsg) {
-        response.set_status(pb::kFailed);
-        response.set_msg(errmsg);
-        return true;
-      }
     }
 
     // generate a salt
@@ -266,6 +284,30 @@ namespace scissy
     }
 
     response.set_status(pb::kSucceed);
+    return true;
+  }
+
+  bool
+  Service::userSetPassword(pb::UserPasswordChange &request, pb::StatusMsg &response)
+  {
+    if (!userCheckPassword(request.new_password(), response))
+      return true;
+
+    AUTHENTICATE_USER();
+
+    int64_t user_id = 0;
+    if (!Db::userGetId(request.user(), &user_id)) {
+      response.set_status(pb::kNotFound);
+      return true;
+    }
+
+    if (session.role() != pb::kOwner &&
+        (true /* TODO: same user and old_password matches */)) {
+      response.set_status(pb::kForbidden);
+      return true;
+    }
+
+    // TODO: set user password
     return true;
   }
 
@@ -342,16 +384,6 @@ namespace scissy
 
     response.set_user(request.user());
     response.set_status(pb::kSucceed);
-    return true;
-  }
-
-  static bool
-  userGetSession(pb::Session & response)
-  {
-    auto & session = SessionHandler::threadSession();
-    response.set_user(session.user());
-    response.set_role(session.role());
-    response.set_user_id(session.userId());
     return true;
   }
 

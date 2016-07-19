@@ -38,6 +38,9 @@ namespace scissy
     virtual bool userGetSshKeys(pb::UserSshKeySelector & request,
                                 pb::UserSshKeys & response) override;
 
+    virtual bool userSetPassword(pb::UserPasswordChange & request,
+                                 pb::StatusMsg & response) override;
+
     ////////////////////////////
     // Group management stuff //
     ////////////////////////////

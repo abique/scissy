@@ -68,6 +68,13 @@ message UserCreate
   required bytes email    = 3;
 }
 
+message UserPasswordChange
+{
+  required bytes user         = 1;
+  optional bytes old_password = 2;
+  required bytes new_password = 3;
+}
+
 message UserDelete
 {
   required bytes user = 1;
@@ -463,6 +470,7 @@ service Service
   rpc userAddSshKey(UserSshKey) returns (StatusMsg);
   rpc userRemoveSshKey(UserSshKey) returns (StatusMsg);
   rpc userGetSshKeys(UserSshKeySelector) returns (UserSshKeys);
+  rpc userSetPassword(UserPasswordChange) returns (StatusMsg);
 
   /* group management */
   rpc groupCreate(GroupCreate) returns (GroupInfo);
