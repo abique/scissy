@@ -16,12 +16,12 @@ namespace scissy
     std::string salt16;
     std::string hash16;
 
-    auto stmt             = Db::prepare(
+    auto stmt = Db::prepare(
       "select password_type, password_salt, password_hash from users where login = ?");
     if (!stmt.bind(request.user()).fetch(&type, &salt16, &hash16)) {
       response.set_status(pb::kFailed);
       response.set_msg("user not found");
-      return true;
+      return false;
     }
 
     std::string salt = mimosa::stream::filter<mimosa::stream::Base16Decoder>(
@@ -48,7 +48,7 @@ namespace scissy
       log->error("invalid password for user %s", request.user());
       response.set_status(pb::kFailed);
       response.set_msg("invalid password");
-      return true;
+      return false;
     }
 
     // password matched

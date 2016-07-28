@@ -269,7 +269,7 @@ namespace scissy
       "                           password_salt, password_hash)"
       " values (?, ?, ?, ?, ?)");
 
-    int err = stmt.bind(login, email, hash_name, hash16, salt16).step();
+    int err = stmt.bind(login, email, hash_name, salt16, hash16).step();
 
     if (err == SQLITE_CONSTRAINT) {
       response.set_status(pb::kFailed);
