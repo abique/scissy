@@ -9,7 +9,7 @@ namespace scissy
 {
   bool
   BuiltinAuthenticator::auth(pb::UserAuth & request,
-                        pb::Session & response) const
+                             pb::Session & response) const
   {
     // load the password from the db
     std::string type;
@@ -37,7 +37,9 @@ namespace scissy
       hash.write(request.password().data(), request.password().size());
       hash_bin_computed = std::string(hash.digest(), hash.digestLen());
     } else {
-      log->error("unsupported hash type: %s for user %s", type, request.user());
+      std::string msg = mimosa::format::str("unsupported hash type: %s for user %s", type, request.user());
+      response.set_msg(msg);
+      log->error("%s", msg);
       return false;
     }
 

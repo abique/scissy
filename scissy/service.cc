@@ -261,7 +261,7 @@ namespace scissy
     std::string hash16 = mimosa::stream::filter<mimosa::stream::Base16Encoder>(
       hash.digest(), hash.digestLen());
 
-    static const std::string hash_name("SHA-512");
+    static const std::string hash_name("SHA3-512");
 
     // save user
     auto stmt = Db::prepare(
@@ -317,8 +317,10 @@ namespace scissy
     int64_t    user_id   = 0;
 
     // Check if auth works
-    if (!Config::instance().authenticator().auth(request, response))
+    if (!Config::instance().authenticator().auth(request, response)) {
+      response.set_status(pb::kFailed);
       return true;
+    }
 
     // Ensure the user has an account
     if (!Db::userGetId(request.user(), &user_id)) {
