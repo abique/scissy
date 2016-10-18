@@ -13,15 +13,15 @@ message("PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 add_definitions(
   -DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}"
-  -std=c++0x
   -D_GNU_SOURCE -D_LARGEFILE64_SOURCE
   -Wall -Wextra -Werror=return-type
   -DSCISSY_VERSION="${SCISSY_VERSION}"
   ${GNUTLS_DEFINITIONS})
 
-set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -std=c99")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
+add_subdirectory(libgit2 EXCLUDE_FROM_ALL)
 add_subdirectory(mimosa EXCLUDE_FROM_ALL)
 include_directories(mimosa)
 
