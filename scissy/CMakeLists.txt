@@ -13,6 +13,8 @@ add_executable(scissy-shell
 target_link_libraries(scissy-shell
   scissy-common
   mimosa-rpc
+  mimosa-rpc-json
+  mimosa-http
   mimosa
   protobuf
   gnutls
