@@ -1,7 +1,7 @@
 mimosa_protoc(service)
 mimosa_protoc(config)
 
-add_library(scissy-common SHARED
+add_library(scissy-common STATIC
   service.pb.cc
   log.cc
   ssh-key-type.cc
