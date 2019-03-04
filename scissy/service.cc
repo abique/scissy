@@ -1225,7 +1225,7 @@ namespace scissy
       if (git_patch_from_diff(patch.ref(), diff, i))
         continue;
 
-      git_buf buf = { 0, 0, 0};
+      git_buf buf = { nullptr, 0, 0};
       if (git_patch_to_buf(&buf, patch) || !buf.ptr)
         continue;
       patch_ss << buf.ptr;
