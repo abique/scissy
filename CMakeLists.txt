@@ -21,7 +21,6 @@ add_definitions(
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 
-add_subdirectory(libgit2 EXCLUDE_FROM_ALL)
 add_subdirectory(mimosa EXCLUDE_FROM_ALL)
 include_directories(mimosa)
 

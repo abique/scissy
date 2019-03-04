@@ -85,7 +85,6 @@ bool checkAcl(int64_t             user_id,
   mimosa::rpc::Channel::Ptr channel(
     new mimosa::rpc::Channel(
       new mimosa::stream::FdStream(fd)));
-  channel->start();
 
   // create a service stub
   scissy::pb::Service::Client service(channel);

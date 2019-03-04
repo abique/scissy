@@ -3,6 +3,7 @@
 #include <grp.h>
 
 #include <cerrno>
+#include <thread>
 
 #include <git2/global.h>
 
@@ -82,23 +83,15 @@ int main(int argc, char ** argv)
   auto log_handler = new mimosa::http::LogHandler;
   log_handler->setHandler(dispatch);
 
-  std::vector<mimosa::Thread *> threads;
+  std::vector<mimosa::http::Server::Ptr> http_servers;
   for (auto & it : scissy::Config::instance().listens()) {
     mimosa::http::Server::Ptr http_server(new mimosa::http::Server);
     http_server->setHandler(log_handler);
     if (it.isSslEnabled())
       http_server->setSecure(it.ssl_cert_, it.ssl_key_);
 
-    if (!http_server->listenInet4(it.port_)) {
-      mimosa::log::fatal("failed to listen on the port %d: %s",
-                         it.port_, ::strerror(errno));
-      return 1;
-    }
-
-    threads.push_back(new mimosa::Thread([&stop, http_server] {
-          while (!stop)
-            http_server->serveOne();
-        }));
+    http_server->listenInet4(it.port_);
+    http_servers.emplace_back(http_server);
   }
 
   if (!scissy::Config::instance().user().empty() ||
@@ -110,17 +103,19 @@ int main(int argc, char ** argv)
     }
   }
 
-  for (auto & thread : threads)
-    thread->start();
+  std::vector<std::thread> threads;
+  for (auto &http_server : http_servers)
+    threads.emplace_back([&stop, http_server] {
+      while (!stop)
+        http_server->serveOne();
+    });
 
   rpc_server->listenUnix(scissy::Config::instance().socket());
   while (!stop)
     rpc_server->serveOne();
 
-  for (auto & thread : threads) {
-    thread->join();
-    delete thread;
-  }
+  for (auto & thread : threads)
+    thread.join();
 
   scissy::Repositories::release();
   scissy::Db::release();
