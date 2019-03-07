@@ -90,12 +90,7 @@ int main(int argc, char ** argv)
     if (it.isSslEnabled())
       http_server->setSecure(it.ssl_cert_, it.ssl_key_);
 
-    try {
-      http_server->listenInet4(it.port_);
-    } catch (const std::exception &e) {
-      mimosa::log::fatal("Could not listen on port %d", it.port_);
-      return 1;
-    }
+    http_server->listenInet4(it.port_);
     http_servers.emplace_back(http_server);
   }
 
