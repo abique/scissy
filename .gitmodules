@@ -4,6 +4,3 @@
 [submodule "www/codemirror"]
 	path = www/codemirror
 	url = git://github.com/marijnh/CodeMirror
-[submodule "libgit2"]
-	path = libgit2
-	url = git://github.com/libgit2/libgit2
