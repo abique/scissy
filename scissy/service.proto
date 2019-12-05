@@ -1,4 +1,4 @@
-syntax = "proto3";
+syntax = "proto2";
 
 package scissy.pb;
 
@@ -20,17 +20,17 @@ enum Status
 
 message StatusMsg
 {
-  Status status = 1;
-  string msg    = 2;
+  required Status status = 1;
+  optional string msg    = 2;
 }
 
 message ServiceInfo
 {
-  bytes  clone_user          = 1;
-  bytes  clone_host          = 2;
-  bytes  version             = 3;
-  uint64 start_time          = 4;
-  bool   is_register_enabled = 5;
+  required bytes  clone_user          = 1;
+  required bytes  clone_host          = 2;
+  required bytes  version             = 3;
+  required uint64 start_time          = 4;
+  required bool   is_register_enabled = 5;
 }
 
 enum Role
@@ -49,225 +49,225 @@ enum SshKeyType
 
 message UserAuth
 {
-  bytes user     = 1;
-  bytes password = 2;
+  required bytes user     = 1;
+  required bytes password = 2;
 }
 
 message Session
 {
-  bytes  user    = 1;
-  int64  user_id = 2;
-  bytes  email   = 3;
-  Status status  = 4;
-  string msg     = 5;
-  Role   role    = 6;
+  required bytes  user    = 1;
+  optional int64  user_id = 2;
+  optional bytes  email   = 3;
+  optional Status status  = 4;
+  optional string msg     = 5;
+  optional Role   role    = 6;
 }
 
 message UserCreate
 {
-  bytes user     = 1;
-  bytes password = 2;
-  bytes email    = 3;
+  required bytes user     = 1;
+  required bytes password = 2;
+  required bytes email    = 3;
 }
 
 message UserPasswordChange
 {
-  bytes user         = 1;
-  bytes old_password = 2;
-  bytes new_password = 3;
+  required bytes user         = 1;
+  optional bytes old_password = 2;
+  required bytes new_password = 3;
 }
 
 message UserDelete
 {
-  bytes user = 1;
+  required bytes user = 1;
 }
 
 message SshKey
 {
-  SshKeyType type   = 1;
-  bytes      key    = 2;
-  string     desc   = 3;
-  uint64     key_id = 4;
+  required SshKeyType type   = 1;
+  required bytes      key    = 2;
+  optional string     desc   = 3;
+  optional uint64     key_id = 4;
 }
 
 message UserSshKey
 {
-  SshKey        key  = 1;
+  required SshKey        key  = 1;
 }
 
 message UserSshKeySelector
 {
-  bytes         user = 3; // target
+  required bytes         user = 3; // target
 }
 
 message UserSshKeys
 {
   repeated SshKey keys   = 1;
-  Status status = 2;
-  string msg    = 3;
+  optional Status status = 2;
+  optional string msg    = 3;
 }
 
 message GroupCreate
 {
-  bytes grp          = 2;
-  bytes desc         = 3;
+  optional bytes grp          = 2;
+  required bytes desc         = 3;
 }
 
 message GroupDelete
 {
-  int64         grp_id = 2;
-  bytes         grp    = 3;
+  optional int64         grp_id = 2;
+  optional bytes         grp    = 3;
 }
 
 message GroupAddUser
 {
-  bytes grp          = 2;
-  int64 grp_id       = 3;
-  bytes user         = 4;
-  int64 user_id      = 5;
-  Role  role         = 6;
+  optional bytes grp          = 2;
+  optional int64 grp_id       = 3;
+  optional bytes user         = 4;
+  optional int64 user_id      = 5;
+  required Role  role         = 6;
 }
 
 message GroupRemoveUser
 {
-  bytes grp          = 2;
-  int64 grp_id       = 3;
-  bytes user         = 4;
-  int64 user_id      = 5;
+  optional bytes grp          = 2;
+  optional int64 grp_id       = 3;
+  optional bytes user         = 4;
+  optional int64 user_id      = 5;
 }
 
 message GroupSelector
 {
-  bytes  grp    = 1; // the name of the group
-  bytes  user   = 2; // the group which contains this user
-  uint32 limit  = 3;
-  uint32 offset = 4;
-  int64  grp_id = 5;
+  optional bytes  grp    = 1; // the name of the group
+  optional bytes  user   = 2; // the group which contains this user
+  optional uint32 limit  = 3;
+  optional uint32 offset = 4;
+  optional int64  grp_id = 5;
 }
 
 message GroupMemberSelector
 {
-  bytes  grp     = 1;
-  int64  grp_id  = 2;
-  bytes  user    = 3;
-  int64  user_id = 4;
-  Role   role    = 5;
-  uint32 limit   = 6;
-  uint32 offset  = 7;
+  optional bytes  grp     = 1;
+  optional int64  grp_id  = 2;
+  optional bytes  user    = 3;
+  optional int64  user_id = 4;
+  optional Role   role    = 5;
+  optional uint32 limit   = 6;
+  optional uint32 offset  = 7;
 }
 
 message GroupInfo
 {
-  bytes  grp    = 1;
-  uint32 size   = 2;
-  int64  grp_id = 3;
-  string desc   = 4;
-  Status status = 5;
-  string msg    = 6;
+  optional bytes  grp    = 1;
+  optional uint32 size   = 2;
+  optional int64  grp_id = 3;
+  optional string desc   = 4;
+  optional Status status = 5;
+  optional string msg    = 6;
 }
 
 message GroupList
 {
   repeated GroupInfo grps   = 1;
-  Status    status = 2;
-  string    msg    = 3;
+  optional Status    status = 2;
+  optional string    msg    = 3;
 }
 
 message Member
 {
-  Status status  = 1;
-  bytes  user    = 2;
-  int64  user_id = 3;
-  Role   role    = 4;
-  bytes  grp     = 5;
-  int64  grp_id  = 6;
+  optional Status status  = 1;
+  optional bytes  user    = 2;
+  optional int64  user_id = 3;
+  required Role   role    = 4;
+  optional bytes  grp     = 5;
+  optional int64  grp_id  = 6;
 }
 
 message MemberList
 {
-  Status status = 1;
-  string msg    = 2;
+  optional Status status = 1;
+  optional string msg    = 2;
   repeated Member groups = 3;
   repeated Member users  = 4;
 }
 
 message RepoCreate
 {
-  bytes         name      = 2;
-  bytes         desc      = 3;
-  bool          is_public = 4;
+  required bytes         name      = 2;
+  required bytes         desc      = 3;
+  required bool          is_public = 4;
 }
 
 message RepoUpdate
 {
-  int64         repo_id   = 2;
-  bytes         repo      = 3;
-  bytes         name      = 4;
-  bytes         desc      = 5;
-  bool          is_public = 6;
+  optional int64         repo_id   = 2;
+  required bytes         repo      = 3;
+  required bytes         name      = 4;
+  required bytes         desc      = 5;
+  required bool          is_public = 6;
 }
 
 message RepoDelete
 {
-  int64         repo_id = 2;
-  bytes         repo    = 3;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
 }
 
 message RepoAddUser
 {
-  int64         repo_id = 2;
-  bytes         repo    = 3;
-  int64         user_id = 4;
-  bytes         user    = 5;
-  Role          role    = 6;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
+  optional int64         user_id = 4;
+  optional bytes         user    = 5;
+  required Role          role    = 6;
 }
 
 message RepoRemoveUser
 {
-  int64         repo_id = 2;
-  bytes         repo    = 3;
-  int64         user_id = 4;
-  bytes         user    = 5;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
+  optional int64         user_id = 4;
+  optional bytes         user    = 5;
 }
 
 message RepoAddGroup
 {
-  int64         repo_id = 2;
-  bytes         repo    = 3;
-  int64         grp_id  = 4;
-  bytes         grp     = 5;
-  Role          role    = 6;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
+  optional int64         grp_id  = 4;
+  optional bytes         grp     = 5;
+  required Role          role    = 6;
 }
 
 message RepoRemoveGroup
 {
-  int64         repo_id = 2;
-  bytes         repo    = 3;
-  int64         grp_id  = 4;
-  bytes         grp     = 5;
+  optional int64         repo_id = 2;
+  optional bytes         repo    = 3;
+  optional int64         grp_id  = 4;
+  optional bytes         grp     = 5;
 }
 
 message RepoName
 {
-  bytes name = 1;
+  required bytes name = 1;
 }
 
 message RepoInfo
 {
-  Status status = 1;
-  string msg    = 2;
+  required Status status = 1;
+  optional string msg    = 2;
 
-  int64  id               = 3;
-  bytes  name             = 4;
-  bytes  desc             = 5;
-  bool   is_public        = 6;
-  uint64 last_commit_time = 7;
+  required int64  id               = 3;
+  required bytes  name             = 4;
+  required bytes  desc             = 5;
+  required bool   is_public        = 6;
+  optional uint64 last_commit_time = 7;
 }
 
 message RepoMembers
 {
-  Status status = 1;
-  string msg    = 2;
+  required Status status = 1;
+  optional string msg    = 2;
 
   repeated int64  users_id  = 3;
   repeated bytes  users     = 4;
@@ -278,79 +278,79 @@ message RepoMembers
 message RepoList
 {
   repeated RepoInfo repos            = 1;
-  Status   status           = 2;
-  string   msg              = 3;
+  optional Status   status           = 2;
+  optional string   msg              = 3;
 }
 
 message RepoSelector
 {
-  uint32        limit     = 1;
-  uint32        offset    = 2;
-  int64         repo_id   = 3;
-  bytes         repo      = 4;
-  bytes         commit_id = 6;
+  optional uint32        limit     = 1;
+  optional uint32        offset    = 2;
+  optional int64         repo_id   = 3;
+  optional bytes         repo      = 4;
+  optional bytes         commit_id = 6;
 }
 
 message CommitSelector
 {
-  bytes         revision = 2;
-  int64         repo_id  = 3;
-  bytes         repo     = 4;
+  required bytes         revision = 2;
+  optional int64         repo_id  = 3;
+  optional bytes         repo     = 4;
 }
 
 message LogSelector
 {
-  bytes         revision = 2;
-  int64         repo_id  = 3;
-  bytes         repo     = 4;
-  uint32        limit    = 5;
-  uint32        offset   = 6;
+  optional bytes         revision = 2;
+  optional int64         repo_id  = 3;
+  optional bytes         repo     = 4;
+  optional uint32        limit    = 5;
+  optional uint32        offset   = 6;
 }
 
 message TreeSelector
 {
-  bytes         revision  = 2;
-  int64         repo_id   = 3;
-  bytes         repo      = 4;
-  bytes         directory = 5;
+  optional bytes         revision  = 2;
+  optional int64         repo_id   = 3;
+  optional bytes         repo      = 4;
+  optional bytes         directory = 5;
 }
 
 message BlobSelector
 {
-  bytes         revision  = 2;
-  int64         repo_id   = 3;
-  bytes         repo      = 4;
-  bytes         path      = 5;
+  optional bytes         revision  = 2;
+  optional int64         repo_id   = 3;
+  optional bytes         repo      = 4;
+  optional bytes         path      = 5;
 }
 
 message DiffSelector
 {
-  int64         repo_id      = 2;
-  bytes         repo         = 3;
-  bytes         revision_old = 4;
-  bytes         revision_new = 5;
-  bytes         path         = 6;
+  optional int64         repo_id      = 2;
+  optional bytes         repo         = 3;
+  optional bytes         revision_old = 4;
+  optional bytes         revision_new = 5;
+  optional bytes         path         = 6;
 }
 
 message AccessUserRepo
 {
-  int64 repo_id   = 1;
-  int64 user_id   = 2;
+  required int64 repo_id   = 1;
+  required int64 user_id   = 2;
 }
 
 message ShellControl
 {
-  int64 user_id   = 1;
-  bytes repo_name = 2;
+  required int64 user_id   = 1;
+  required bytes repo_name = 2;
 }
 
 message ShellStatus
 {
-  Status status    = 1;
-  bytes  repo_path = 2;
-  Role   role      = 3;
-  bool   is_public = 4;
-  bool   is_admin  = 5;
+  required Status status    = 1;
+  optional bytes  repo_path = 2;
+  optional Role   role      = 3;
+  optional bool   is_public = 4;
+  optional bool   is_admin  = 5;
 }
 
 enum GitFileMode
@@ -365,96 +365,95 @@ enum GitFileMode
 
 enum GitOtype
 {
-  kGitObjDummy    = 0;
+  kGitObjAny      = -2;
+  kGitObjBad      = -1;
   kGitObjCommit   = 1;
   kGitObjTree     = 2;
   kGitObjBlob     = 3;
   kGitObjTag      = 4;
   kGitObjOfsDelta = 6;
   kGitObjRefDelta = 7;
-  kGitObjAny      = -2;
-  kGitObjBad      = -1;
 }
 
 message GitBranch
 {
-  bytes name = 1;
+  required bytes name = 1;
 }
 
 message GitBranches
 {
-  Status    status   = 1;
-  bytes     msg      = 2;
+  optional Status    status   = 1;
+  optional bytes     msg      = 2;
   repeated GitBranch branches = 3;
 }
 
 message GitSignature
 {
-  bytes  name        = 1;
-  bytes  email       = 2;
-  uint64 time        = 3;
+  optional bytes  name        = 1;
+  optional bytes  email       = 2;
+  optional uint64 time        = 3;
 }
 
 message GitCommit
 {
-  Status       status      = 1;
-  bytes        id          = 2;
+  optional Status       status      = 1;
+  optional bytes        id          = 2;
   repeated bytes        parents_id  = 3;
-  bytes        msg         = 4;
-  uint64       time        = 5;
-  GitSignature commiter    = 6;
-  GitSignature author      = 7;
-  bytes        tree_id     = 8;
+  optional bytes        msg         = 4;
+  optional uint64       time        = 5;
+  optional GitSignature commiter    = 6;
+  optional GitSignature author      = 7;
+  optional bytes        tree_id     = 8;
 }
 
 message GitLog
 {
-  Status    status  = 1;
-  bytes     msg     = 2;
+  optional Status    status  = 1;
+  optional bytes     msg     = 2;
   repeated GitCommit commits = 3;
 }
 
 message GitTreeEntry
 {
-  bytes       name = 1;
-  bytes       id   = 2;
-  GitOtype    type = 3;
-  GitFileMode mode = 4;
+  required bytes       name = 1;
+  required bytes       id   = 2;
+  required GitOtype    type = 3;
+  required GitFileMode mode = 4;
 }
 
 message GitTree
 {
-  Status status        = 1;
-  bytes  msg           = 2;
+  optional Status status        = 1;
+  optional bytes  msg           = 2;
   repeated GitTreeEntry entries = 3;
 }
 
 message GitBlob
 {
-  Status status       = 1;
-  bytes  msg          = 2;
-  bool   is_binary    = 3;
-  bytes  data         = 4;
-  bytes  content_type = 5;
+  optional Status status       = 1;
+  optional bytes  msg          = 2;
+  optional bool   is_binary    = 3;
+  optional bytes  data         = 4;
+  optional bytes  content_type = 5;
 }
 
 message GitPatch
 {
-  Status status = 1;
-  bytes  msg    = 2;
-  bytes  data   = 3;
+  optional Status status = 1;
+  optional bytes  msg    = 2;
+  optional bytes  data   = 3;
 }
 
 message GitTag
 {
-  bytes  name     = 1;
-  bytes  revision = 2;
+  required bytes  name     = 1;
+  required bytes  revision = 2;
 }
 
 message GitTags
 {
-  Status status = 1;
-  bytes  msg    = 2;
+  optional Status status = 1;
+  optional bytes  msg    = 2;
   repeated GitTag tags   = 3;
 }
 

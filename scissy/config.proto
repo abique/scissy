@@ -1,13 +1,13 @@
-syntax = "proto3";
+syntax = "proto2";
 
 package scissy.pb.config;
 
 message ListenAddr
 {
-  bytes addr       = 1;
-  int32 port       = 2;
-  bytes ssl_key    = 4;
-  bytes ssl_cert   = 5;
+  required bytes addr       = 1;
+  required int32 port       = 2;
+  optional bytes ssl_key    = 4;
+  optional bytes ssl_cert   = 5;
 }
 
 enum AuthMethod
@@ -18,39 +18,39 @@ enum AuthMethod
 
 message AuthEnv
 {
-  bytes key   = 1;
-  bytes value = 2;
+  required bytes key   = 1;
+  required bytes value = 2;
 }
 
 message AuthProcess
 {
-  bytes   program = 1;
+  required bytes   program = 1;
   repeated AuthEnv env  = 2;
   repeated bytes   args = 3;
-  bytes   working_directory = 4;
+  optional bytes   working_directory = 4;
 }
 
 message Auth
 {
-  AuthMethod  method  = 1;
-  AuthProcess process = 2;
+  required AuthMethod  method  = 1;
+  optional AuthProcess process = 2;
 }
 
 message Config
 {
-  bytes repos_root       = 1;
-  bytes www_root         = 2;
-  bytes db               = 3;
-  bytes socket           = 4;
-  bool  crack_passwords  = 5;
-  bytes clone_user       = 6;
-  bytes clone_host       = 7;
+  optional bytes repos_root       = 1;
+  optional bytes www_root         = 2;
+  optional bytes db               = 3;
+  optional bytes socket           = 4;
+  optional bool  crack_passwords  = 5;
+  optional bytes clone_user       = 6;
+  optional bytes clone_host       = 7;
   repeated ListenAddr listen      = 8;
-  bytes authorized_keys  = 9;
-  int32 git_log_limit    = 10;
-  bytes user             = 11;
-  bytes group            = 12;
-  uint32 cookie_duration = 13;
-  Auth  auth             = 14;
-  bool  enable_register  = 15;
+  optional bytes authorized_keys  = 9;
+  optional int32 git_log_limit    = 10;
+  optional bytes user             = 11;
+  optional bytes group            = 12;
+  optional uint32 cookie_duration = 13;
+  optional Auth  auth             = 14;
+  optional bool  enable_register  = 15;
 }
