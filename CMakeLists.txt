@@ -8,6 +8,8 @@ find_package(GnuTLS REQUIRED)
 
 file(STRINGS VERSION SCISSY_VERSION)
 
+set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
+
 message("scissy version: ${SCISSY_VERSION}")
 message("PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
